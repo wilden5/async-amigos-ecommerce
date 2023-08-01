@@ -13,5 +13,10 @@
     "prettier"
   ],
   "parserOptions": { "ecmaVersion": "latest", "project": true, "tsconfigRootDir": "/", "sourceType": "module" },
-  "rules": { "import/extensions": "off", "import/prefer-default-export": "off" }
+  "rules": {
+    "import/extensions": "off",
+    "import/prefer-default-export": "off",
+    "@typescript-eslint/no-explicit-any": "error",
+    "@typescript-eslint/explicit-function-return-type": "error"
+    }
 }
