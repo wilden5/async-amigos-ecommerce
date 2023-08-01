@@ -1,0 +1,17 @@
+{
+  "root": true,
+  "env": { "es6": true, "browser": true, "node": true },
+  "parser": "@typescript-eslint/parser",
+  "plugins": ["@typescript-eslint"],
+  "extends": [
+    "eslint:recommended",
+    "plugin:@typescript-eslint/recommended",
+    "plugin:@typescript-eslint/recommended-requiring-type-checking",
+    "plugin:import/recommended",
+    "airbnb-base",
+    "airbnb-typescript/base",
+    "prettier"
+  ],
+  "parserOptions": { "ecmaVersion": "latest", "project": true, "tsconfigRootDir": "/", "sourceType": "module" },
+  "rules": { "import/extensions": "off", "import/prefer-default-export": "off" }
+}
