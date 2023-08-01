@@ -3,7 +3,7 @@ const HTMLWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const ESLintPlugin = require('eslint-webpack-plugin');
 
-const resolve = (...paths) => path.resolve(__dirname, ...paths);
+const resolve = (...paths) => path.resolve(__dirname, '..', ...paths);
 
 const config = {
   context: resolve('src'),
@@ -16,7 +16,11 @@ const config = {
     filename: 'js/[name].[contenthash].js',
   },
   plugins: [
-    new ESLintPlugin({ extensions: ['.ts'], fix: true }),
+    new ESLintPlugin({
+      extensions: ['.ts'],
+      fix: true,
+      overrideConfigFile: resolve('config', '.eslintrc'),
+    }),
     new MiniCssExtractPlugin({ filename: 'css/[name].[contenthash].css' }),
     new HTMLWebpackPlugin({
       template: resolve('src', 'template'),
