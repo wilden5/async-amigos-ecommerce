@@ -7,8 +7,7 @@
     "start": "webpack serve --config webpack.dev.js",
     "build": "webpack --config webpack.prod.js",
     "lint": "eslint .",
-    "format": "prettier --write .",
-    "prod": "npm run build && gh-pages -d dist -e eCommerceApp -m \"feat: update deploy $(date)\""
+    "format": "prettier --write ."
   },
   "keywords": [],
   "author": "async-amigos",
