@@ -1,5 +1,5 @@
 import './style.scss';
-import { createElement } from './helpers/createElement';
+import { createElement } from './utils/createElement';
 
 class App {
   root: Element;
