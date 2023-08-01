@@ -1,5 +1,5 @@
 *.*~
-*[-\.]lock.json
+# *[-\.]lock.json
 
 # OS Auto created files
 .DS_Store
@@ -97,13 +97,13 @@ typings/
 
 # Nuxt.js build / generate output
 .nuxt
-dist
+# dist
 
 # Build results
 # src
-package.json
-webpack.config.js
-.editorconfig
+# package.json
+# webpack.config.js
+# .editorconfig
 
 # Gatsby files
 .cache/
