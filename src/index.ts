@@ -8,7 +8,7 @@ class App {
     this.root = document.getElementById('root') ?? createElement('div', { id: 'root' }, root);
   }
 
-  run() {
+  run(): void {
     createElement('h1', { className: 'title', textContent: 'Hello!' }, this.root);
   }
 }
