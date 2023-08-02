@@ -13,6 +13,7 @@ or any other relevant modifications.]
 - [ ] Code has been tested thoroughly
 - [ ] All existing tests pass successfully
 - [ ] New tests cover at least 20% of the code
+- [ ] All task requirements for the maximum score have been fulfilled
 
 ### Reviewers
 [Tag your group members and any other relevant individuals who should review this PR. E.g., @teammate1, @teammate2]
