@@ -4,7 +4,6 @@ module.exports = {
   moduleNameMapper: {
     '^@/(.*)$': '<rootDir>/$1',
   },
-  rootDir: '../',
   coverageReporters: ['text-summary', 'html'],
   coverageDirectory: '<rootDir>/coverage',
   collectCoverageFrom: ['./src/**/*.{ts,tsx}', '!**/node_modules/**', '!**/vendor/**'],

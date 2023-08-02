@@ -5,13 +5,13 @@
   "main": "index.js",
   "prettier": "./config/prettier.json",
   "scripts": {
-    "start": "webpack serve --config config/webpack.dev.js",
-    "build": "webpack --config config/webpack.prod.js",
+    "start": "webpack serve --config webpack.dev.js",
+    "build": "webpack --config webpack.prod.js",
     "lint": "eslint .",
     "format": "prettier --write .",
     "clear-dist": "rd /s /q dist",
-    "jest-test": "jest -c ./config/jest.config.js",
-    "jest-generate-report": "jest -c ./config/jest.config.js --coverage"
+    "jest-test": "jest -c jest.config.js",
+    "jest-generate-report": "jest -c jest.config.js --coverage"
   },
   "keywords": [],
   "author": "async-amigos",
