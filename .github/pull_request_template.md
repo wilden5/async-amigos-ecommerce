@@ -1,6 +1,3 @@
-## Pull Request Name:
-[Feature/Issue Name]
-
 ### Short Description:
 [Provide a brief description of the feature/issue that this pull request addresses. Mention the user story or problem 
 statement it solves.]
