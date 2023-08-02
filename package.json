@@ -10,7 +10,8 @@
     "lint": "eslint .",
     "format": "prettier --write .",
     "clear-dist": "rd /s /q dist",
-    "test": "jest -c ./config/jest.config.js"
+    "jest-test": "jest -c ./config/jest.config.js",
+    "jest-generate-report": "jest -c ./config/jest.config.js --coverage"
   },
   "keywords": [],
   "author": "async-amigos",
