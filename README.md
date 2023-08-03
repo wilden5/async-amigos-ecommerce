@@ -82,5 +82,3 @@ Using yarn:```yarn jest-test```
 ```jest-generate-report```: Runs Jest with coverage enabled to generate a test coverage report in the Coverage folder.\
 ```prepare```: Installs Git hooks using Husky to facilitate pre-commit and pre-push actions.
 #### Make sure to run ```prepare``` script after the first npm install!
-
-
