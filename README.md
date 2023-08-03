@@ -1,4 +1,16 @@
-# Computer Parts E-Commerce Application `Shop&Comp`
+<h1 align="center">
+E-Commerce Application
+</h1>
+<p align="center">
+<br>
+  <a href="https://revealjs.com">
+  <img src="./public/logo.png" alt="reveal.js" width="250">
+  </a>
+  <br>
+</p>
+<h3 align="center">
+Computer Parts
+</h3>
 
 ## Overview
 The Computer E-Commerce Application is a user-friendly and feature-rich online platform designed to cater to computer 
