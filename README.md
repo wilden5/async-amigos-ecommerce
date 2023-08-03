@@ -3,9 +3,7 @@ E-Commerce Application
 </h1>
 <p align="center">
 <br>
-  <a href="https://revealjs.com">
   <img src="./public/logo.png" alt="reveal.js" width="250">
-  </a>
   <br>
 </p>
 <h3 align="center">
@@ -70,7 +68,7 @@ This will start the development server, and the application will be accessible a
 Using npm:```npm run jest-test```\
 Using yarn:```yarn jest-test```
 
-#### Now you have successfully set up and run the Computer E-Commerce Application project locally on your machine. Feel free to explore and contribute to the project!
+#### Now you have successfully set up and run the Computer E-Commerce Application project locally on your machine. You are welcome to explore and contribute the project!
 
 ## Available Scripts
 ```start```: Starts the development server using webpack and serves the application in development mode.\
