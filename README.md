@@ -39,6 +39,39 @@ seeking the latest and most reliable computer components.
 16. **[ts-jest](https://www.npmjs.com/package/ts-jest)**: A TypeScript preprocessor for Jest to enable testing TypeScript files.
 17. **[@typescript-eslint](https://www.npmjs.com/package/@typescript-eslint/eslint-plugin)**: Integrates ESLint with TypeScript for enhanced linting capabilities.
 
+## Setting up and Running the Project Locally
+### Prerequisites
+Before you begin, ensure that you have the following software installed on your machine:
+1. Node.js (v14.x or higher)
+2. npm (Node Package Manager) or yarn
+### Clone the Repository
+1. Open your terminal or command prompt.
+2. Change the current working directory to the location where you want to clone the project.
+3. Run the following command to clone the repository:\
+```git clone https://github.com/your-username/shop-n-comp.git``` \
+Replace your-username with your actual GitHub username.
+4. Change into the project directory:
+```cd shop-n-comp```
+### Install Dependencies
+1. After navigating to the project directory, install the required dependencies using npm or yarn:\
+Using npm:```npm install```\
+Using yarn:```yarn install```
+### Build the Project
+1. To build the project, run the following command:\
+Using npm:```npm run build```\
+Using yarn:```yarn build```
+### Start the Development Server
+1. To start the development server and view the application in your browser, use the following command:\
+Using npm:```npm start```\
+Using yarn:```yarn start```\
+This will start the development server, and the application will be accessible at ```http://localhost:8080```.
+### Running Tests
+1. To run tests, use the following command:\
+Using npm:```npm run jest-test```\
+Using yarn:```yarn jest-test```
+
+#### Now you have successfully set up and run the Computer E-Commerce Application project locally on your machine. Feel free to explore and contribute to the project!
+
 ## Available Scripts
 ```start```: Starts the development server using webpack and serves the application in development mode.\
 ```build```: Bundles the application using webpack in production mode for deployment.\
@@ -47,7 +80,7 @@ seeking the latest and most reliable computer components.
 ```clear-dist```: Removes the dist directory and its content.\
 ```jest-test```: Runs Jest to execute unit tests defined in the project.\
 ```jest-generate-report```: Runs Jest with coverage enabled to generate a test coverage report in the Coverage folder.\
-```prepare```: Installs Git hooks using Husky to facilitate pre-commit and pre-push actions.\
-**Make sure to run ```prepare``` script after the first npm install!**
+```prepare```: Installs Git hooks using Husky to facilitate pre-commit and pre-push actions.
+#### Make sure to run ```prepare``` script after the first npm install!
 
 
