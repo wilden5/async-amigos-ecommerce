@@ -62,5 +62,11 @@
   "lint-staged": {
     "src/**/*.{ts, html.css}": "prettier --write",
     "src/**/*.ts": "eslint --color"
+  },
+  "dependencies": {
+    "@commercetools/importapi-sdk": "^4.6.2",
+    "@commercetools/ml-sdk": "^3.4.1",
+    "@commercetools/platform-sdk": "^4.11.0",
+    "@commercetools/sdk-client-v2": "^2.2.0"
   }
 }
