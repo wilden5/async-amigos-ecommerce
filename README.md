@@ -27,3 +27,16 @@ seeking the latest and most reliable computer components.
 - [Prettier](https://prettier.io)  
 - [Sass](https://github.com/sass/dart-sass)  
 - [Gh-Pages](https://github.com/tschaub/gh-pages)
+
+## Available Scripts
+```start```: Starts the development server using webpack and serves the application in development mode.\
+```build```: Bundles the application using webpack in production mode for deployment.\
+```lint```: Runs ESLint to check for linting errors in the project's files.\
+```format```: Formats the project's TypeScript files using Prettier to ensure consistent code style.\
+```clear-dist```: Removes the dist directory and its content.\
+```jest-test```: Runs Jest to execute unit tests defined in the project.\
+```jest-generate-report```: Runs Jest with coverage enabled to generate a test coverage report in the Coverage folder.\
+```prepare```: Installs Git hooks using Husky to facilitate pre-commit and pre-push actions.\
+**Make sure to run ```prepare``` script after the first npm install!**
+
+
