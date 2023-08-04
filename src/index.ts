@@ -1,17 +1,6 @@
 import './style.scss';
-import { createElement } from './utils/DOMHelpers';
+import App from './pages/app/App';
 
-class App {
-  root: Element;
+const APP = new App();
 
-  constructor(root: HTMLElement) {
-    this.root = document.getElementById('root') ?? createElement('div', { id: 'root' }, root);
-  }
-
-  run(): void {
-    createElement('h1', { className: 'title', textContent: 'Hello!' }, this.root);
-  }
-}
-
-const app = new App(document.body);
-app.run();
+APP.init();

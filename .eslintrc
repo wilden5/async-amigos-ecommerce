@@ -16,6 +16,8 @@
   "rules": {
     "import/extensions": "off",
     "import/prefer-default-export": "off",
+    "@typescript-eslint/no-useless-constructor": "off",
+    "class-methods-use-this": "off",
     "@typescript-eslint/no-explicit-any": "error",
     "@typescript-eslint/explicit-function-return-type": "error"
     }
