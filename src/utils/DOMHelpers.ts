@@ -1,8 +1,8 @@
 class DOMHelpers {
   static createElement<T extends HTMLElement = HTMLElement>(
-    tagName: keyof HTMLElementTagNameMap,
+    tagName: string,
     properties: Partial<T>,
-    parentElement: Element,
+    parentElement?: Element,
   ): T | HTMLElement {
     const element = document.createElement(tagName);
     parentElement?.append(element);
@@ -15,6 +15,10 @@ class DOMHelpers {
       throw new Error(`Element with selector '${selector}' not found.`);
     }
     return element;
+  }
+
+  static appendChildToElement<T extends HTMLElement>(parent: HTMLElement, child: T): void {
+    parent.appendChild(child);
   }
 }
 

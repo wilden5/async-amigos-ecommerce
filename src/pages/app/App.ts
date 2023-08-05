@@ -8,17 +8,16 @@ import ErrorPage from '../error/ErrorPage';
 import DOMHelpers from '../../utils/DOMHelpers';
 
 class App {
-  private PAGE_WRAPPER_CONTAINER: HTMLElement;
+  private readonly PAGE_WRAPPER_CONTAINER: HTMLElement;
 
   private INITIAL_PAGE: MainPage;
 
   private NAVIGATION_BAR: NavigationBar;
 
   constructor() {
+    this.PAGE_WRAPPER_CONTAINER = DOMHelpers.createElement('div', { className: 'page-wrapper' });
     this.NAVIGATION_BAR = new NavigationBar('nav', 'navigation-bar');
     this.INITIAL_PAGE = new MainPage('main-page');
-    document.body.appendChild(this.NAVIGATION_BAR.renderComponent());
-    this.PAGE_WRAPPER_CONTAINER = DOMHelpers.createElement('div', { className: 'page-wrapper' }, document.body);
   }
 
   private renderSpecificPage(pageID: string): void {
@@ -38,11 +37,10 @@ class App {
         currentPage = new ErrorPage(ProjectPages.ErrorPage);
         break;
     }
+
     if (currentPage) {
-      const page = document.querySelector('.page-wrapper');
-      (page as HTMLElement).innerHTML = '';
-      const pageHTML = currentPage.renderPage();
-      this.PAGE_WRAPPER_CONTAINER.append(pageHTML);
+      DOMHelpers.getElement('.page-wrapper').innerHTML = '';
+      DOMHelpers.appendChildToElement(this.PAGE_WRAPPER_CONTAINER, currentPage.renderPage());
     }
   }
 
@@ -54,6 +52,8 @@ class App {
   }
 
   public init(): void {
+    DOMHelpers.appendChildToElement(document.body, this.NAVIGATION_BAR.renderComponent());
+    DOMHelpers.appendChildToElement(document.body, this.PAGE_WRAPPER_CONTAINER);
     this.setupRouteChangeListener();
     this.renderSpecificPage('main-page');
   }
