@@ -1,17 +1,15 @@
 import Page from '../../components/templates/Page';
 
 class RegistrationPage extends Page {
-  static TextVariables = {
-    MainTitle: 'Registration Page',
-  };
+  private REGISTRATION_PAGE_MARKUP = `
+     <h1 class='header'>Registration Page</h1>`;
 
   constructor(id: string) {
     super(id);
   }
 
-  render(): HTMLElement {
-    const title = this.createHeaderTitle(RegistrationPage.TextVariables.MainTitle);
-    this.CONTAINER.append(title);
+  renderPage(): HTMLElement {
+    this.CONTAINER.innerHTML = this.REGISTRATION_PAGE_MARKUP;
     return this.CONTAINER;
   }
 }
