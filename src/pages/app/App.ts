@@ -20,7 +20,7 @@ class App {
     if (currentPageHTML) {
       currentPageHTML.remove();
     }
-    let page: Page | null = null;
+    let page: Page | null;
 
     if (idPage === ProjectPages.MainPage) {
       page = new MainPage(idPage);
@@ -52,7 +52,7 @@ class App {
   }
 
   public init(): void {
-    App.CONTAINER.append(this.NAVIGATION_BAR.render());
+    App.CONTAINER.append(this.NAVIGATION_BAR.renderComponent());
     App.renderNewPage('main-page');
     this.enableRouteChange();
   }

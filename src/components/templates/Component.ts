@@ -6,7 +6,7 @@ abstract class Component {
     this.CONTAINER.className = className;
   }
 
-  public render(): HTMLElement {
+  public renderComponent(): HTMLElement {
     return this.CONTAINER;
   }
 }
