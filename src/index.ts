@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import './style.scss';
 import { createElement } from './utils/DOMHelpers';
 
