@@ -3,58 +3,59 @@ import MainPage from '../main-page/MainPage';
 import Page from '../../components/templates/Page';
 import LoginPage from '../login-page/LoginPage';
 import RegistrationPage from '../registration-page/RegistrationPage';
-import { Errors, ProjectPages } from '../../types/Enums';
+import { ProjectPages } from '../../types/Enums';
 import ErrorPage from '../error/ErrorPage';
+import DOMHelpers from '../../utils/DOMHelpers';
 
 class App {
-  private NAVIGATION_BAR: NavigationBar;
+  private PAGE_WRAPPER_CONTAINER: HTMLElement;
 
   private INITIAL_PAGE: MainPage;
 
-  private static CONTAINER: HTMLElement = document.body;
+  private NAVIGATION_BAR: NavigationBar;
 
-  private static defaultPageId = 'current-page';
+  constructor() {
+    this.NAVIGATION_BAR = new NavigationBar('nav', 'navigation-bar');
+    this.INITIAL_PAGE = new MainPage('main-page');
+    document.body.appendChild(this.NAVIGATION_BAR.renderComponent());
+    this.PAGE_WRAPPER_CONTAINER = DOMHelpers.createElement('div', { className: 'page-wrapper' }, document.body);
+  }
 
-  static renderNewPage(idPage: string): void {
-    const currentPageHTML = document.querySelector(`#${App.defaultPageId}`);
-    if (currentPageHTML) {
-      currentPageHTML.remove();
+  private renderSpecificPage(pageID: string): void {
+    let currentPage: Page;
+
+    switch (pageID) {
+      case ProjectPages.MainPage:
+        currentPage = new MainPage(pageID);
+        break;
+      case ProjectPages.LoginPage:
+        currentPage = new LoginPage(pageID);
+        break;
+      case ProjectPages.RegistrationPage:
+        currentPage = new RegistrationPage(pageID);
+        break;
+      default:
+        currentPage = new ErrorPage(ProjectPages.ErrorPage);
+        break;
     }
-    let page: Page | null;
-
-    if (idPage === ProjectPages.MainPage) {
-      page = new MainPage(idPage);
-    } else if (idPage === ProjectPages.LoginPage) {
-      page = new LoginPage(idPage);
-    } else if (idPage === ProjectPages.RegistrationPage) {
-      page = new RegistrationPage(idPage);
-    } else {
-      page = new ErrorPage(idPage, Errors.Error_404);
-    }
-
-    if (page) {
-      const pageHTML = page.render();
-      pageHTML.id = App.defaultPageId;
-      App.CONTAINER.append(pageHTML);
+    if (currentPage) {
+      const page = document.querySelector('.page-wrapper');
+      (page as HTMLElement).innerHTML = '';
+      const pageHTML = currentPage.renderPage();
+      this.PAGE_WRAPPER_CONTAINER.append(pageHTML);
     }
   }
 
-  private enableRouteChange(): void {
+  private setupRouteChangeListener(): void {
     window.addEventListener('hashchange', () => {
-      const hash = window.location.hash.slice(1);
-      App.renderNewPage(hash);
+      const pageHash = window.location.hash.slice(1);
+      this.renderSpecificPage(pageHash);
     });
   }
 
-  constructor() {
-    this.INITIAL_PAGE = new MainPage('main-page');
-    this.NAVIGATION_BAR = new NavigationBar('nav', 'navigation-bar');
-  }
-
   public init(): void {
-    App.CONTAINER.append(this.NAVIGATION_BAR.renderComponent());
-    App.renderNewPage('main-page');
-    this.enableRouteChange();
+    this.setupRouteChangeListener();
+    this.renderSpecificPage('main-page');
   }
 }
 

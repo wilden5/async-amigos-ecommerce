@@ -8,7 +8,7 @@ class LoginPage extends Page {
     super(id);
   }
 
-  renderPage(): HTMLElement {
+  public renderPage(): HTMLElement {
     this.CONTAINER.innerHTML = this.LOGIN_PAGE_MARKUP;
     return this.CONTAINER;
   }
