@@ -1,12 +1,11 @@
 import {
   ClientBuilder,
-
-  // Import middlewares
   type AuthMiddlewareOptions, // Required for auth
   type HttpMiddlewareOptions, // Required for sending HTTP requests
 } from '@commercetools/sdk-client-v2';
 
-const projectKey = 'asdfadfsdfgsg';
+export const projectKey = 'asdfadfsdfgsg';
+
 const scopes = [
     'introspect_oauth_tokens:asdfadfsdfgsg',
     'manage_cart_discounts:asdfadfsdfgsg',
