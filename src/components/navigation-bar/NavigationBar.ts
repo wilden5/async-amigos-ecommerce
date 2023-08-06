@@ -8,10 +8,10 @@ class NavigationBar extends Component {
 
   constructor(tagName: string, className: string) {
     super(tagName, className);
-    this.CONTAINER.innerHTML = this.NAVIGATION_BAR_MARKUP;
   }
 
   public renderComponent(): HTMLElement {
+    this.CONTAINER.innerHTML = this.NAVIGATION_BAR_MARKUP;
     return this.CONTAINER;
   }
 }

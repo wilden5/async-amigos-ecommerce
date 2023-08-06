@@ -4,7 +4,7 @@ import Page from '../../components/templates/Page';
 import LoginPage from '../login-page/LoginPage';
 import RegistrationPage from '../registration-page/RegistrationPage';
 import { ProjectPages } from '../../types/Enums';
-import ErrorPage from '../error/ErrorPage';
+import ErrorPage from '../error-page/ErrorPage';
 import DOMHelpers from '../../utils/DOMHelpers';
 
 class App {

@@ -22,7 +22,7 @@ const config = {
       chunks: ['main'],
       inject: true,
       hash: false,
-      favicon: resolve('public', 'favicon.png'),
+      favicon: resolve('public', 'shop-n-comp-favicon.png'),
     }),
   ],
   module: {
