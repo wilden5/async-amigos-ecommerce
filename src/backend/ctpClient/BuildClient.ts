@@ -28,13 +28,11 @@ const authMiddlewareOptions: AuthMiddlewareOptions = {
     clientSecret: 'eneEZtxyI08K96EiowFmlGv9gVQ1HCVC',
   },
   scopes,
-  fetch,
 };
 
 // Configure httpMiddlewareOptions
 const httpMiddlewareOptions: HttpMiddlewareOptions = {
   host: 'https://api.europe-west1.gcp.commercetools.com/',
-  fetch,
 };
 
 // Export the ClientBuilder
