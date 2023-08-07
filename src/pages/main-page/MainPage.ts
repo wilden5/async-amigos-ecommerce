@@ -4,8 +4,8 @@ class MainPage extends Page {
   private MAIN_PAGE_MARKUP = `
      <h1 class='header'>Main Page</h1>`;
 
-  constructor(id: string) {
-    super(id);
+  constructor(className: string) {
+    super(className);
   }
 
   public renderPage(): HTMLElement {

@@ -4,8 +4,8 @@ class RegistrationPage extends Page {
   private REGISTRATION_PAGE_MARKUP = `
      <h1 class='header'>Registration Page</h1>`;
 
-  constructor(id: string) {
-    super(id);
+  constructor(className: string) {
+    super(className);
   }
 
   renderPage(): HTMLElement {

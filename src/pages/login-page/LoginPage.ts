@@ -4,8 +4,8 @@ class LoginPage extends Page {
   private LOGIN_PAGE_MARKUP = `
      <h1 class='header'>Login Page</h1>`;
 
-  constructor(id: string) {
-    super(id);
+  constructor(className: string) {
+    super(className);
   }
 
   public renderPage(): HTMLElement {
