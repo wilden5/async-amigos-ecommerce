@@ -9,7 +9,7 @@ describe('LoginPage', () => {
     const container = document.createElement('div');
     container.id = containerId;
     document.body.appendChild(container);
-    loginPage = new LoginPage(containerId);
+    loginPage = new LoginPage();
   });
 
   afterEach(() => {

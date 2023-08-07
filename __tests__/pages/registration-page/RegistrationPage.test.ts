@@ -3,13 +3,13 @@ import RegistrationPage from '../../../src/pages/registration-page/RegistrationP
 describe('RegistrationPage', () => {
   let registrationPage: RegistrationPage;
   const containerId = 'test-container';
-  const expectedRegistraionPageMarkup = `<h1 class="header">Registration Page</h1>`;
+  const expectedRegistrationPageMarkup = `<h1 class="header">Registration Page</h1>`;
 
   beforeEach(() => {
     const container = document.createElement('div');
     container.id = containerId;
     document.body.appendChild(container);
-    registrationPage = new RegistrationPage(containerId);
+    registrationPage = new RegistrationPage();
   });
 
   afterEach(() => {
@@ -25,6 +25,6 @@ describe('RegistrationPage', () => {
 
     container = registrationPage.renderPage();
 
-    expect(container?.innerHTML).toContain(expectedRegistraionPageMarkup.trim());
+    expect(container?.innerHTML).toContain(expectedRegistrationPageMarkup.trim());
   });
 });

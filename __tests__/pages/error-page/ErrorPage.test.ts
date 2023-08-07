@@ -9,7 +9,7 @@ describe('ErrorPage', () => {
     const container = document.createElement('div');
     container.id = containerId;
     document.body.appendChild(container);
-    errorPage = new ErrorPage(containerId);
+    errorPage = new ErrorPage();
   });
 
   afterEach(() => {
