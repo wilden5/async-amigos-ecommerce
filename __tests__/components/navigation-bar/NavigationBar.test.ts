@@ -4,7 +4,7 @@ describe('NavigationBar', () => {
   let navigationBar: NavigationBar;
   const containerClassName = 'test-nav-name';
   const expectedNavigationBarMarkup = `
-    <a href="/#main-page">Main</a>
+    <a href="/#">Main</a>
     <a href="/#login-page">Login page</a>
     <a href="/#registration-page">Registration page</a>
   `;
