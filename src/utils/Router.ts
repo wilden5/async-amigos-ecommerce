@@ -34,13 +34,20 @@ class Router {
     );
   }
 
+  private handleHashChange(): void {
+    const pageHash = window.location.hash.slice(1);
+    this.renderSpecificPage(pageHash);
+  }
+
   private setupRouteChangeListener(initialPage?: ProjectPages): void {
     if (initialPage) {
       this.renderSpecificPage(initialPage);
     }
     window.addEventListener('hashchange', () => {
-      const pageHash = window.location.hash.slice(1);
-      this.renderSpecificPage(pageHash);
+      this.handleHashChange();
+    });
+    window.addEventListener('load', () => {
+      this.handleHashChange();
     });
   }
 
