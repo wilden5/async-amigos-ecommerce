@@ -2,12 +2,9 @@ import NavigationBar from '../../components/navigation-bar/NavigationBar';
 import DOMHelpers from '../../utils/DOMHelpers';
 import Router from '../../utils/Router';
 import Constants from '../../utils/Constants';
-import LockState from '../login-page/LoginPageControl';
 
 class App {
   private ROUTER: Router;
-
-  private LPC: LockState;
 
   private NAVIGATION_BAR: NavigationBar;
 
@@ -16,7 +13,6 @@ class App {
   });
 
   constructor() {
-    this.LPC = new LockState();
     this.ROUTER = new Router();
     this.NAVIGATION_BAR = new NavigationBar();
     DOMHelpers.appendChildToElement(document.body, this.NAVIGATION_BAR.renderComponent()); // append nav bar
