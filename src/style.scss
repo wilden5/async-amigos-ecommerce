@@ -1,6 +1,3 @@
-@import 'sanitize.css';
+@import './sanitize.scss';
 @import 'components/navigation-bar/_navigationBar.scss';
-
-html {
-  font-size: 10px;
-}
+@import './pages/login-page/_LoginPage.scss';

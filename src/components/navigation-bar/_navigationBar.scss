@@ -1,5 +1,7 @@
 .navigation-bar {
   display: flex;
+  justify-content: flex-end;
+  padding: 20px 40px;
   font-size: 2rem;
   gap: 2rem;
 }
