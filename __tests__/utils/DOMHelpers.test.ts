@@ -22,7 +22,7 @@ describe('DOMHelpers', () => {
     element.className = 'test-element';
     document.body.appendChild(element);
 
-    const result = DOMHelpers.getElement('.test-element');
+    const result = DOMHelpers.getElement('test-element');
 
     expect(result).toBe(element);
   });

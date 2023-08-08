@@ -3,7 +3,7 @@ E-Commerce Application
 </h1>
 <p align="center">
 <br>
-  <img src="./public/logo.png" alt="reveal.js" width="250">
+  <img src="./public/shop-n-comp-logo.png" alt="reveal.js" width="250">
   <br>
 </p>
 <h3 align="center">

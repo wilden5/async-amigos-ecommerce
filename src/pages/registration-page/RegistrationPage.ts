@@ -1,11 +1,12 @@
 import Page from '../../components/templates/Page';
+import { ProjectPages } from '../../types/Enums';
 
 class RegistrationPage extends Page {
   private REGISTRATION_PAGE_MARKUP = `
      <h1 class='header'>Registration Page</h1>`;
 
-  constructor(className: string) {
-    super(className);
+  constructor() {
+    super(ProjectPages.RegistrationPage);
   }
 
   renderPage(): HTMLElement {
