@@ -1,5 +1,7 @@
 import Page from '../../components/templates/Page';
 import { ProjectPages } from '../../types/Enums';
+// import DOMHelpers from '../../utils/DOMHelpers';
+// import LockState from './LoginPageControl';
 
 class LoginPage extends Page {
   private LOGIN_PAGE_MARKUP =
@@ -25,9 +27,11 @@ class LoginPage extends Page {
       </div>
     </div>`;
 
+
   constructor() {
     super(ProjectPages.LoginPage);
   }
+
 
   public renderPage(): HTMLElement {
     this.CONTAINER.innerHTML = this.LOGIN_PAGE_MARKUP;
