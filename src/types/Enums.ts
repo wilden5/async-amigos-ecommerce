@@ -1,6 +1,5 @@
 export enum ProjectPages {
-  MainPage = 'main-page',
-  MainPageDummy = '',
+  MainPage = '',
   LoginPage = 'login-page',
   RegistrationPage = 'registration-page',
   ErrorPage = 'error-page',

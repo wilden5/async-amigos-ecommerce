@@ -14,7 +14,6 @@ class Router {
 
     switch (pageID) {
       case ProjectPages.MainPage:
-      case ProjectPages.MainPageDummy:
         currentPage = new MainPage();
         break;
       case ProjectPages.LoginPage:

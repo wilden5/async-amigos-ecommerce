@@ -1,12 +1,12 @@
 import Page from '../../components/templates/Page';
-import { ProjectPages } from '../../types/Enums';
+import Constants from '../../utils/Constants';
 
 class MainPage extends Page {
   private MAIN_PAGE_MARKUP = `
      <h1 class='header'>Main Page</h1>`;
 
   constructor() {
-    super(ProjectPages.MainPage);
+    super(Constants.MAIN_PAGE_SELECTOR);
   }
 
   public renderPage(): HTMLElement {
