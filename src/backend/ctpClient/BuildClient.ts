@@ -1,12 +1,8 @@
-import {
-  ClientBuilder,
-  type AuthMiddlewareOptions, // Required for auth
-  type HttpMiddlewareOptions, // Required for sending HTTP requests
-} from '@commercetools/sdk-client-v2';
+import { ClientBuilder, type AuthMiddlewareOptions, type HttpMiddlewareOptions } from '@commercetools/sdk-client-v2';
 
 export const projectKey = 'commercetools-api';
 
-const scopes = [
+export const scopes = [
   'manage_orders:commercetools-api',
   'manage_discount_codes:commercetools-api',
   'manage_my_profile:commercetools-api',
@@ -19,8 +15,7 @@ const scopes = [
   'manage_products:commercetools-api',
 ];
 
-// Configure authMiddlewareOptions
-const authMiddlewareOptions: AuthMiddlewareOptions = {
+export const authMiddlewareOptions: AuthMiddlewareOptions = {
   host: 'https://auth.europe-west1.gcp.commercetools.com',
   projectKey,
   credentials: {
@@ -28,17 +23,17 @@ const authMiddlewareOptions: AuthMiddlewareOptions = {
     clientSecret: 'eneEZtxyI08K96EiowFmlGv9gVQ1HCVC',
   },
   scopes,
+  fetch,
 };
 
-// Configure httpMiddlewareOptions
-const httpMiddlewareOptions: HttpMiddlewareOptions = {
+export const httpMiddlewareOptions: HttpMiddlewareOptions = {
   host: 'https://api.europe-west1.gcp.commercetools.com/',
+  fetch,
 };
 
-// Export the ClientBuilder
 export const ctpClient = new ClientBuilder()
-  .withProjectKey(projectKey) // .withProjectKey() is not required if the projectKey is included in authMiddlewareOptions
+  .withProjectKey(projectKey)
   .withClientCredentialsFlow(authMiddlewareOptions)
   .withHttpMiddleware(httpMiddlewareOptions)
-  .withLoggerMiddleware() // Include middleware for logging
+  .withLoggerMiddleware()
   .build();
