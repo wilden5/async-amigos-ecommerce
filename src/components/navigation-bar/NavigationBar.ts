@@ -5,7 +5,8 @@ class NavigationBar extends Component {
   private NAVIGATION_BAR_MARKUP = `
     <a href='/#'>Main Page</a>
     <a href='/#login-page'>Login page</a>
-    <a href='/#registration-page'>Registration page</a>`;
+    <a href='/#registration-page'>Registration page</a>
+    <a href='/#catalog-page'>Catalog page</a>`;
 
   constructor() {
     super('nav', `${Constants.NAVIGATION_BAR_SELECTOR}`);

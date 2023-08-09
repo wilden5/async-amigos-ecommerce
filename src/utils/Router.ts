@@ -6,6 +6,7 @@ import RegistrationPage from '../pages/registration-page/RegistrationPage';
 import ErrorPage from '../pages/error-page/ErrorPage';
 import DOMHelpers from './DOMHelpers';
 import Constants from './Constants';
+import CatalogPage from '../pages/catalog-page/CatalogPage';
 
 class Router {
   private renderSpecificPage(pageID: string): void {
@@ -21,6 +22,9 @@ class Router {
         break;
       case ProjectPages.RegistrationPage:
         currentPage = new RegistrationPage();
+        break;
+      case ProjectPages.CatalogPage:
+        currentPage = new CatalogPage();
         break;
       default:
         currentPage = new ErrorPage();
