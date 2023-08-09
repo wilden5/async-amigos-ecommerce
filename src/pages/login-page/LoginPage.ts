@@ -3,7 +3,28 @@ import { ProjectPages } from '../../types/Enums';
 import Constants from '../../utils/Constants';
 
 class LoginPage extends Page {
-  private LOGIN_PAGE_MARKUP = `<div class="container container-login"><div class="main-box login"><h2>Login</h2><form id="login-form"><div class="input-box"><span class="icon"><i class='bx bxs-envelope'></i></span><input type="email" autocomplete="current-email" name="email" required><label for="email">Email</label></div><div class="input-box"><span class="icon icon-lock"><i class='bx bxs-lock-alt'></i></span><input type="password" autocomplete="current-password" name="password" class="input-password" required><label for="password">Password</label></div><button class="main-btn" type="submit">Login</button><div class="register"><p>New customer?<a href="/#registration-page" class="register-link">Register</a></p></div></form></div></div>`;
+  private LOGIN_PAGE_MARKUP = `
+  <div class="container container-login">
+  <div class="main-box login">
+    <h2>Login</h2>
+    <form id="login-form">
+      <div class="input-box">
+        <span class="icon"><i class='bx bxs-envelope'></i></span>
+        <input type="email" autocomplete="current-email" name="email" required>
+        <label for="email">Email</label>
+      </div>
+      <div class="input-box">
+        <span class="icon icon-lock"><i class='bx bxs-lock-alt'></i></span>
+        <input type="password" autocomplete="current-password" name="password" class="input-password" required>
+        <label for="password">Password</label>
+      </div>
+      <button class="main-btn" type="submit">Login</button>
+      <div class="register">
+        <p>New customer?<a href="/#registration-page" class="register-link">Register</a></p>
+      </div>
+    </form>
+  </div>
+</div>`;
 
   constructor() {
     super(ProjectPages.LoginPage);
