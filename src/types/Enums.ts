@@ -4,5 +4,7 @@ export enum ProjectPages {
   Registration = 'registration',
   Catalog = 'catalog',
   MyProfile = 'my-profile',
-  NotFound = 'error-page',
+  Cart = 'cart',
+  AboutUs = 'about-us',
+  NotFound = 'not-found',
 }

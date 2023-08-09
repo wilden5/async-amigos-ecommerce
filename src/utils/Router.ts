@@ -8,6 +8,8 @@ import DOMHelpers from './DOMHelpers';
 import Constants from './Constants';
 import CatalogPage from '../pages/catalog-page/CatalogPage';
 import MyProfile from '../pages/my-profile/MyProfile';
+import CartPage from '../pages/cart-page/CartPage';
+import AboutUsPage from '../pages/about-us/AboutUsPage';
 
 class Router {
   private renderSpecificPage(pageID: string): void {
@@ -29,6 +31,12 @@ class Router {
         break;
       case ProjectPages.MyProfile:
         currentPage = new MyProfile();
+        break;
+      case ProjectPages.Cart:
+        currentPage = new CartPage();
+        break;
+      case ProjectPages.AboutUs:
+        currentPage = new AboutUsPage();
         break;
       default:
         currentPage = new NotFoundPage();
