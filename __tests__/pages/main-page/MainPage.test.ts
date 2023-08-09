@@ -9,7 +9,7 @@ describe('MainPage', () => {
     const container = document.createElement('div');
     container.id = containerId;
     document.body.appendChild(container);
-    mainPage = new MainPage(containerId);
+    mainPage = new MainPage();
   });
 
   afterEach(() => {

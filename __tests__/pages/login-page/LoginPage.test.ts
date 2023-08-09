@@ -1,30 +1,39 @@
 import LoginPage from '../../../src/pages/login-page/LoginPage';
 
-describe('LoginPage', () => {
+describe('LoginPage', (): void => {
   let loginPage: LoginPage;
-  const containerId = 'test-container';
-  const expectedLoginPageMarkup = `<h1 class="header">Login Page</h1>`;
+  let actualPageMarkup: HTMLElement;
 
-  beforeEach(() => {
+  beforeEach((): void => {
+    loginPage = new LoginPage();
+
     const container = document.createElement('div');
-    container.id = containerId;
+    container.className = 'test-container';
+    actualPageMarkup = loginPage.renderPage();
+
     document.body.appendChild(container);
-    loginPage = new LoginPage(containerId);
+    container.appendChild(actualPageMarkup);
   });
 
-  afterEach(() => {
-    const container = document.querySelector(`#${containerId}`);
+  afterEach((): void => {
+    const container = document.querySelector('.test-container');
     if (container) {
       document.body.removeChild(container);
     }
   });
 
-  test('renderPage should render the login page markup', () => {
-    let container = document.querySelector(`#${containerId}`);
-    expect(container?.innerHTML).toBe('');
+  test('Login container should be present', () => {
+    const containerLogin = actualPageMarkup.querySelector('.container.container-login');
+    expect(containerLogin).not.toBeNull();
+  });
 
-    container = loginPage.renderPage();
+  test('Login form should be present', () => {
+    const loginForm = actualPageMarkup.querySelector('form#login-form');
+    expect(loginForm).not.toBeNull();
+  });
 
-    expect(container?.innerHTML).toContain(expectedLoginPageMarkup.trim());
+  test('Input box should be present within the form', () => {
+    const inputBox = actualPageMarkup.querySelector('.input-box');
+    expect(inputBox).not.toBeNull();
   });
 });

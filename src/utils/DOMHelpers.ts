@@ -9,10 +9,10 @@ class DOMHelpers {
     return Object.assign(element, properties);
   }
 
-  static getElement<T extends HTMLElement>(selector: string): T {
-    const element: T | null = document.querySelector(selector);
+  static getElement<T extends HTMLElement>(classSelector: string): T {
+    const element: T | null = document.querySelector(`.${classSelector}`);
     if (element === null) {
-      throw new Error(`Element with selector '${selector}' not found.`);
+      throw new Error(`Element with selector '${classSelector}' not found.`);
     }
     return element;
   }

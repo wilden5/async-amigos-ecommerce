@@ -1,30 +1,39 @@
 import RegistrationPage from '../../../src/pages/registration-page/RegistrationPage';
 
-describe('RegistrationPage', () => {
+describe('RegistrationPage', (): void => {
   let registrationPage: RegistrationPage;
-  const containerId = 'test-container';
-  const expectedRegistraionPageMarkup = `<h1 class="header">Registration Page</h1>`;
+  let actualPageMarkup: HTMLElement;
 
-  beforeEach(() => {
+  beforeEach((): void => {
+    registrationPage = new RegistrationPage();
+
     const container = document.createElement('div');
-    container.id = containerId;
+    container.className = 'test-container';
+    actualPageMarkup = registrationPage.renderPage();
+
     document.body.appendChild(container);
-    registrationPage = new RegistrationPage(containerId);
+    container.appendChild(actualPageMarkup);
   });
 
-  afterEach(() => {
-    const container = document.querySelector(`#${containerId}`);
+  afterEach((): void => {
+    const container = document.querySelector('.test-container');
     if (container) {
       document.body.removeChild(container);
     }
   });
 
-  test('renderPage should render the registration page markup', () => {
-    let container = document.querySelector(`#${containerId}`);
-    expect(container?.innerHTML).toBe('');
+  test('Registration container should be present', () => {
+    const containerRegister = actualPageMarkup.querySelector('.container.container-register');
+    expect(containerRegister).not.toBeNull();
+  });
 
-    container = registrationPage.renderPage();
+  test('Registration form should be present', () => {
+    const registerForm = actualPageMarkup.querySelector('form#register-form');
+    expect(registerForm).not.toBeNull();
+  });
 
-    expect(container?.innerHTML).toContain(expectedRegistraionPageMarkup.trim());
+  test('Input box for email should be present within the form', () => {
+    const emailInputBox = actualPageMarkup.querySelector('input[name="email"]');
+    expect(emailInputBox).not.toBeNull();
   });
 });

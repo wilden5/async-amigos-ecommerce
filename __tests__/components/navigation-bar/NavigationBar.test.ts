@@ -2,9 +2,9 @@ import NavigationBar from '../../../src/components/navigation-bar/NavigationBar'
 
 describe('NavigationBar', () => {
   let navigationBar: NavigationBar;
-  const containerClassName = 'test-nav-name';
+  const containerClassName = 'navigation-bar';
   const expectedNavigationBarMarkup = `
-    <a href="/#">Main</a>
+    <a href="/#">Main Page</a>
     <a href="/#login-page">Login page</a>
     <a href="/#registration-page">Registration page</a>
   `;
@@ -13,7 +13,7 @@ describe('NavigationBar', () => {
     const container = document.createElement('nav');
     container.className = containerClassName;
     document.body.appendChild(container);
-    navigationBar = new NavigationBar(container.tagName, containerClassName);
+    navigationBar = new NavigationBar();
   });
 
   afterEach(() => {
