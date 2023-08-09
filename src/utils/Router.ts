@@ -1,12 +1,13 @@
 import Page from '../components/templates/Page';
 import { ProjectPages } from '../types/Enums';
-import MainPage from '../pages/main-page/MainPage';
+import HomePage from '../pages/home-page/HomePage';
 import LoginPage from '../pages/login-page/LoginPage';
 import RegistrationPage from '../pages/registration-page/RegistrationPage';
-import ErrorPage from '../pages/error-page/ErrorPage';
+import NotFoundPage from '../pages/not-found-page/NotFoundPage';
 import DOMHelpers from './DOMHelpers';
 import Constants from './Constants';
 import CatalogPage from '../pages/catalog-page/CatalogPage';
+import MyProfile from '../pages/my-profile/MyProfile';
 
 class Router {
   private renderSpecificPage(pageID: string): void {
@@ -14,20 +15,23 @@ class Router {
     DOMHelpers.getElement(`${Constants.PAGE_CONTAINER_SELECTOR}`).innerHTML = ''; // remove content before next page loading
 
     switch (pageID) {
-      case ProjectPages.MainPage:
-        currentPage = new MainPage();
+      case ProjectPages.Home:
+        currentPage = new HomePage();
         break;
-      case ProjectPages.LoginPage:
+      case ProjectPages.Login:
         currentPage = new LoginPage();
         break;
-      case ProjectPages.RegistrationPage:
+      case ProjectPages.Registration:
         currentPage = new RegistrationPage();
         break;
-      case ProjectPages.CatalogPage:
+      case ProjectPages.Catalog:
         currentPage = new CatalogPage();
         break;
+      case ProjectPages.MyProfile:
+        currentPage = new MyProfile();
+        break;
       default:
-        currentPage = new ErrorPage();
+        currentPage = new NotFoundPage();
         break;
     }
 
@@ -55,7 +59,7 @@ class Router {
   }
 
   public init(): void {
-    this.setupRouteChangeListener(ProjectPages.MainPage);
+    this.setupRouteChangeListener(ProjectPages.Home);
   }
 }
 

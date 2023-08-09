@@ -1,7 +1,7 @@
-import MainPage from '../../../src/pages/main-page/MainPage';
+import HomePage from '../../../src/pages/home-page/HomePage';
 
 describe('MainPage', () => {
-  let mainPage: MainPage;
+  let mainPage: HomePage;
   const containerId = 'test-container';
   const expectedMainPageMarkup = `<h1 class="header">Main Page</h1>`;
 
@@ -9,7 +9,7 @@ describe('MainPage', () => {
     const container = document.createElement('div');
     container.id = containerId;
     document.body.appendChild(container);
-    mainPage = new MainPage();
+    mainPage = new HomePage();
   });
 
   afterEach(() => {

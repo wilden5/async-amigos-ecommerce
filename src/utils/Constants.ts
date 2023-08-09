@@ -3,7 +3,7 @@ class Constants {
 
   static NAVIGATION_BAR_SELECTOR = 'navigation-bar';
 
-  static MAIN_PAGE_SELECTOR = 'main-page';
+  static HOME_PAGE_SELECTOR = 'home';
 }
 
 export default Constants;

@@ -6,7 +6,7 @@ class LoginPage extends Page {
      <h1 class='header'>Login Page</h1>`;
 
   constructor() {
-    super(ProjectPages.LoginPage);
+    super(ProjectPages.Login);
   }
 
   public renderPage(): HTMLElement {

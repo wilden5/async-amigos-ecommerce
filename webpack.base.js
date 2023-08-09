@@ -18,7 +18,7 @@ const config = {
     new MiniCssExtractPlugin({ filename: 'css/[name].[contenthash].css' }),
     new HTMLWebpackPlugin({
       template: resolve('src', 'template'),
-      title: 'Shop&Comp',
+      title: 'Shop&Comp: Your Source for Premium PC Parts',
       chunks: ['main'],
       inject: true,
       hash: false,

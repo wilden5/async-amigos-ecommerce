@@ -6,7 +6,7 @@ class RegistrationPage extends Page {
      <h1 class='header'>Registration Page</h1>`;
 
   constructor() {
-    super(ProjectPages.RegistrationPage);
+    super(ProjectPages.Registration);
   }
 
   renderPage(): HTMLElement {

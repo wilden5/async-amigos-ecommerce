@@ -1,7 +1,7 @@
-import ErrorPage from '../../../src/pages/error-page/ErrorPage';
+import NotFoundPage from '../../../src/pages/not-found-page/NotFoundPage';
 
 describe('ErrorPage', () => {
-  let errorPage: ErrorPage;
+  let errorPage: NotFoundPage;
   const containerId = 'test-container';
   const expectedErrorPageMarkup = `<h1 class="header">404 Page was not found</h1>`;
 
@@ -9,7 +9,7 @@ describe('ErrorPage', () => {
     const container = document.createElement('div');
     container.id = containerId;
     document.body.appendChild(container);
-    errorPage = new ErrorPage();
+    errorPage = new NotFoundPage();
   });
 
   afterEach(() => {
