@@ -1,4 +1,5 @@
 import { ClientBuilder, type AuthMiddlewareOptions, type HttpMiddlewareOptions } from '@commercetools/sdk-client-v2';
+import fetch from 'cross-fetch';
 
 export const projectKey = 'commercetools-api';
 
