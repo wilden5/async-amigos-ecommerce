@@ -16,8 +16,8 @@ export class CustomerAuth {
     this.apiRootPassword = createApiRootPassword(this.email, this.password);
   }
 
-  createCustomer(): Promise<ClientResponse<CustomerSignInResult>> {
-    return apiRoot
+  async createCustomer(): Promise<ClientResponse<CustomerSignInResult>> {
+    const response = await apiRoot
       .customers()
       .post({
         body: {
@@ -26,6 +26,7 @@ export class CustomerAuth {
         },
       })
       .execute();
+    return response;
   }
 
   async checkCustomerExists(): Promise<boolean> {
