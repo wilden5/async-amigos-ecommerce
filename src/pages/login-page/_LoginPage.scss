@@ -38,7 +38,7 @@
   & label {
     position: absolute;
     left: 6px;
-    top: 50%;
+    top: 10%;
     transform: translateY(-50%);
     pointer-events: none;
     font-weight: 500;
@@ -54,8 +54,8 @@
     font-weight: 600;
     color: #162938;
 
-    &:focus~label,
-    &:valid~label {
+    &:focus ~ label,
+    &:valid ~ label {
       top: -3px;
     }
   }
@@ -93,7 +93,6 @@
       text-decoration: underline;
     }
   }
-
 }
 
 .main-btn {
@@ -134,36 +133,3 @@
     }
   }
 }
-
-// .container-login .main-box.login {
-  //   transform: translateX(0);
-  //   transition: transform .20s ease;
-  // }
-
-  // .container-login .main-box.register {
-  //   position: absolute;
-  //   transform: translateX(500px);
-  //   transition: none;
-  // }
-
-// .container-login.active {
-//   height: 570px;
-// }
-
-// .container-login.active .main-box.login {
-//   transition: none;
-//   transform: translate(-500px);
-// }
-
-// .container-login.active .main-box.register {
-//   transition: transform .20s ease;
-//   transform: translateX(0);
-// }
-
-// .container-login {
-//   transform: scale(0);
-// }
-
-// .container-login.active-popup {
-//   transform: scale(1);
-// }

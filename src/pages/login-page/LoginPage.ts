@@ -19,7 +19,7 @@ class LoginPage extends Page {
           </div>
           <button class="main-btn" type="submit">Login</button>
           <div class="register">
-            <p>New customer?<a href="#registration-page" class="register-link">Register</a></p>
+            <p>New customer?<a href="/#registration-page" class="register-link">Register</a></p>
           </div>
         </form>
       </div>
@@ -27,6 +27,23 @@ class LoginPage extends Page {
 
   constructor() {
     super(ProjectPages.LoginPage);
+  }
+
+  public renderPage(): HTMLElement {
+    this.CONTAINER.innerHTML = this.LOGIN_PAGE_MARKUP;
+    this.assignLoginPageEventListeners();
+    this.setupRealTimeValidation();
+    return this.CONTAINER;
+  }
+
+  private validateEmail(email: string): boolean {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+  }
+
+  private validatePassword(password: string): boolean {
+    const passwordRegex = /[A-Za-z\d\-!@#$%^&*]{8,}$/;
+    return passwordRegex.test(password);
   }
 
   private handleLockIconClick = (event: Event): void => {
@@ -47,14 +64,37 @@ class LoginPage extends Page {
   };
 
   private assignLoginPageEventListeners(): void {
-    const lockIcon = this.CONTAINER.querySelector(Constants.LOCK_ICON_SELECTOR) as HTMLElement; //! Обращаться надо к this.CONTAINER а не к document
+    const lockIcon = this.CONTAINER.querySelector(Constants.LOCK_ICON_SELECTOR) as HTMLElement;
     lockIcon.addEventListener('click', this.handleLockIconClick);
   }
 
-  public renderPage(): HTMLElement {
-    this.CONTAINER.innerHTML = this.LOGIN_PAGE_MARKUP;
-    this.assignLoginPageEventListeners();
-    return this.CONTAINER;
+  private setupRealTimeValidation(): void {
+    const emailInputs: NodeListOf<Element> = this.CONTAINER.querySelectorAll('input[name="email"]');
+    emailInputs.forEach((emailInput: Element): void => {
+      emailInput.addEventListener('input', (): void => {
+        const email: string = (emailInput as HTMLInputElement).value.trim();
+        const isValid: boolean = this.validateEmail(email);
+        (emailInput as HTMLInputElement).setCustomValidity(
+          isValid ? '' : 'Invalid email format\nExample: name@domain.com',
+        );
+      });
+    });
+
+    const passInputs: NodeListOf<Element> = this.CONTAINER.querySelectorAll('input[name="password"]');
+    passInputs.forEach((passInput: Element): void => {
+      passInput.addEventListener('input', (): void => {
+        const password: string = (passInput as HTMLInputElement).value.trim();
+        const isValid: boolean = this.validatePassword(password);
+        (passInput as HTMLInputElement).setCustomValidity(
+          isValid
+            ? ''
+            : `Invalid password format\n
+    Your password must contain at least:\n
+    • 8 characters (both letters and numbers),\n
+    • include symbols: -!@#$%^&*`,
+        );
+      });
+    });
   }
 }
 
