@@ -90,7 +90,7 @@ class LoginPage extends Page {
           isValid
             ? ''
             : `Invalid password format\n
-    Your password must contain at least:\n
+          Your password must contain at least:\n
     • 8 characters (both letters and numbers),\n
     • include symbols: -!@#$%^&*`,
         );
