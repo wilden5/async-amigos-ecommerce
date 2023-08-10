@@ -1,6 +1,10 @@
 import NotFoundPage from '../../../src/pages/not-found-page/NotFoundPage';
 
-describe('ErrorPage', () => {
+jest.mock('../../../src/assets/not-found-image.png', () => ({
+  default: 'mock-image',
+}));
+
+describe('NotFoundPage', () => {
   let errorPage: NotFoundPage;
   const containerId = 'test-container';
   const expectedErrorPageMarkup = `<p class="error-message">Oops! The page you're looking for doesn't exist.</p>`;
