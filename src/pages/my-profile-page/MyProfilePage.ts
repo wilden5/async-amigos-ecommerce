@@ -1,7 +1,7 @@
 import Page from '../../components/templates/Page';
 import { ProjectPages } from '../../types/Enums';
 
-class MyProfile extends Page {
+class MyProfilePage extends Page {
   private MY_PROFILE_PAGE_MARKUP = `
      <h1 class='header'>My Profile Page</h1>`;
 
@@ -15,4 +15,4 @@ class MyProfile extends Page {
   }
 }
 
-export default MyProfile;
+export default MyProfilePage;

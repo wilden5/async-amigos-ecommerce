@@ -7,9 +7,9 @@ import NotFoundPage from '../pages/not-found-page/NotFoundPage';
 import DOMHelpers from './DOMHelpers';
 import Constants from './Constants';
 import CatalogPage from '../pages/catalog-page/CatalogPage';
-import MyProfile from '../pages/my-profile/MyProfile';
+import MyProfilePage from '../pages/my-profile-page/MyProfilePage';
 import CartPage from '../pages/cart-page/CartPage';
-import AboutUsPage from '../pages/about-us/AboutUsPage';
+import AboutUsPage from '../pages/about-us-page/AboutUsPage';
 
 class Router {
   private renderSpecificPage(pageID: string): void {
@@ -30,7 +30,7 @@ class Router {
         currentPage = new CatalogPage();
         break;
       case ProjectPages.MyProfile:
-        currentPage = new MyProfile();
+        currentPage = new MyProfilePage();
         break;
       case ProjectPages.Cart:
         currentPage = new CartPage();

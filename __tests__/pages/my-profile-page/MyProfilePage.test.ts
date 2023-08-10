@@ -1,15 +1,15 @@
-import HomePage from '../../../src/pages/home-page/HomePage';
+import MyProfilePage from '../../../src/pages/my-profile-page/MyProfilePage';
 
-describe('MainPage', () => {
-  let mainPage: HomePage;
+describe('MyProfilePage', () => {
+  let myProfilePage: MyProfilePage;
   const containerId = 'test-container';
-  const expectedMainPageMarkup = `<h1 class="header">Main Page</h1>`;
+  const expectedPageMarkup = `<h1 class="header">My Profile Page</h1>`;
 
   beforeEach(() => {
     const container = document.createElement('div');
     container.id = containerId;
     document.body.appendChild(container);
-    mainPage = new HomePage();
+    myProfilePage = new MyProfilePage();
   });
 
   afterEach(() => {
@@ -19,12 +19,12 @@ describe('MainPage', () => {
     }
   });
 
-  test('renderPage should render the main page markup', () => {
+  test('renderPage should render the my profile page markup', () => {
     let container = document.querySelector(`#${containerId}`);
     expect(container?.innerHTML).toBe('');
 
-    container = mainPage.renderPage();
+    container = myProfilePage.renderPage();
 
-    expect(container?.innerHTML).toContain(expectedMainPageMarkup.trim());
+    expect(container?.innerHTML).toContain(expectedPageMarkup.trim());
   });
 });

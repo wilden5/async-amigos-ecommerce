@@ -30,13 +30,6 @@ class LoginPage extends Page {
     super(ProjectPages.Login);
   }
 
-  public renderPage(): HTMLElement {
-    this.CONTAINER.innerHTML = this.LOGIN_PAGE_MARKUP;
-    this.assignLoginPageEventListeners();
-    this.setupRealTimeValidation();
-    return this.CONTAINER;
-  }
-
   private validateEmail(email: string): boolean {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return emailRegex.test(email);
@@ -96,6 +89,13 @@ class LoginPage extends Page {
         );
       });
     });
+  }
+
+  public renderPage(): HTMLElement {
+    this.CONTAINER.innerHTML = this.LOGIN_PAGE_MARKUP;
+    this.assignLoginPageEventListeners();
+    this.setupRealTimeValidation();
+    return this.CONTAINER;
   }
 }
 
