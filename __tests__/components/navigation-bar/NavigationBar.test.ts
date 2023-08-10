@@ -23,32 +23,32 @@ describe('NavigationBar', () => {
   });
 
   test('Login link should be present in Navigation Bar', () => {
-    const element = actualComponentMarkup.querySelector('a[href="/#login"]');
+    const element = actualComponentMarkup.querySelector('a[href="#login"]');
     expect(element).not.toBeNull();
   });
 
   test('Registration link should be present in Navigation Bar', () => {
-    const element = actualComponentMarkup.querySelector('a[href="/#registration"]');
+    const element = actualComponentMarkup.querySelector('a[href="#registration"]');
     expect(element).not.toBeNull();
   });
 
   test('Catalog link should be present in Navigation Bar', () => {
-    const element = actualComponentMarkup.querySelector('a[href="/#catalog"]');
+    const element = actualComponentMarkup.querySelector('a[href="#catalog"]');
     expect(element).not.toBeNull();
   });
 
   test('My Profile link should be present in Navigation Bar', () => {
-    const element = actualComponentMarkup.querySelector('a[href="/#my-profile"]');
+    const element = actualComponentMarkup.querySelector('a[href="#my-profile"]');
     expect(element).not.toBeNull();
   });
 
   test('Cart link should be present in Navigation Bar', () => {
-    const element = actualComponentMarkup.querySelector('a[href="/#cart"]');
+    const element = actualComponentMarkup.querySelector('a[href="#cart"]');
     expect(element).not.toBeNull();
   });
 
   test('About Us link should be present in Navigation Bar', () => {
-    const element = actualComponentMarkup.querySelector('a[href="/#about-us"]');
+    const element = actualComponentMarkup.querySelector('a[href="#about-us"]');
     expect(element).not.toBeNull();
   });
 });
