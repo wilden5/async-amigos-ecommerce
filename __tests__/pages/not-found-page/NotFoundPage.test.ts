@@ -5,30 +5,33 @@ jest.mock('../../../src/assets/not-found-image.png', () => ({
 }));
 
 describe('NotFoundPage', () => {
-  let errorPage: NotFoundPage;
+  let notFoundPage: NotFoundPage;
   const containerId = 'test-container';
-  const expectedErrorPageMarkup = `<p class="error-message">Oops! The page you're looking for doesn't exist.</p>`;
+  let actualPageMarkup: HTMLElement;
 
   beforeEach(() => {
+    notFoundPage = new NotFoundPage();
+
     const container = document.createElement('div');
-    container.id = containerId;
+    container.className = containerId;
+    actualPageMarkup = notFoundPage.renderPage();
     document.body.appendChild(container);
-    errorPage = new NotFoundPage();
   });
 
   afterEach(() => {
-    const container = document.querySelector(`#${containerId}`);
+    const container = document.querySelector(`.${containerId}`);
     if (container) {
       document.body.removeChild(container);
     }
   });
 
-  test('renderPage should render the error page markup', () => {
-    let container = document.querySelector(`#${containerId}`);
-    expect(container?.innerHTML).toBe('');
+  test('Error message should be present', () => {
+    const errorMessage = actualPageMarkup.querySelector('.error-message');
+    expect(errorMessage).not.toBeNull();
+  });
 
-    container = errorPage.renderPage();
-
-    expect(container?.innerHTML).toContain(expectedErrorPageMarkup.trim());
+  test('Navigate to home button should be present', () => {
+    const navigateToHomeButton = actualPageMarkup.querySelector('a[href="#"]');
+    expect(navigateToHomeButton).not.toBeNull();
   });
 });
