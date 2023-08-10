@@ -3,9 +3,13 @@ import Constants from '../../utils/Constants';
 
 class NavigationBar extends Component {
   private NAVIGATION_BAR_MARKUP = `
-    <a href='/#'>Main Page</a>
-    <a href='/#login-page'>Login page</a>
-    <a href='/#registration-page'>Registration page</a>`;
+    <a href='/#'>Home</a>
+    <a href='/#login'>Login</a>
+    <a href='/#registration'>Registration</a>
+    <a href='/#catalog'>Catalog</a>
+    <a href='/#my-profile'>My Profile</a>
+    <a href='/#cart'>Cart</a>
+    <a href='/#about-us'>About Us</a>`;
 
   constructor() {
     super('nav', `${Constants.NAVIGATION_BAR_SELECTOR}`);

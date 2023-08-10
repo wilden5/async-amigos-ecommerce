@@ -1,15 +1,15 @@
-import ErrorPage from '../../../src/pages/error-page/ErrorPage';
+import MyProfilePage from '../../../src/pages/my-profile-page/MyProfilePage';
 
-describe('ErrorPage', () => {
-  let errorPage: ErrorPage;
+describe('MyProfilePage', () => {
+  let myProfilePage: MyProfilePage;
   const containerId = 'test-container';
-  const expectedErrorPageMarkup = `<h1 class="header">404 Page was not found</h1>`;
+  const expectedPageMarkup = `<h1 class="header">My Profile Page</h1>`;
 
   beforeEach(() => {
     const container = document.createElement('div');
     container.id = containerId;
     document.body.appendChild(container);
-    errorPage = new ErrorPage();
+    myProfilePage = new MyProfilePage();
   });
 
   afterEach(() => {
@@ -19,12 +19,12 @@ describe('ErrorPage', () => {
     }
   });
 
-  test('renderPage should render the error page markup', () => {
+  test('renderPage should render the my profile page markup', () => {
     let container = document.querySelector(`#${containerId}`);
     expect(container?.innerHTML).toBe('');
 
-    container = errorPage.renderPage();
+    container = myProfilePage.renderPage();
 
-    expect(container?.innerHTML).toContain(expectedErrorPageMarkup.trim());
+    expect(container?.innerHTML).toContain(expectedPageMarkup.trim());
   });
 });
