@@ -20,7 +20,7 @@ class LoginPage extends Page {
       </div>
       <button class="main-btn" type="submit">Login</button>
       <div class="register">
-        <p>New customer?<a href="/#registration-page" class="register-link">Register</a></p>
+        <p>New customer?<a href="/#registration" class="register-link">Register</a></p>
       </div>
     </form>
   </div>
