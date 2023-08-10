@@ -3,7 +3,7 @@ import NotFoundPage from '../../../src/pages/not-found-page/NotFoundPage';
 describe('ErrorPage', () => {
   let errorPage: NotFoundPage;
   const containerId = 'test-container';
-  const expectedErrorPageMarkup = `<h1 class="header">404 Page was not found</h1>`;
+  const expectedErrorPageMarkup = `<p class="error-message">Oops! The page you're looking for doesn't exist.</p>`;
 
   beforeEach(() => {
     const container = document.createElement('div');
