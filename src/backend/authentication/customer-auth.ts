@@ -1,14 +1,14 @@
-import { ClientResponse, CustomerSignInResult } from '@commercetools/platform-sdk';
+import { ClientResponse, CustomerDraft, CustomerSignInResult, CustomerSignin } from '@commercetools/platform-sdk';
 import { ByProjectKeyRequestBuilder } from '@commercetools/platform-sdk/dist/declarations/src/generated/client/by-project-key-request-builder';
 import { createApiRootPassword } from './passwordClient';
 import { apiRoot } from '../ctpClient/apiRoot';
 
 export class CustomerAuth {
-  email: string;
+  private email: string;
 
-  password: string;
+  private password: string;
 
-  apiRootPassword: ByProjectKeyRequestBuilder;
+  private apiRootPassword: ByProjectKeyRequestBuilder;
 
   constructor(email: string, password: string) {
     this.email = email;
@@ -16,14 +16,11 @@ export class CustomerAuth {
     this.apiRootPassword = createApiRootPassword(this.email, this.password);
   }
 
-  async createCustomer(): Promise<ClientResponse<CustomerSignInResult>> {
+  async createCustomer(customerData: CustomerDraft): Promise<ClientResponse<CustomerSignInResult>> {
     const response = await apiRoot
       .customers()
       .post({
-        body: {
-          email: this.email,
-          password: this.password,
-        },
+        body: customerData,
       })
       .execute();
     return response;
@@ -41,14 +38,11 @@ export class CustomerAuth {
     return response.body.count > 0;
   }
 
-  async signIn(): Promise<ClientResponse<CustomerSignInResult>> {
+  async signIn(customerLogin: CustomerSignin): Promise<ClientResponse<CustomerSignInResult>> {
     const response = await this.apiRootPassword
       .login()
       .post({
-        body: {
-          email: this.email,
-          password: this.password,
-        },
+        body: customerLogin,
       })
       .execute();
     return response;
