@@ -20,21 +20,14 @@ class LoginPage extends Page {
       </div>
       <button class="main-btn" type="submit">Login</button>
       <div class="register">
-        <p>New customer?<a href="/#registration-page" class="register-link">Register</a></p>
+        <p>New customer?<a href="/#registration" class="register-link">Register</a></p>
       </div>
     </form>
   </div>
 </div>`;
 
   constructor() {
-    super(ProjectPages.LoginPage);
-  }
-
-  public renderPage(): HTMLElement {
-    this.CONTAINER.innerHTML = this.LOGIN_PAGE_MARKUP;
-    this.assignLoginPageEventListeners();
-    this.setupRealTimeValidation();
-    return this.CONTAINER;
+    super(ProjectPages.Login);
   }
 
   private validateEmail(email: string): boolean {
@@ -96,6 +89,13 @@ class LoginPage extends Page {
         );
       });
     });
+  }
+
+  public renderPage(): HTMLElement {
+    this.CONTAINER.innerHTML = this.LOGIN_PAGE_MARKUP;
+    this.assignLoginPageEventListeners();
+    this.setupRealTimeValidation();
+    return this.CONTAINER;
   }
 }
 

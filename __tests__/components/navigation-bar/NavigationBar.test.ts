@@ -2,34 +2,53 @@ import NavigationBar from '../../../src/components/navigation-bar/NavigationBar'
 
 describe('NavigationBar', () => {
   let navigationBar: NavigationBar;
-  const containerClassName = 'navigation-bar';
-  const expectedNavigationBarMarkup = `
-    <a href="/#">Main Page</a>
-    <a href="/#login-page">Login page</a>
-    <a href="/#registration-page">Registration page</a>
-  `;
+  let actualComponentMarkup: HTMLElement;
 
   beforeEach(() => {
-    const container = document.createElement('nav');
-    container.className = containerClassName;
-    document.body.appendChild(container);
     navigationBar = new NavigationBar();
+
+    const container = document.createElement('nav');
+    container.className = 'navigation-bar';
+    actualComponentMarkup = navigationBar.renderComponent();
+
+    document.body.appendChild(container);
+    container.appendChild(actualComponentMarkup);
   });
 
   afterEach(() => {
-    const container = document.querySelector(`.${containerClassName}`);
+    const container = document.querySelector('.navigation-bar');
     if (container) {
       document.body.removeChild(container);
     }
   });
 
-  test('renderComponent should render the navigation bar markup', () => {
-    let container = document.querySelector(`.${containerClassName}`);
-    expect(container?.innerHTML).toBe('');
+  test('Login link should be present in Navigation Bar', () => {
+    const element = actualComponentMarkup.querySelector('a[href="/#login"]');
+    expect(element).not.toBeNull();
+  });
 
-    container = navigationBar.renderComponent();
+  test('Registration link should be present in Navigation Bar', () => {
+    const element = actualComponentMarkup.querySelector('a[href="/#registration"]');
+    expect(element).not.toBeNull();
+  });
 
-    expect(container?.innerHTML).toContain(expectedNavigationBarMarkup.trim());
-    expect(container?.className).toBe(containerClassName);
+  test('Catalog link should be present in Navigation Bar', () => {
+    const element = actualComponentMarkup.querySelector('a[href="/#catalog"]');
+    expect(element).not.toBeNull();
+  });
+
+  test('My Profile link should be present in Navigation Bar', () => {
+    const element = actualComponentMarkup.querySelector('a[href="/#my-profile"]');
+    expect(element).not.toBeNull();
+  });
+
+  test('Cart link should be present in Navigation Bar', () => {
+    const element = actualComponentMarkup.querySelector('a[href="/#cart"]');
+    expect(element).not.toBeNull();
+  });
+
+  test('About Us link should be present in Navigation Bar', () => {
+    const element = actualComponentMarkup.querySelector('a[href="/#about-us"]');
+    expect(element).not.toBeNull();
   });
 });

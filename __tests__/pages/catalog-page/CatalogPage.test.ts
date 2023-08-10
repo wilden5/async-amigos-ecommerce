@@ -1,15 +1,15 @@
-import MainPage from '../../../src/pages/main-page/MainPage';
+import CatalogPage from '../../../src/pages/catalog-page/CatalogPage';
 
-describe('MainPage', () => {
-  let mainPage: MainPage;
+describe('CatalogPage', () => {
+  let catalogPage: CatalogPage;
   const containerId = 'test-container';
-  const expectedMainPageMarkup = `<h1 class="header">Main Page</h1>`;
+  const expectedPageMarkup = `<h1 class="header">Catalog Page</h1>`;
 
   beforeEach(() => {
     const container = document.createElement('div');
     container.id = containerId;
     document.body.appendChild(container);
-    mainPage = new MainPage();
+    catalogPage = new CatalogPage();
   });
 
   afterEach(() => {
@@ -19,12 +19,12 @@ describe('MainPage', () => {
     }
   });
 
-  test('renderPage should render the main page markup', () => {
+  test('renderPage should render the catalog page markup', () => {
     let container = document.querySelector(`#${containerId}`);
     expect(container?.innerHTML).toBe('');
 
-    container = mainPage.renderPage();
+    container = catalogPage.renderPage();
 
-    expect(container?.innerHTML).toContain(expectedMainPageMarkup.trim());
+    expect(container?.innerHTML).toContain(expectedPageMarkup.trim());
   });
 });
