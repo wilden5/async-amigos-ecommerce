@@ -11,7 +11,7 @@ const httpMiddlewareOptions: HttpMiddlewareOptions = {
 };
 
 export class CtpClient {
-  private ctpClient: ClientBuilder;
+  ctpClient: ClientBuilder;
 
   constructor() {
     this.ctpClient = new ClientBuilder()
