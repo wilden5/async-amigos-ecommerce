@@ -1,8 +1,12 @@
 import Page from '../../components/templates/Page';
 import { ProjectPages } from '../../types/Enums';
 import Constants from '../../utils/Constants';
+import validatePassword from '../../utils/ValidatePassword';
+import DOMHelpers from '../../utils/DOMHelpers';
 
 class LoginPage extends Page {
+  private HINT_HOLDER = `<span class="dynamic-message"></span>`;
+
   private LOGIN_PAGE_MARKUP = `
   <div class="container container-login">
   <div class="main-box login">
@@ -30,14 +34,16 @@ class LoginPage extends Page {
     super(ProjectPages.Login);
   }
 
+  public renderPage(): HTMLElement {
+    this.CONTAINER.innerHTML = this.LOGIN_PAGE_MARKUP;
+    this.assignLoginPageEventListeners();
+    this.setupRealTimeValidation();
+    return this.CONTAINER;
+  }
+
   private validateEmail(email: string): boolean {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return emailRegex.test(email);
-  }
-
-  private validatePassword(password: string): boolean {
-    const passwordRegex = /[A-Za-z\d\-!@#$%^&*]{8,}$/;
-    return passwordRegex.test(password);
   }
 
   private handleLockIconClick = (event: Event): void => {
@@ -65,7 +71,7 @@ class LoginPage extends Page {
   private setupRealTimeValidation(): void {
     const emailInputs: NodeListOf<Element> = this.CONTAINER.querySelectorAll('input[name="email"]');
     emailInputs.forEach((emailInput: Element): void => {
-      emailInput.addEventListener('input', (): void => {
+      emailInput.addEventListener('change', (): void => {
         const email: string = (emailInput as HTMLInputElement).value.trim();
         const isValid: boolean = this.validateEmail(email);
         (emailInput as HTMLInputElement).setCustomValidity(
@@ -74,28 +80,30 @@ class LoginPage extends Page {
       });
     });
 
-    const passInputs: NodeListOf<Element> = this.CONTAINER.querySelectorAll('input[name="password"]');
-    passInputs.forEach((passInput: Element): void => {
-      passInput.addEventListener('input', (): void => {
-        const password: string = (passInput as HTMLInputElement).value.trim();
-        const isValid: boolean = this.validatePassword(password);
-        (passInput as HTMLInputElement).setCustomValidity(
-          isValid
-            ? ''
-            : `Invalid password format\n
-          Your password must contain at least:\n
-    • 8 characters (both letters and numbers),\n
-    • include symbols: -!@#$%^&*`,
-        );
-      });
+    const passInput = this.CONTAINER.querySelector('input[name="password"]') as HTMLInputElement;
+    passInput.addEventListener('change', (): void => {
+      const password: string = passInput.value;
+      if (typeof validatePassword(password) === 'boolean') return;
+      if (typeof validatePassword(password) === 'string') {
+        console.log(validatePassword(password));
+      }
     });
-  }
 
-  public renderPage(): HTMLElement {
-    this.CONTAINER.innerHTML = this.LOGIN_PAGE_MARKUP;
-    this.assignLoginPageEventListeners();
-    this.setupRealTimeValidation();
-    return this.CONTAINER;
+    // const passInputs: NodeListOf<Element> = this.CONTAINER.querySelectorAll('input[name="password"]');
+    // passInputs.forEach((passInput: Element): void => {
+    //   passInput.addEventListener('input', (): void => {
+    //     const password: string = (passInput as HTMLInputElement).value.trim();
+    //     const isValid: boolean  = validatePassword(password);
+    //     (passInput as HTMLInputElement).setCustomValidity(
+    //       isValid
+    //         ? ''
+    //         : `Invalid password format\n
+    //       Your password must contain at least:\n
+    // • 8 characters (both letters and numbers),\n
+    // • include symbols: -!@#$%^&*`,
+    //     );
+    //   });
+    // });
   }
 }
 
