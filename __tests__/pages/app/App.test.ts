@@ -1,5 +1,13 @@
 import App from '../../../src/pages/app/App';
 
+jest.mock('../../../src/assets/not-found-image.png', () => ({
+  default: 'mock-image-not-found',
+}));
+
+jest.mock('../../../src/assets/header-logo2.png', () => ({
+  default: 'mock-image-header',
+}));
+
 describe('App', () => {
   let app: App;
 
