@@ -2,9 +2,12 @@ import NavigationBar from '../../components/navigation-bar/NavigationBar';
 import DOMHelpers from '../../utils/DOMHelpers';
 import Router from '../../utils/Router';
 import Constants from '../../utils/Constants';
+import Header from '../../components/header/Header';
 
 class App {
   private ROUTER: Router;
+
+  private HEADER: Header;
 
   private NAVIGATION_BAR: NavigationBar;
 
@@ -14,8 +17,13 @@ class App {
 
   constructor() {
     this.ROUTER = new Router();
+    this.HEADER = new Header();
     this.NAVIGATION_BAR = new NavigationBar();
-    DOMHelpers.appendChildToElement(document.body, this.NAVIGATION_BAR.renderComponent()); // append nav bar
+    DOMHelpers.appendChildToElement(document.body, this.HEADER.renderComponent()); // append header container
+    DOMHelpers.appendChildToElement(
+      DOMHelpers.getElement(`${Constants.HEADER_CONTAINER_SELECTOR}`),
+      this.NAVIGATION_BAR.renderComponent(),
+    );
     DOMHelpers.appendChildToElement(document.body, this.PAGE_CONTAINER); // append generic page container
   }
 
