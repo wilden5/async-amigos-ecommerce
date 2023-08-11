@@ -1,6 +1,7 @@
 import Page from '../../components/templates/Page';
 import { ProjectPages } from '../../types/Enums';
 import Constants from '../../utils/Constants';
+import { LoginFormController } from './LoginFormController';
 
 class LoginPage extends Page {
   private LOGIN_PAGE_MARKUP = `
@@ -91,10 +92,17 @@ class LoginPage extends Page {
     });
   }
 
+  private handleSubmit(): void {
+    const loginForm = this.CONTAINER.querySelector('#login-form') as HTMLFormElement;
+    const logingFormController = new LoginFormController(loginForm);
+    logingFormController.addEventSubmit();
+  }
+
   public renderPage(): HTMLElement {
     this.CONTAINER.innerHTML = this.LOGIN_PAGE_MARKUP;
     this.assignLoginPageEventListeners();
     this.setupRealTimeValidation();
+    this.handleSubmit();
     return this.CONTAINER;
   }
 }

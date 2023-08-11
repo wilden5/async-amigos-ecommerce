@@ -1,12 +1,5 @@
-/* eslint-disable no-console */
 import './style.scss';
-// import { ClientResponse, CustomerDraft, CustomerSignInResult /* CustomerSignin */ } from '@commercetools/platform-sdk';
-import { ClientResponse, CustomerDraft, CustomerSignInResult } from '@commercetools/platform-sdk';
 import App from './pages/app/App';
-// import { CustomerLogin } from './backend/login/customer-login';
-import { CustomerRegistration } from './backend/registration/customer-registration';
-// import { CustomerRegistration } from './backend/registration/customer-registration';
-// import { CustomerLogin } from './backend/login/customer-login';
 
 const APP = new App();
 
@@ -30,7 +23,7 @@ signInCustomer().catch((error) => {
   console.error(error);
 }); */
 
-const customerData: CustomerDraft = {
+/* const customerData: CustomerDraft = {
   email: 'example66645@gmail.com',
   password: 'examplePassword',
   firstName: 'Roberto34348789798',
@@ -53,4 +46,4 @@ customerRegistration
   })
   .catch((error: Error) => {
     console.error(error);
-  });
+  }); */
