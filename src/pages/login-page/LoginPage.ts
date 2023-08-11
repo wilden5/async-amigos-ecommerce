@@ -1,11 +1,11 @@
 import Page from '../../components/templates/Page';
 import { ProjectPages } from '../../types/Enums';
 import Constants from '../../utils/Constants';
-import validatePassword from '../../utils/ValidatePassword';
-import validateEmail from '../../utils/ValidateEmail';
+import EmailValidator from '../../utils/ValidateEmail';
+import PasswordValidator from '../../utils/ValidatePassword';
 
 class LoginPage extends Page {
-  // private HINT_HOLDER = `<span class="dynamic-message"></span>`;
+  // private hint = `<span class="dynamic-message"></span>`;
 
   private LOGIN_PAGE_MARKUP = `
   <div class="container container-login">
@@ -67,18 +67,18 @@ class LoginPage extends Page {
     const emailInput = this.CONTAINER.querySelector('input[name="email"]') as HTMLInputElement;
     emailInput.addEventListener('change', (): void => {
       const email: string = emailInput.value;
-      if (typeof validateEmail(email) === 'boolean') return;
-      if (typeof validateEmail(email) === 'string') {
-        console.log(validateEmail(email));
+      if (typeof EmailValidator.validate(email) === 'boolean') return;
+      if (typeof EmailValidator.validate(email) === 'string') {
+        console.log(EmailValidator.validate(email));
       }
     });
 
     const passInput = this.CONTAINER.querySelector('input[name="password"]') as HTMLInputElement;
     passInput.addEventListener('change', (): void => {
       const password: string = passInput.value;
-      if (typeof validatePassword(password) === 'boolean') return;
-      if (typeof validatePassword(password) === 'string') {
-        console.log(validatePassword(password));
+      if (typeof PasswordValidator.validate(password) === 'boolean') return;
+      if (typeof PasswordValidator.validate(password) === 'string') {
+        console.log(PasswordValidator.validate(password));
       }
     });
   }

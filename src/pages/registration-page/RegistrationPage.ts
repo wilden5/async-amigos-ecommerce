@@ -1,5 +1,8 @@
 import Page from '../../components/templates/Page';
 import { ProjectPages } from '../../types/Enums';
+import Constants from '../../utils/Constants';
+import EmailValidator from '../../utils/ValidateEmail';
+import PasswordValidator from '../../utils/ValidatePassword';
 
 class RegistrationPage extends Page {
   private REGISTRATION_PAGE_MARKUP = `
@@ -75,7 +78,51 @@ class RegistrationPage extends Page {
 
   renderPage(): HTMLElement {
     this.CONTAINER.innerHTML = this.REGISTRATION_PAGE_MARKUP;
+    this.assignLoginPageEventListeners();
+    this.setupRealTimeValidation();
     return this.CONTAINER;
+  }
+
+  private handleLockIconClick = (event: Event): void => {
+    const target = event.currentTarget as HTMLElement;
+    const passwordInput = this.CONTAINER.querySelector('.input-password') as HTMLInputElement;
+
+    if (!passwordInput.value) {
+      return;
+    }
+
+    if (passwordInput.type === 'password') {
+      target.innerHTML = Constants.OPENED_LOCK_ICON_MARKUP;
+      passwordInput.type = 'text';
+    } else if (passwordInput.type === 'text') {
+      target.innerHTML = Constants.CLOSED_LOCK_ICON_MARKUP;
+      passwordInput.type = 'password';
+    }
+  };
+
+  private assignLoginPageEventListeners(): void {
+    const lockIcon = this.CONTAINER.querySelector(Constants.LOCK_ICON_SELECTOR) as HTMLElement;
+    lockIcon.addEventListener('click', this.handleLockIconClick);
+  }
+
+  private setupRealTimeValidation(): void {
+    const emailInput = this.CONTAINER.querySelector('input[name="email"]') as HTMLInputElement;
+    emailInput.addEventListener('change', (): void => {
+      const email: string = emailInput.value;
+      if (typeof EmailValidator.validate(email) === 'boolean') return;
+      if (typeof EmailValidator.validate(email) === 'string') {
+        console.log(EmailValidator.validate(email));
+      }
+    });
+
+    const passInput = this.CONTAINER.querySelector('input[name="password"]') as HTMLInputElement;
+    passInput.addEventListener('change', (): void => {
+      const password: string = passInput.value;
+      if (typeof PasswordValidator.validate(password) === 'boolean') return;
+      if (typeof PasswordValidator.validate(password) === 'string') {
+        console.log(PasswordValidator.validate(password));
+      }
+    });
   }
 }
 
