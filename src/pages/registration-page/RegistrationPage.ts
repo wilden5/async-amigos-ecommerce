@@ -63,7 +63,7 @@ class RegistrationPage extends Page {
         </div>
         <button class="main-btn" type="submit">Register me</button>
         <div class="register">
-          <p>Already a Customer?<a href="/login" class="login-link">Login</a></p>
+          <p>Already a Customer?<a href="#login" class="login-link">Login</a></p>
         </div>
       </form>
     </div>
