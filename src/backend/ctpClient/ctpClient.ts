@@ -1,28 +1,34 @@
-import { AuthMiddlewareOptions, ClientBuilder, PasswordAuthMiddlewareOptions } from '@commercetools/sdk-client-v2';
-import { createApiBuilderFromCtpClient } from '@commercetools/platform-sdk';
-import { ByProjectKeyRequestBuilder } from '@commercetools/platform-sdk/dist/declarations/src/generated/client/by-project-key-request-builder';
-import { type HttpMiddlewareOptions } from '@commercetools/sdk-client-v2';
 import fetch from 'cross-fetch';
-import { clientId, clientSecret, host, projectKey, scopes } from '../configure/configure';
-
-const httpMiddlewareOptions: HttpMiddlewareOptions = {
-  host,
-  fetch,
-};
+import {
+  AnonymousAuthMiddlewareOptions,
+  AuthMiddlewareOptions,
+  ClientBuilder,
+  HttpMiddlewareOptions,
+  PasswordAuthMiddlewareOptions,
+} from '@commercetools/sdk-client-v2';
+import { ByProjectKeyRequestBuilder } from '@commercetools/platform-sdk/dist/declarations/src/generated/client/by-project-key-request-builder';
+import { createApiBuilderFromCtpClient } from '@commercetools/platform-sdk';
+import { clientId, clientSecret, hostApi, hostAuth, projectKey, scopes } from '../configure/configure';
 
 export class CtpClient {
   ctpClient: ClientBuilder;
 
+  httpMiddlewareOptions: HttpMiddlewareOptions;
+
   constructor() {
+    this.httpMiddlewareOptions = {
+      host: hostApi,
+      fetch,
+    };
     this.ctpClient = new ClientBuilder()
       .withProjectKey(projectKey)
-      .withHttpMiddleware(httpMiddlewareOptions)
+      .withHttpMiddleware(this.httpMiddlewareOptions)
       .withLoggerMiddleware();
   }
 
   withPasswordFlow(email: string, password: string): ByProjectKeyRequestBuilder {
     const authMiddlewareOptions: PasswordAuthMiddlewareOptions = {
-      host,
+      host: hostAuth,
       projectKey,
       credentials: {
         clientId,
@@ -36,16 +42,16 @@ export class CtpClient {
       fetch,
     };
 
-    this.ctpClient.withPasswordFlow(authMiddlewareOptions);
+    const newClient = this.ctpClient.withPasswordFlow(authMiddlewareOptions).build();
 
-    const apiRootPassword = createApiBuilderFromCtpClient(this.ctpClient).withProjectKey({ projectKey });
+    const apiRootPassword = createApiBuilderFromCtpClient(newClient).withProjectKey({ projectKey });
 
     return apiRootPassword;
   }
 
-  withClientCredentialsFlow(): ClientBuilder {
+  withClientCredentialsFlow(): ByProjectKeyRequestBuilder {
     const authMiddlewareOptions: AuthMiddlewareOptions = {
-      host,
+      host: hostAuth,
       projectKey,
       credentials: {
         clientId,
@@ -54,6 +60,30 @@ export class CtpClient {
       scopes,
       fetch,
     };
-    return this.ctpClient.withClientCredentialsFlow(authMiddlewareOptions);
+
+    const newClient = this.ctpClient.withClientCredentialsFlow(authMiddlewareOptions).build();
+
+    const apiRootCredentials = createApiBuilderFromCtpClient(newClient).withProjectKey({ projectKey });
+
+    return apiRootCredentials;
+  }
+
+  withAnonymousSessionFlow(): ByProjectKeyRequestBuilder {
+    const anonymousAuthMiddlewareOptions: AnonymousAuthMiddlewareOptions = {
+      host: hostAuth,
+      projectKey,
+      credentials: {
+        clientId,
+        clientSecret,
+      },
+      scopes,
+      fetch,
+    };
+
+    const newClient = this.ctpClient.withAnonymousSessionFlow(anonymousAuthMiddlewareOptions).build();
+
+    const apiRootAnonymous = createApiBuilderFromCtpClient(newClient).withProjectKey({ projectKey });
+
+    return apiRootAnonymous;
   }
 }

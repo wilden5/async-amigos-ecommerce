@@ -4,7 +4,7 @@ import { CtpClient } from '../ctpClient/ctpClient';
 export class CustomerLogin {
   private loginData: CustomerSignin;
 
-  private ctpClient: CtpClient;
+  public ctpClient: CtpClient;
 
   constructor(loginData: CustomerSignin) {
     this.ctpClient = new CtpClient();

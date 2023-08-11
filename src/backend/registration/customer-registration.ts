@@ -14,7 +14,7 @@ export class CustomerRegistration {
   async createCustomer(): Promise<ClientResponse<CustomerSignInResult>> {
     if (this.customerData.email && this.customerData.password) {
       const response = await this.ctpClient
-        .withPasswordFlow(this.customerData.email, this.customerData.password)
+        .withClientCredentialsFlow()
         .customers()
         .post({
           body: this.customerData,

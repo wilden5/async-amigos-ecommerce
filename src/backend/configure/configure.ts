@@ -1,13 +1,8 @@
-/* eslint-disable no-nested-ternary */
-import dotenv from 'dotenv';
-
-dotenv.config();
-
-export const host = process.env.HOST || 'https://auth.europe-west1.gcp.commercetools.com';
-export const projectKey = process.env.PROJECT_KEY || 'commercetools-api';
-export const clientId = process.env.CLIENT_ID || '05uAYgczsJrIx3uguiJM0Go-';
-export const clientSecret = process.env.CLIENT_SECRET || 'eneEZtxyI08K96EiowFmlGv9gVQ1HCVC';
-// Исправленный код
+export const hostAuth = 'https://auth.europe-west1.gcp.commercetools.com';
+export const hostApi = 'https://api.europe-west1.gcp.commercetools.com/';
+export const projectKey = 'commercetools-api';
+export const clientId = '05uAYgczsJrIx3uguiJM0Go-';
+export const clientSecret = 'eneEZtxyI08K96EiowFmlGv9gVQ1HCVC';
 export const scopes = [
   'manage_orders:commercetools-api',
   'manage_discount_codes:commercetools-api',
