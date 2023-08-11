@@ -1,14 +1,14 @@
 import Page from '../../components/templates/Page';
 import { ProjectPages } from '../../types/Enums';
-import Constants from '../../utils/Constants';
-import EmailValidator from '../../utils/ValidateEmail';
-import PasswordValidator from '../../utils/ValidatePassword';
 
 class RegistrationPage extends Page {
   private REGISTRATION_PAGE_MARKUP = `
   <div class="container container-register">
     <div class="main-box register">
       <h2>Registration</h2>
+      <div class="register">
+          <p class='customer-message'>Already a Customer?<a href="#login" class="login-link">Login</a></p>
+        </div>
       <form id="register-form">
         <div class="input-box">
           <span class="icon"><i class='bx bxs-envelope'></i></span>
@@ -17,7 +17,7 @@ class RegistrationPage extends Page {
         </div>
         <div class="input-box">
           <span class="icon icon-lock"><i class='bx bxs-lock-alt'></i></span>
-          <input type="password" name="password" class="input-password" required>
+          <input type="password" autocomplete='reg-password' name="password" class="input-password" required>
           <label for="password">Password</label>
         </div>
         <div class="input-box">
@@ -65,9 +65,6 @@ class RegistrationPage extends Page {
           </label>
         </div>
         <button class="main-btn" type="submit">Register me</button>
-        <div class="register">
-          <p>Already a Customer?<a href="#login" class="login-link">Login</a></p>
-        </div>
       </form>
     </div>
   </div>`;
@@ -78,51 +75,7 @@ class RegistrationPage extends Page {
 
   renderPage(): HTMLElement {
     this.CONTAINER.innerHTML = this.REGISTRATION_PAGE_MARKUP;
-    this.assignLoginPageEventListeners();
-    this.setupRealTimeValidation();
     return this.CONTAINER;
-  }
-
-  private handleLockIconClick = (event: Event): void => {
-    const target = event.currentTarget as HTMLElement;
-    const passwordInput = this.CONTAINER.querySelector('.input-password') as HTMLInputElement;
-
-    if (!passwordInput.value) {
-      return;
-    }
-
-    if (passwordInput.type === 'password') {
-      target.innerHTML = Constants.OPENED_LOCK_ICON_MARKUP;
-      passwordInput.type = 'text';
-    } else if (passwordInput.type === 'text') {
-      target.innerHTML = Constants.CLOSED_LOCK_ICON_MARKUP;
-      passwordInput.type = 'password';
-    }
-  };
-
-  private assignLoginPageEventListeners(): void {
-    const lockIcon = this.CONTAINER.querySelector(Constants.LOCK_ICON_SELECTOR) as HTMLElement;
-    lockIcon.addEventListener('click', this.handleLockIconClick);
-  }
-
-  private setupRealTimeValidation(): void {
-    const emailInput = this.CONTAINER.querySelector('input[name="email"]') as HTMLInputElement;
-    emailInput.addEventListener('change', (): void => {
-      const email: string = emailInput.value;
-      if (typeof EmailValidator.validate(email) === 'boolean') return;
-      if (typeof EmailValidator.validate(email) === 'string') {
-        console.log(EmailValidator.validate(email));
-      }
-    });
-
-    const passInput = this.CONTAINER.querySelector('input[name="password"]') as HTMLInputElement;
-    passInput.addEventListener('change', (): void => {
-      const password: string = passInput.value;
-      if (typeof PasswordValidator.validate(password) === 'boolean') return;
-      if (typeof PasswordValidator.validate(password) === 'string') {
-        console.log(PasswordValidator.validate(password));
-      }
-    });
   }
 }
 
