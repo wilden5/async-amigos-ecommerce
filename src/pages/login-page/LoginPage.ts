@@ -2,10 +2,10 @@ import Page from '../../components/templates/Page';
 import { ProjectPages } from '../../types/Enums';
 import Constants from '../../utils/Constants';
 import validatePassword from '../../utils/ValidatePassword';
-import DOMHelpers from '../../utils/DOMHelpers';
+import validateEmail from '../../utils/ValidateEmail';
 
 class LoginPage extends Page {
-  private HINT_HOLDER = `<span class="dynamic-message"></span>`;
+  // private HINT_HOLDER = `<span class="dynamic-message"></span>`;
 
   private LOGIN_PAGE_MARKUP = `
   <div class="container container-login">
@@ -41,11 +41,6 @@ class LoginPage extends Page {
     return this.CONTAINER;
   }
 
-  private validateEmail(email: string): boolean {
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return emailRegex.test(email);
-  }
-
   private handleLockIconClick = (event: Event): void => {
     const target = event.currentTarget as HTMLElement;
     const passwordInput = this.CONTAINER.querySelector('.input-password') as HTMLInputElement;
@@ -69,15 +64,13 @@ class LoginPage extends Page {
   }
 
   private setupRealTimeValidation(): void {
-    const emailInputs: NodeListOf<Element> = this.CONTAINER.querySelectorAll('input[name="email"]');
-    emailInputs.forEach((emailInput: Element): void => {
-      emailInput.addEventListener('change', (): void => {
-        const email: string = (emailInput as HTMLInputElement).value.trim();
-        const isValid: boolean = this.validateEmail(email);
-        (emailInput as HTMLInputElement).setCustomValidity(
-          isValid ? '' : 'Invalid email format\nExample: name@domain.com',
-        );
-      });
+    const emailInput = this.CONTAINER.querySelector('input[name="email"]') as HTMLInputElement;
+    emailInput.addEventListener('change', (): void => {
+      const email: string = emailInput.value;
+      if (typeof validateEmail(email) === 'boolean') return;
+      if (typeof validateEmail(email) === 'string') {
+        console.log(validateEmail(email));
+      }
     });
 
     const passInput = this.CONTAINER.querySelector('input[name="password"]') as HTMLInputElement;
@@ -88,22 +81,6 @@ class LoginPage extends Page {
         console.log(validatePassword(password));
       }
     });
-
-    // const passInputs: NodeListOf<Element> = this.CONTAINER.querySelectorAll('input[name="password"]');
-    // passInputs.forEach((passInput: Element): void => {
-    //   passInput.addEventListener('input', (): void => {
-    //     const password: string = (passInput as HTMLInputElement).value.trim();
-    //     const isValid: boolean  = validatePassword(password);
-    //     (passInput as HTMLInputElement).setCustomValidity(
-    //       isValid
-    //         ? ''
-    //         : `Invalid password format\n
-    //       Your password must contain at least:\n
-    // • 8 characters (both letters and numbers),\n
-    // • include symbols: -!@#$%^&*`,
-    //     );
-    //   });
-    // });
   }
 }
 

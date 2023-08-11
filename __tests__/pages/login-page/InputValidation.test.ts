@@ -1,7 +1,8 @@
+import { EmailHints, PasswordHints } from '../../../src/types/Enums';
 import validatePassword from '../../../src/utils/ValidatePassword';
-import { PasswordHints } from '../../../src/types/Enums';
+import validateEmail from '../../../src/utils/ValidateEmail';
 
-describe('validatePassword', (): void => {
+describe('Validate Password Format: ', (): void => {
   it('should return LengthHint for a password less than 8 characters', (): void => {
     expect(validatePassword('Abc123')).toBe(PasswordHints.LengthHint);
   });
@@ -28,6 +29,20 @@ describe('validatePassword', (): void => {
 
   it('should return SpacesHint for a password with spaces', (): void => {
     expect(validatePassword('Abc 12345')).toBe(PasswordHints.SpacesHint);
+  });
+});
+
+describe('Validate Email Format: ', (): void => {
+  it('should return EmailFormatHint for an invalid email format', (): void => {
+    expect(validateEmail('invalid-email')).toBe(EmailHints.EmailFormatHint);
+    expect(validateEmail('email@domain')).toBe(EmailHints.EmailFormatHint);
+    expect(validateEmail('@domain.com')).toBe(EmailHints.EmailFormatHint);
+    expect(validateEmail('email@.com')).toBe(EmailHints.EmailFormatHint);
+  });
+
+  it('should return true for a valid email format', (): void => {
+    expect(validateEmail('valid@email.com')).toBe(true);
+    expect(validateEmail('user.name@example.co.uk')).toBe(true);
   });
 });
 

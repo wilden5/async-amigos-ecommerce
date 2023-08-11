@@ -17,3 +17,7 @@ export enum PasswordHints {
   SpecialCharsHint = 'Password must contain at least one one of: !@#$%^&*',
   SpacesHint = 'Password must not contain spaces',
 }
+
+export enum EmailHints {
+  EmailFormatHint = 'Incorrect email format',
+}
