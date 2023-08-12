@@ -62,7 +62,7 @@ class RegistrationPage extends Page {
         </div>
         <div class="check">
           <label for="acceptTerms">
-            <input type="checkbox" name="acceptTerms">I accept terms and conditions</input>
+            <input type="checkbox" id="acceptTerms">I accept terms and conditions
           </label>
         </div>
         <button class="main-btn" type="submit">Register me</button>
@@ -74,18 +74,18 @@ class RegistrationPage extends Page {
     super(ProjectPages.Registration);
   }
 
+  renderPage(): HTMLElement {
+    this.CONTAINER.innerHTML = this.REGISTRATION_PAGE_MARKUP;
+    this.handleSubmit();
+    return this.CONTAINER;
+  }
+
   private handleSubmit(): void {
     const registerForm = this.CONTAINER.querySelector('#register-form') as HTMLFormElement;
 
     const registerFormController = new RegistrationFormController(registerForm);
 
     registerFormController.addEventSubmit();
-  }
-
-  renderPage(): HTMLElement {
-    this.CONTAINER.innerHTML = this.REGISTRATION_PAGE_MARKUP;
-    this.handleSubmit();
-    return this.CONTAINER;
   }
 }
 

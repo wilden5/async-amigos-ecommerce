@@ -82,18 +82,21 @@
 }
 
 .check {
-  display: flex;
-  justify-content: space-between;
   margin: -14px 0 15px;
-  font-size: 1.5rem;
-  font-weight: 500;
-  color: #162938;
 
-  & label input {
-    margin-right: 5px;
-    accent-color: #162938;
+  & label {
+    display: flex;
+    font-size: 1.5rem;
+    font-weight: 500;
+    color: #162938;
+    user-select: none;
+
+    & input {
+      margin-right: 15px;
+      accent-color: #162938;
+    }
   }
-
+  
   & a {
     color: #162938;
 
