@@ -2,6 +2,8 @@ import Page from '../../components/templates/Page';
 import { ProjectPages } from '../../types/Enums';
 import Constants from '../../utils/Constants';
 import { LoginFormController } from './LoginFormController';
+import EmailValidator from '../../utils/ValidateEmail';
+import PasswordValidator from '../../utils/ValidatePassword';
 
 class LoginPage extends Page {
   private LOGIN_PAGE_MARKUP = `
@@ -31,16 +33,6 @@ class LoginPage extends Page {
     super(ProjectPages.Login);
   }
 
-  private validateEmail(email: string): boolean {
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return emailRegex.test(email);
-  }
-
-  private validatePassword(password: string): boolean {
-    const passwordRegex = /[A-Za-z\d\-!@#$%^&*]{8,}$/;
-    return passwordRegex.test(password);
-  }
-
   private handleLockIconClick = (event: Event): void => {
     const target = event.currentTarget as HTMLElement;
     const passwordInput = this.CONTAINER.querySelector('.input-password') as HTMLInputElement;
@@ -64,31 +56,22 @@ class LoginPage extends Page {
   }
 
   private setupRealTimeValidation(): void {
-    const emailInputs: NodeListOf<Element> = this.CONTAINER.querySelectorAll('input[name="email"]');
-    emailInputs.forEach((emailInput: Element): void => {
-      emailInput.addEventListener('input', (): void => {
-        const email: string = (emailInput as HTMLInputElement).value.trim();
-        const isValid: boolean = this.validateEmail(email);
-        (emailInput as HTMLInputElement).setCustomValidity(
-          isValid ? '' : 'Invalid email format\nExample: name@domain.com',
-        );
-      });
+    const emailInput = this.CONTAINER.querySelector('input[name="email"]') as HTMLInputElement;
+    emailInput.addEventListener('change', (): void => {
+      const email: string = emailInput.value;
+      if (typeof EmailValidator.validate(email) === 'boolean') return;
+      if (typeof EmailValidator.validate(email) === 'string') {
+        console.log(EmailValidator.validate(email));
+      }
     });
 
-    const passInputs: NodeListOf<Element> = this.CONTAINER.querySelectorAll('input[name="password"]');
-    passInputs.forEach((passInput: Element): void => {
-      passInput.addEventListener('input', (): void => {
-        const password: string = (passInput as HTMLInputElement).value.trim();
-        const isValid: boolean = this.validatePassword(password);
-        (passInput as HTMLInputElement).setCustomValidity(
-          isValid
-            ? ''
-            : `Invalid password format\n
-          Your password must contain at least:\n
-    • 8 characters (both letters and numbers),\n
-    • include symbols: -!@#$%^&*`,
-        );
-      });
+    const passInput = this.CONTAINER.querySelector('input[name="password"]') as HTMLInputElement;
+    passInput.addEventListener('change', (): void => {
+      const password: string = passInput.value;
+      if (typeof PasswordValidator.validate(password) === 'boolean') return;
+      if (typeof PasswordValidator.validate(password) === 'string') {
+        console.log(PasswordValidator.validate(password));
+      }
     });
   }
 
