@@ -1,5 +1,6 @@
 import Page from '../../components/templates/Page';
 import { ProjectPages } from '../../types/Enums';
+import { RegistrationFormController } from './RegistrationFormController';
 
 class RegistrationPage extends Page {
   private REGISTRATION_PAGE_MARKUP = `
@@ -32,7 +33,7 @@ class RegistrationPage extends Page {
         </div>
         <div class="input-box">
           <span class="icon"><i class='bx bxs-calendar'></i></span>
-          <input type="date" name="dob" required>
+          <input type="date" name="dob">
           <label for="dob">Date of Birth</label>
         </div>
         <div class="input-box">
@@ -54,8 +55,8 @@ class RegistrationPage extends Page {
           <span class="icon"><i class='bx bx-globe'></i></span>
           <select name="country" required>
             <option value="" disabled selected>Select Country</option>
-            <option value="us">United States</option>
-            <option value="ca">Canada</option>
+            <option value="US">United States</option>
+            <option value="CA">Canada</option>
             <!-- Add more countries here -->
           </select>
         </div>
@@ -73,8 +74,17 @@ class RegistrationPage extends Page {
     super(ProjectPages.Registration);
   }
 
+  private handleSubmit(): void {
+    const registerForm = this.CONTAINER.querySelector('#register-form') as HTMLFormElement;
+
+    const registerFormController = new RegistrationFormController(registerForm);
+
+    registerFormController.addEventSubmit();
+  }
+
   renderPage(): HTMLElement {
     this.CONTAINER.innerHTML = this.REGISTRATION_PAGE_MARKUP;
+    this.handleSubmit();
     return this.CONTAINER;
   }
 }
