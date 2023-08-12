@@ -82,7 +82,7 @@ class RegistrationPage extends Page {
     registerFormController.addEventSubmit();
   }
 
-  renderPage(): HTMLElement {
+  public renderPage(): HTMLElement {
     this.CONTAINER.innerHTML = this.REGISTRATION_PAGE_MARKUP;
     this.handleSubmit();
     return this.CONTAINER;

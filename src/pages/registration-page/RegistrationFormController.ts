@@ -49,7 +49,7 @@ export class RegistrationFormController {
     const password = this.passwordInput.value;
     const firstName = this.firstNameInput.value;
     const lastName = this.lastNameInput.value;
-    // const dateOfBirth = this.dobInput.value;
+    const dateOfBirth = this.dobInput.value;
     const streetName = this.streetInput.value;
     const city = this.cityInput.value;
     const postalCode = this.postalCodeInput.value;
@@ -60,7 +60,7 @@ export class RegistrationFormController {
       password,
       firstName,
       lastName,
-      // dateOfBirth,
+      dateOfBirth,
       addresses: [
         {
           streetName,
@@ -70,7 +70,7 @@ export class RegistrationFormController {
         },
       ],
     };
-    console.log(customerData);
+    // console.log(customerData);
     this.customerRegistration = new CustomerRegistration(customerData);
     this.customerRegistration
       .createCustomer()
