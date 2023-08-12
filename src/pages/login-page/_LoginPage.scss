@@ -8,8 +8,6 @@
   background: transparent;
   backdrop-filter: blur(25px);
   border-radius: 24px;
-  // border: 3px solid rgba(257, 257, 257, .4);
-  // box-shadow: rgba(17, 12, 46, 0.15) 0px 48px 100px 0px;
   transition: all ease .35s;
 
   &-login {
@@ -96,7 +94,7 @@
       accent-color: #162938;
     }
   }
-  
+
   & a {
     color: #162938;
 
@@ -148,4 +146,13 @@
 .new-customer-message {
   color: #f70303;
   font-weight: 800;
+}
+
+.validation-hint {
+  width: 100%;
+  text-align: right;
+  padding: 10px 0;
+  font-size: 1.2rem;
+  font-weight: 300;
+  color: red;
 }

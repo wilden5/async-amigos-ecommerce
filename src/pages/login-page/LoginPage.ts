@@ -1,5 +1,5 @@
 import Page from '../../components/templates/Page';
-import { ProjectPages } from '../../types/Enums';
+import { EmailHints, PasswordHints, ProjectPages } from '../../types/Enums';
 import Constants from '../../utils/Constants';
 import { LoginFormController } from './LoginFormController';
 import EmailValidator from '../../utils/ValidateEmail';
@@ -41,8 +41,28 @@ class LoginPage extends Page {
     const emailInput = this.CONTAINER.querySelector('input[name="email"]') as HTMLInputElement;
     const passInput = this.CONTAINER.querySelector('input[name="password"]') as HTMLInputElement;
 
-    RealTimeValidationFactory.setupValidation(emailInput, EmailValidator.validate.bind(EmailValidator));
-    RealTimeValidationFactory.setupValidation(passInput, PasswordValidator.validate.bind(PasswordValidator));
+    const emailValidationHints = {
+      [EmailHints.EmailFormatHint]: EmailHints.EmailFormatHint,
+    };
+    RealTimeValidationFactory.setupValidation(
+      emailInput,
+      EmailValidator.validate.bind(EmailValidator),
+      emailValidationHints,
+    );
+
+    const passValidationHints = {
+      [PasswordHints.LengthHint]: PasswordHints.LengthHint,
+      [PasswordHints.UpperLettersHint]: PasswordHints.UpperLettersHint,
+      [PasswordHints.LowerLettersHint]: PasswordHints.LowerLettersHint,
+      [PasswordHints.DigitsHint]: PasswordHints.DigitsHint,
+      [PasswordHints.SpacesHint]: PasswordHints.SpacesHint,
+      [PasswordHints.SpecialCharsHint]: PasswordHints.SpecialCharsHint,
+    };
+    RealTimeValidationFactory.setupValidation(
+      passInput,
+      PasswordValidator.validate.bind(PasswordValidator),
+      passValidationHints,
+    );
 
     this.handleSubmit();
     return this.CONTAINER;
