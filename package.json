@@ -69,6 +69,13 @@
     "@commercetools/ml-sdk": "^3.4.1",
     "@commercetools/platform-sdk": "^4.11.0",
     "@commercetools/sdk-client-v2": "^2.2.0",
-    "node-fetch": "^3.3.2"
+    "@types/dotenv": "^8.2.0",
+    "and": "^0.0.3",
+    "cross-fetch": "^4.0.0",
+    "dotenv": "^16.3.1",
+    "install": "^0.13.0",
+    "jest-mock": "^29.6.2",
+    "node-fetch": "^3.3.2",
+    "npm": "^9.8.1"
   }
 }

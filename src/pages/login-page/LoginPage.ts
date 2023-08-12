@@ -1,12 +1,11 @@
 import Page from '../../components/templates/Page';
 import { ProjectPages } from '../../types/Enums';
 import Constants from '../../utils/Constants';
+import { LoginFormController } from './LoginFormController';
 import EmailValidator from '../../utils/ValidateEmail';
 import PasswordValidator from '../../utils/ValidatePassword';
 
 class LoginPage extends Page {
-  // private hint = `<span class="dynamic-message"></span>`;
-
   private LOGIN_PAGE_MARKUP = `
   <div class="container container-login">
   <div class="main-box login">
@@ -32,13 +31,6 @@ class LoginPage extends Page {
 
   constructor() {
     super(ProjectPages.Login);
-  }
-
-  public renderPage(): HTMLElement {
-    this.CONTAINER.innerHTML = this.LOGIN_PAGE_MARKUP;
-    this.assignLoginPageEventListeners();
-    this.setupRealTimeValidation();
-    return this.CONTAINER;
   }
 
   private handleLockIconClick = (event: Event): void => {
@@ -81,6 +73,20 @@ class LoginPage extends Page {
         console.log(PasswordValidator.validate(password));
       }
     });
+  }
+
+  private handleSubmit(): void {
+    const loginForm = this.CONTAINER.querySelector('#login-form') as HTMLFormElement;
+    const logingFormController = new LoginFormController(loginForm);
+    logingFormController.addEventSubmit();
+  }
+
+  public renderPage(): HTMLElement {
+    this.CONTAINER.innerHTML = this.LOGIN_PAGE_MARKUP;
+    this.assignLoginPageEventListeners();
+    this.setupRealTimeValidation();
+    this.handleSubmit();
+    return this.CONTAINER;
   }
 }
 
