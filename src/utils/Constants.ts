@@ -30,6 +30,8 @@ class Constants {
   static BACKEND_ADDRESS_VALIDATION_MESSAGE = 'All parts of an address must be filled!';
 
   static REGISTRATION_REQUIRED_FIELDS = ['email', 'firstName', 'lastName', 'dateOfBirth', 'addresses'];
+
+  static FAILED_TO_FETCH_ERROR_MESSAGE = 'Failed to fetch';
 }
 
 export default Constants;
