@@ -1,5 +1,6 @@
 import { ClientResponse, CustomerDraft, CustomerSignInResult } from '@commercetools/platform-sdk';
 import { CtpClient } from '../ctpClient/ctpClient';
+import Constants from '../../utils/Constants';
 
 export class CustomerRegistration {
   private ctpClient: CtpClient;
@@ -12,18 +13,16 @@ export class CustomerRegistration {
   }
 
   async validateCustomerRegistration(customer: CustomerDraft): Promise<void> {
-    const requiredFields = ['email', 'firstName', 'lastName', 'dateOfBirth', 'addresses'];
-
-    if (requiredFields.some((fieldName) => !customer[fieldName as keyof CustomerDraft])) {
-      throw new Error('All registration form fields must be filled!');
+    if (Constants.REGISTRATION_REQUIRED_FIELDS.some((fieldName) => !customer[fieldName as keyof CustomerDraft])) {
+      throw new Error(Constants.BACKEND_GENERIC_VALIDATION_MESSAGE_REGISTRATION);
     }
 
     if (customer.firstName && /\d/.test(customer.firstName)) {
-      throw new Error('First name field cannot have any digits or special symbols!');
+      throw new Error(Constants.BACKEND_FIRST_NAME_VALIDATION_MESSAGE);
     }
 
     if (customer.lastName && /\d/.test(customer.lastName)) {
-      throw new Error('Last name field cannot have any digits or special symbols!');
+      throw new Error(Constants.BACKEND_LAST_NAME_VALIDATION_MESSAGE);
     }
 
     if (customer.addresses) {
@@ -32,13 +31,13 @@ export class CustomerRegistration {
           (address) => !address.streetName || !address.city || !address.postalCode || !address.country,
         )
       ) {
-        throw new Error('All parts of an address must be filled!');
+        throw new Error(Constants.BACKEND_ADDRESS_VALIDATION_MESSAGE);
       }
     }
   }
 
   async createCustomer(): Promise<ClientResponse<CustomerSignInResult>> {
-    if (this.customerData.email && this.customerData.password) {
+    try {
       await this.validateCustomerRegistration(this.customerData);
       const response = await this.ctpClient
         .withClientCredentialsFlow()
@@ -48,7 +47,8 @@ export class CustomerRegistration {
         })
         .execute();
       return response;
+    } catch (error) {
+      return Promise.reject(error);
     }
-    throw new Error('Email or password is missing');
   }
 }

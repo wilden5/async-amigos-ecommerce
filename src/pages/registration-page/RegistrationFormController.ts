@@ -1,7 +1,7 @@
-/* eslint-disable no-console */
-/* eslint-disable no-alert */
-import { CustomerDraft } from '@commercetools/platform-sdk';
+import { ClientResponse, CustomerDraft, CustomerSignInResult } from '@commercetools/platform-sdk';
+import Toastify from 'toastify-js';
 import { CustomerRegistration } from '../../backend/registration/customer-registration';
+import Constants from '../../utils/Constants';
 
 export class RegistrationFormController {
   private registerForm: HTMLFormElement;
@@ -43,6 +43,24 @@ export class RegistrationFormController {
     this.customerRegistration = null;
   }
 
+  private showToast(message: string, hexToastColor: string): void {
+    Toastify({
+      text: message,
+      duration: 5000,
+      style: {
+        background: hexToastColor,
+      },
+    }).showToast();
+  }
+
+  private handleRegistrationResponse(response: ClientResponse<CustomerSignInResult>): void {
+    if (response.statusCode === 201) {
+      this.showToast(Constants.ACCOUNT_HAS_BEEN_CREATED, Constants.TOAST_COLOR_GREEN);
+    } else {
+      this.showToast(Constants.ACCOUNT_CREATION_ERROR, Constants.TOAST_COLOR_RED);
+    }
+  }
+
   private handleSubmit(event: Event): void {
     event.preventDefault();
     const email = this.emailInput.value;
@@ -70,19 +88,14 @@ export class RegistrationFormController {
         },
       ],
     };
-    // console.log(customerData);
     this.customerRegistration = new CustomerRegistration(customerData);
     this.customerRegistration
       .createCustomer()
       .then((response) => {
-        if (response.statusCode === 201) {
-          alert('Registration successful');
-        } else {
-          alert('Registration failed');
-        }
+        this.handleRegistrationResponse(response);
       })
       .catch((error: Error) => {
-        alert(error.message);
+        this.showToast(error.message, Constants.TOAST_COLOR_RED);
       });
   }
 
