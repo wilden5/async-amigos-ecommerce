@@ -21,7 +21,7 @@ class Constants {
 
   static TOAST_COLOR_GREEN = '#00FF00';
 
-  static BACKEND_GENERIC_VALIDATION_MESSAGE_REGISTRATION = 'All registration form fields must be filled!';
+  static BACKEND_GENERIC_VALIDATION_MESSAGE_REGISTRATION = 'field must be filled!';
 
   static BACKEND_FIRST_NAME_VALIDATION_MESSAGE = 'First name field cannot have any digits or special symbols!';
 
@@ -30,6 +30,8 @@ class Constants {
   static BACKEND_ADDRESS_VALIDATION_MESSAGE = 'All parts of an address must be filled!';
 
   static REGISTRATION_REQUIRED_FIELDS = ['email', 'firstName', 'lastName', 'dateOfBirth', 'addresses'];
+
+  static REGISTRATION_ADDRESS_PARTS = ['streetName', 'city', 'postalCode', 'country'];
 
   static FAILED_TO_FETCH_ERROR_MESSAGE = 'Failed to fetch';
 }

@@ -2,7 +2,7 @@ import { ClientResponse, CustomerDraft, CustomerSignInResult } from '@commerceto
 import Page from '../../components/templates/Page';
 import { ProjectPages } from '../../types/Enums';
 import Constants from '../../utils/Constants';
-import { CustomerRegistration } from '../../backend/registration/customer-registration';
+import { CustomerRegistration } from '../../backend/registration/CustomerRegistration';
 import ToastifyHelper from '../../utils/TostifyHelper';
 
 class RegistrationPage extends Page {
