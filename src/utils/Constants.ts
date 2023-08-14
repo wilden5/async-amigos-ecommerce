@@ -29,7 +29,7 @@ class Constants {
 
   static BACKEND_ADDRESS_VALIDATION_MESSAGE = 'All parts of an address must be filled!';
 
-  static REGISTRATION_REQUIRED_FIELDS = ['email', 'firstName', 'lastName', 'dateOfBirth', 'addresses'];
+  static REGISTRATION_REQUIRED_FIELDS = ['email', 'password', 'firstName', 'lastName', 'dateOfBirth', 'addresses'];
 
   static REGISTRATION_ADDRESS_PARTS = ['streetName', 'city', 'postalCode', 'country'];
 
