@@ -61,7 +61,7 @@
     "webpack-merge": "^5.9.0"
   },
   "lint-staged": {
-    "src/**/*.{ts, html, css}": "prettier --write",
+    "src/**/*.{ts, html.css}": "prettier --write",
     "src/**/*.ts": "eslint --color"
   },
   "dependencies": {
