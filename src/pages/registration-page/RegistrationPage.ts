@@ -1,6 +1,9 @@
+import { ClientResponse, CustomerDraft, CustomerSignInResult } from '@commercetools/platform-sdk';
 import Page from '../../components/templates/Page';
 import { ProjectPages } from '../../types/Enums';
-import { RegistrationFormController } from './RegistrationFormController';
+import Constants from '../../utils/Constants';
+import { CustomerRegistration } from '../../backend/registration/CustomerRegistration';
+import ToastifyHelper from '../../utils/TostifyHelper';
 
 class RegistrationPage extends Page {
   private REGISTRATION_PAGE_MARKUP = `
@@ -74,17 +77,55 @@ class RegistrationPage extends Page {
     super(ProjectPages.Registration);
   }
 
-  private handleSubmit(): void {
-    const registerForm = this.CONTAINER.querySelector('#register-form') as HTMLFormElement;
-
-    const registerFormController = new RegistrationFormController(registerForm);
-
-    registerFormController.addEventSubmit();
+  private handleRegistrationResponse(response: ClientResponse<CustomerSignInResult>): void {
+    if (response.statusCode === 201) {
+      ToastifyHelper.showToast(Constants.ACCOUNT_HAS_BEEN_CREATED, Constants.TOAST_COLOR_GREEN);
+    } else {
+      ToastifyHelper.showToast(Constants.ACCOUNT_CREATION_ERROR, Constants.TOAST_COLOR_RED);
+    }
   }
 
-  renderPage(): HTMLElement {
+  private handleRegistrationFormSubmit = (event: Event): void => {
+    event.preventDefault();
+
+    const customerData: CustomerDraft = {
+      email: (this.CONTAINER.querySelector('input[name="email"]') as HTMLInputElement).value.trim(),
+      password: (this.CONTAINER.querySelector('input[name="password"]') as HTMLInputElement).value.trim(),
+      firstName: (this.CONTAINER.querySelector('input[name="firstName"]') as HTMLInputElement).value.trim(),
+      lastName: (this.CONTAINER.querySelector('input[name="lastName"]') as HTMLInputElement).value.trim(),
+      dateOfBirth: (this.CONTAINER.querySelector('input[name="dob"]') as HTMLInputElement).value.trim(),
+      addresses: [
+        {
+          streetName: (this.CONTAINER.querySelector('input[name="street"]') as HTMLInputElement).value.trim(),
+          city: (this.CONTAINER.querySelector('input[name="city"]') as HTMLInputElement).value.trim(),
+          postalCode: (this.CONTAINER.querySelector('input[name="postalCode"]') as HTMLInputElement).value.trim(),
+          country: (this.CONTAINER.querySelector('select[name="country"]') as HTMLSelectElement).value.trim(),
+        },
+      ],
+    };
+
+    new CustomerRegistration(customerData)
+      .createCustomer()
+      .then((response) => {
+        this.handleRegistrationResponse(response);
+      })
+      .catch((error: Error) => {
+        const errorMessage =
+          error.message === Constants.FAILED_TO_FETCH_ERROR_MESSAGE ? Constants.ACCOUNT_CREATION_ERROR : error.message;
+        ToastifyHelper.showToast(errorMessage, Constants.TOAST_COLOR_RED);
+      });
+  };
+
+  private assignRegistrationPageEventListeners(): void {
+    (this.CONTAINER.querySelector('#register-form') as HTMLFormElement).addEventListener(
+      'submit',
+      this.handleRegistrationFormSubmit,
+    );
+  }
+
+  public renderPage(): HTMLElement {
     this.CONTAINER.innerHTML = this.REGISTRATION_PAGE_MARKUP;
-    this.handleSubmit();
+    this.assignRegistrationPageEventListeners();
     return this.CONTAINER;
   }
 }
