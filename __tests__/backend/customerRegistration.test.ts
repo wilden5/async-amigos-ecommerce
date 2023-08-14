@@ -9,8 +9,8 @@ const mockCtpClient = {
 };
 
 jest.mock('../../src/backend/ctpClient/ctpClient', () => ({
-    CtpClient: jest.fn().mockImplementation(() => mockCtpClient),
-  }));
+  CtpClient: jest.fn().mockImplementation(() => mockCtpClient),
+}));
 
 describe('CustomerRegistration', () => {
   let customerData: CustomerDraft;

@@ -43,6 +43,10 @@ export class RegistrationFormController {
     this.customerRegistration = null;
   }
 
+  public addEventSubmit(): void {
+    this.registerForm.addEventListener('submit', this.handleSubmit.bind(this));
+  }
+
   private handleSubmit(event: Event): void {
     event.preventDefault();
     const email = this.emailInput.value;
@@ -84,9 +88,5 @@ export class RegistrationFormController {
       .catch((error: Error) => {
         alert(error.message);
       });
-  }
-
-  public addEventSubmit(): void {
-    this.registerForm.addEventListener('submit', this.handleSubmit.bind(this));
   }
 }

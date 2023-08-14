@@ -34,6 +34,34 @@ class LoginPage extends Page {
     super(ProjectPages.Login);
   }
 
+  private handleLockIconClick = (event: Event): void => {
+    const target = event.currentTarget as HTMLElement;
+    const passwordInput = this.CONTAINER.querySelector('.input-password') as HTMLInputElement;
+
+    if (!passwordInput.value) {
+      return;
+    }
+
+    if (passwordInput.type === 'password') {
+      target.innerHTML = Constants.OPENED_LOCK_ICON_MARKUP;
+      passwordInput.type = 'text';
+    } else if (passwordInput.type === 'text') {
+      target.innerHTML = Constants.CLOSED_LOCK_ICON_MARKUP;
+      passwordInput.type = 'password';
+    }
+  };
+
+  private assignLoginPageEventListeners(): void {
+    const lockIcon = this.CONTAINER.querySelector(Constants.LOCK_ICON_SELECTOR) as HTMLElement;
+    lockIcon.addEventListener('click', this.handleLockIconClick);
+  }
+
+  private handleSubmit(): void {
+    const loginForm = this.CONTAINER.querySelector('#login-form') as HTMLFormElement;
+    const loginFormController = new LoginFormController(loginForm);
+    loginFormController.addEventSubmit();
+  }
+
   public renderPage(): HTMLElement {
     this.CONTAINER.innerHTML = this.LOGIN_PAGE_MARKUP;
     this.assignLoginPageEventListeners();
@@ -66,34 +94,6 @@ class LoginPage extends Page {
 
     this.handleSubmit();
     return this.CONTAINER;
-  }
-
-  private handleLockIconClick = (event: Event): void => {
-    const target = event.currentTarget as HTMLElement;
-    const passwordInput = this.CONTAINER.querySelector('.input-password') as HTMLInputElement;
-
-    if (!passwordInput.value) {
-      return;
-    }
-
-    if (passwordInput.type === 'password') {
-      target.innerHTML = Constants.OPENED_LOCK_ICON_MARKUP;
-      passwordInput.type = 'text';
-    } else if (passwordInput.type === 'text') {
-      target.innerHTML = Constants.CLOSED_LOCK_ICON_MARKUP;
-      passwordInput.type = 'password';
-    }
-  };
-
-  private assignLoginPageEventListeners(): void {
-    const lockIcon = this.CONTAINER.querySelector(Constants.LOCK_ICON_SELECTOR) as HTMLElement;
-    lockIcon.addEventListener('click', this.handleLockIconClick);
-  }
-
-  private handleSubmit(): void {
-    const loginForm = this.CONTAINER.querySelector('#login-form') as HTMLFormElement;
-    const loginFormController = new LoginFormController(loginForm);
-    loginFormController.addEventSubmit();
   }
 }
 

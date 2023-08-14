@@ -1,7 +1,7 @@
-import { ClientBuilder } from "@commercetools/sdk-client-v2";
-import { createApiBuilderFromCtpClient } from "@commercetools/platform-sdk";
-import { hostApi } from "../../src/backend/configure/configure";
-import { CtpClient } from "../../src/backend/ctpClient/ctpClient";
+import { ClientBuilder } from '@commercetools/sdk-client-v2';
+import { createApiBuilderFromCtpClient } from '@commercetools/platform-sdk';
+import { hostApi } from '../../src/backend/configure/configure';
+import { CtpClient } from '../../src/backend/ctpClient/ctpClient';
 
 describe('CtpClient', () => {
   let ctpClient: CtpClient;
