@@ -34,6 +34,12 @@ class Constants {
   static REGISTRATION_ADDRESS_PARTS = ['streetName', 'city', 'postalCode', 'country'];
 
   static FAILED_TO_FETCH_ERROR_MESSAGE = 'Failed to fetch';
+
+  static LOGIN_REQUIRED_FIELDS = ['email', 'password'];
+
+  static LOGIN_SUCCESS = 'You have successfully logged in. Welcome back';
+
+  static LOGIN_ERROR = 'Invalid username or password. Please try again or register.';
 }
 
 export default Constants;

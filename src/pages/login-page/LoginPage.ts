@@ -1,7 +1,10 @@
+/* eslint-disable no-console */
+import { ClientResponse, CustomerSignInResult, CustomerSignin, ErrorResponse } from '@commercetools/platform-sdk';
+import ToastifyHelper from '../../utils/TostifyHelper';
+import { CustomerLogin } from '../../backend/login/CustomerLogin';
 import Page from '../../components/templates/Page';
 import { ProjectPages } from '../../types/Enums';
 import Constants from '../../utils/Constants';
-import { LoginFormController } from './LoginFormController';
 import EmailValidator from '../../utils/ValidateEmail';
 import PasswordValidator from '../../utils/ValidatePassword';
 
@@ -33,6 +36,31 @@ class LoginPage extends Page {
     super(ProjectPages.Login);
   }
 
+  private handleLoginResponse(response: ClientResponse<CustomerSignInResult>): void {
+    if (response.statusCode === 200) {
+      ToastifyHelper.showToast(Constants.LOGIN_SUCCESS, Constants.TOAST_COLOR_GREEN);
+    } else {
+      ToastifyHelper.showToast(Constants.LOGIN_ERROR, Constants.TOAST_COLOR_RED);
+    }
+  }
+
+  private handleLoginFormSubmit = (event: Event): void => {
+    event.preventDefault();
+
+    const loginData: CustomerSignin = {
+      email: (this.CONTAINER.querySelector('input[name="email"]') as HTMLInputElement).value.trim(),
+      password: (this.CONTAINER.querySelector('input[name="password"]') as HTMLInputElement).value.trim(),
+    };
+
+    new CustomerLogin(loginData)
+      .signIn()
+      .then((response) => this.handleLoginResponse(response))
+      .catch((error: ClientResponse<ErrorResponse>) => {
+        const errorMessage = error.body.statusCode === 400 ? Constants.LOGIN_ERROR : error.body.message;
+        ToastifyHelper.showToast(errorMessage, Constants.TOAST_COLOR_RED);
+      });
+  };
+
   private handleLockIconClick = (event: Event): void => {
     const target = event.currentTarget as HTMLElement;
     const passwordInput = this.CONTAINER.querySelector('.input-password') as HTMLInputElement;
@@ -53,6 +81,10 @@ class LoginPage extends Page {
   private assignLoginPageEventListeners(): void {
     const lockIcon = this.CONTAINER.querySelector(Constants.LOCK_ICON_SELECTOR) as HTMLElement;
     lockIcon.addEventListener('click', this.handleLockIconClick);
+    (this.CONTAINER.querySelector('#login-form') as HTMLFormElement).addEventListener(
+      'submit',
+      this.handleLoginFormSubmit,
+    );
   }
 
   private setupRealTimeValidation(): void {
@@ -75,17 +107,10 @@ class LoginPage extends Page {
     });
   }
 
-  private handleSubmit(): void {
-    const loginForm = this.CONTAINER.querySelector('#login-form') as HTMLFormElement;
-    const logingFormController = new LoginFormController(loginForm);
-    logingFormController.addEventSubmit();
-  }
-
   public renderPage(): HTMLElement {
     this.CONTAINER.innerHTML = this.LOGIN_PAGE_MARKUP;
-    this.assignLoginPageEventListeners();
     this.setupRealTimeValidation();
-    this.handleSubmit();
+    this.assignLoginPageEventListeners();
     return this.CONTAINER;
   }
 }

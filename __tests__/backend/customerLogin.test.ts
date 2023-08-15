@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/dot-notation */
 import { CustomerSignin } from "@commercetools/platform-sdk";
 import { CtpClient } from "../../src/backend/ctpClient/ctpClient";
-import { CustomerLogin } from "../../src/backend/login/customer-login";
+import { CustomerLogin } from "../../src/backend/login/CustomerLogin";
 
 
 describe("CustomerLogin", () => {
