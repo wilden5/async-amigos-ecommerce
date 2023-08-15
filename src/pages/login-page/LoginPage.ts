@@ -1,10 +1,12 @@
+/* eslint-disable no-console */
+import { ClientResponse, CustomerSignInResult, CustomerSignin, ErrorResponse } from '@commercetools/platform-sdk';
+import ToastifyHelper from '../../utils/TostifyHelper';
+import { CustomerLogin } from '../../backend/login/CustomerLogin';
 import Page from '../../components/templates/Page';
-import { EmailHints, PasswordHints, ProjectPages } from '../../types/Enums';
+import { ProjectPages } from '../../types/Enums';
 import Constants from '../../utils/Constants';
-import { LoginFormController } from './LoginFormController';
 import EmailValidator from '../../utils/ValidateEmail';
 import PasswordValidator from '../../utils/ValidatePassword';
-import RealTimeValidationFactory from '../../utils/RealTimeValidationFactory';
 
 class LoginPage extends Page {
   private LOGIN_PAGE_MARKUP = `
@@ -14,12 +16,12 @@ class LoginPage extends Page {
     <form id="login-form">
       <div class="input-box">
         <span class="icon"><i class='bx bxs-envelope'></i></span>
-        <input type="email" autocomplete="current-email" name="email">
+        <input type="email" autocomplete="current-email" name="email" required>
         <label for="email">Email</label>
       </div>
       <div class="input-box">
         <span class="icon icon-lock"><i class='bx bxs-lock-alt'></i></span>
-        <input type="password" autocomplete="current-password" name="password" class="input-password">
+        <input type="password" autocomplete="current-password" name="password" class="input-password" required>
         <label for="password">Password</label>
       </div>
       <button class="main-btn" type="submit">Login</button>
@@ -33,6 +35,31 @@ class LoginPage extends Page {
   constructor() {
     super(ProjectPages.Login);
   }
+
+  private handleLoginResponse(response: ClientResponse<CustomerSignInResult>): void {
+    if (response.statusCode === 200) {
+      ToastifyHelper.showToast(Constants.LOGIN_SUCCESS, Constants.TOAST_COLOR_GREEN);
+    } else {
+      ToastifyHelper.showToast(Constants.LOGIN_ERROR, Constants.TOAST_COLOR_RED);
+    }
+  }
+
+  private handleLoginFormSubmit = (event: Event): void => {
+    event.preventDefault();
+
+    const loginData: CustomerSignin = {
+      email: (this.CONTAINER.querySelector('input[name="email"]') as HTMLInputElement).value.trim(),
+      password: (this.CONTAINER.querySelector('input[name="password"]') as HTMLInputElement).value.trim(),
+    };
+
+    new CustomerLogin(loginData)
+      .signIn()
+      .then((response) => this.handleLoginResponse(response))
+      .catch((error: ClientResponse<ErrorResponse>) => {
+        const errorMessage = error.body.statusCode === 400 ? Constants.LOGIN_ERROR : error.body.message;
+        ToastifyHelper.showToast(errorMessage, Constants.TOAST_COLOR_RED);
+      });
+  };
 
   private handleLockIconClick = (event: Event): void => {
     const target = event.currentTarget as HTMLElement;
@@ -54,45 +81,36 @@ class LoginPage extends Page {
   private assignLoginPageEventListeners(): void {
     const lockIcon = this.CONTAINER.querySelector(Constants.LOCK_ICON_SELECTOR) as HTMLElement;
     lockIcon.addEventListener('click', this.handleLockIconClick);
+    (this.CONTAINER.querySelector('#login-form') as HTMLFormElement).addEventListener(
+      'submit',
+      this.handleLoginFormSubmit,
+    );
   }
 
-  private handleSubmit(): void {
-    const loginForm = this.CONTAINER.querySelector('#login-form') as HTMLFormElement;
-    const loginFormController = new LoginFormController(loginForm);
-    loginFormController.addEventSubmit();
+  private setupRealTimeValidation(): void {
+    const emailInput = this.CONTAINER.querySelector('input[name="email"]') as HTMLInputElement;
+    emailInput.addEventListener('change', (): void => {
+      const email: string = emailInput.value;
+      if (typeof EmailValidator.validate(email) === 'boolean') return;
+      if (typeof EmailValidator.validate(email) === 'string') {
+        console.log(EmailValidator.validate(email));
+      }
+    });
+
+    const passInput = this.CONTAINER.querySelector('input[name="password"]') as HTMLInputElement;
+    passInput.addEventListener('change', (): void => {
+      const password: string = passInput.value;
+      if (typeof PasswordValidator.validate(password) === 'boolean') return;
+      if (typeof PasswordValidator.validate(password) === 'string') {
+        console.log(PasswordValidator.validate(password));
+      }
+    });
   }
 
   public renderPage(): HTMLElement {
     this.CONTAINER.innerHTML = this.LOGIN_PAGE_MARKUP;
+    this.setupRealTimeValidation();
     this.assignLoginPageEventListeners();
-
-    const emailInput = this.CONTAINER.querySelector('input[name="email"]') as HTMLInputElement;
-    const passInput = this.CONTAINER.querySelector('input[name="password"]') as HTMLInputElement;
-
-    const emailValidationHints = {
-      [EmailHints.EmailFormatHint]: EmailHints.EmailFormatHint,
-    };
-    RealTimeValidationFactory.setupValidation(
-      emailInput,
-      EmailValidator.validate.bind(EmailValidator),
-      emailValidationHints,
-    );
-
-    const passValidationHints = {
-      [PasswordHints.LengthHint]: PasswordHints.LengthHint,
-      [PasswordHints.UpperLettersHint]: PasswordHints.UpperLettersHint,
-      [PasswordHints.LowerLettersHint]: PasswordHints.LowerLettersHint,
-      [PasswordHints.DigitsHint]: PasswordHints.DigitsHint,
-      [PasswordHints.SpacesHint]: PasswordHints.SpacesHint,
-      [PasswordHints.SpecialCharsHint]: PasswordHints.SpecialCharsHint,
-    };
-    RealTimeValidationFactory.setupValidation(
-      passInput,
-      PasswordValidator.validate.bind(PasswordValidator),
-      passValidationHints,
-    );
-
-    this.handleSubmit();
     return this.CONTAINER;
   }
 }

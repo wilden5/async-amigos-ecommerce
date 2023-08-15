@@ -1,10 +1,11 @@
 import { ClientResponse, CustomerDraft, CustomerSignInResult } from '@commercetools/platform-sdk';
 import { CtpClient } from '../ctpClient/ctpClient';
+import RegistrationValidator from './RegistrationValidator';
 
 export class CustomerRegistration {
   private ctpClient: CtpClient;
 
-  private customerData: CustomerDraft;
+  private readonly customerData: CustomerDraft;
 
   constructor(customerData: CustomerDraft) {
     this.ctpClient = new CtpClient();
@@ -12,7 +13,8 @@ export class CustomerRegistration {
   }
 
   async createCustomer(): Promise<ClientResponse<CustomerSignInResult>> {
-    if (this.customerData.email && this.customerData.password) {
+    try {
+      await RegistrationValidator.validateCustomerData(this.customerData);
       const response = await this.ctpClient
         .withClientCredentialsFlow()
         .customers()
@@ -21,7 +23,8 @@ export class CustomerRegistration {
         })
         .execute();
       return response;
+    } catch (error) {
+      return Promise.reject(error);
     }
-    throw new Error('Email or password is missing');
   }
 }
