@@ -1,9 +1,11 @@
 import { ClientResponse, CustomerDraft, CustomerSignInResult } from '@commercetools/platform-sdk';
+import JustValidate, { Rules } from 'just-validate';
 import Page from '../../components/templates/Page';
 import { ProjectPages } from '../../types/Enums';
 import Constants from '../../utils/Constants';
 import { CustomerRegistration } from '../../backend/registration/CustomerRegistration';
 import ToastifyHelper from '../../utils/TostifyHelper';
+import RegistrationPageValidation from './RegistrationPageValidation';
 
 class RegistrationPage extends Page {
   private REGISTRATION_PAGE_MARKUP = `
@@ -13,59 +15,59 @@ class RegistrationPage extends Page {
       <div class="register">
           <p class='customer-message'>Already a Customer?<a href="#login" class="login-link">Login</a></p>
         </div>
-      <form id="register-form">
+      <form class="register-form">
         <div class="input-box">
           <span class="icon"><i class='bx bxs-envelope'></i></span>
-            <input type="email" name="email" required>
+            <input class='input-email' type="email" name="email">
             <label for="email">Email</label>
         </div>
         <div class="input-box">
           <span class="icon icon-lock"><i class='bx bxs-lock-alt'></i></span>
-          <input type="password" autocomplete='reg-password' name="password" class="input-password" required>
+          <input class="input-password" type="password" autocomplete='reg-password' name="password">
           <label for="password">Password</label>
         </div>
         <div class="input-box">
           <span class="icon"><i class='bx bxs-user'></i></span>
-          <input type="text" name="firstName" pattern="[A-Za-z]+" required>
+          <input class='input-first-name' type="text" name="firstName">
           <label for="firstName">First Name</label>
         </div>
         <div class="input-box">
           <span class="icon"><i class='bx bxs-user'></i></span>
-          <input type="text" name="lastName" pattern="[A-Za-z]+" required>
+          <input class='input-last-name' type="text" name="lastName">
           <label for="lastName">Last Name</label>
         </div>
         <div class="input-box">
           <span class="icon"><i class='bx bxs-calendar'></i></span>
-          <input type="date" name="dob">
+          <input class='input-date-of-birth' type="date" name="dob">
           <label for="dob">Date of Birth</label>
         </div>
         <div class="input-box">
-          <span class="icon"><i class='bx bxs-traffic'></i></span>
-          <input type="text" name="street" required>
-          <label for="street">Street</label>
-        </div>
-        <div class="input-box">
-          <span class="icon"><i class='bx bxs-city'></i></span>
-          <input type="text" name="city" pattern="[A-Za-z]+" required>
-          <label for="city">City</label>
-        </div>
-        <div class="input-box">
-          <span class="icon"><i class='bx bxs-building-house'></i></span>
-          <input type="text" name="postalCode" pattern="[A-Za-z0-9\\s]+" required>
-          <label for="postalCode">Postal Code</label>
-        </div>
-        <div class="input-box">
           <span class="icon"><i class='bx bx-globe'></i></span>
-          <select name="country" required>
+          <select class='select-country' name="country">
             <option value="" disabled selected>Select Country</option>
             <option value="US">United States</option>
             <option value="CA">Canada</option>
             <!-- Add more countries here -->
           </select>
         </div>
+        <div class="input-box">
+          <span class="icon"><i class='bx bxs-city'></i></span>
+          <input class='input-city address-part' type="text" name="city">
+          <label for="city">City</label>
+        </div>
+        <div class="input-box">
+          <span class="icon"><i class='bx bxs-traffic'></i></span>
+          <input class='input-street address-part' type="text" name="street">
+          <label for="street">Street</label>
+        </div>
+        <div class="input-box">
+          <span class="icon"><i class='bx bxs-building-house'></i></span>
+          <input class='input-postal-code address-part' type="text" name="postalCode">
+          <label for="postalCode">Postal Code</label>
+        </div>
         <div class="check">
           <label for="acceptTerms">
-            <input type="checkbox" name="acceptTerms">I accept terms and conditions</input>
+            <input class='accept-terms' type="checkbox" name="acceptTerms">I accept terms and conditions</input>
           </label>
         </div>
         <button class="main-btn" type="submit">Register me</button>
@@ -75,6 +77,96 @@ class RegistrationPage extends Page {
 
   constructor() {
     super(ProjectPages.Registration);
+  }
+
+  private clientSideValidation(): void {
+    const validator = new JustValidate(this.CONTAINER.querySelector('.register-form') as HTMLFormElement);
+    validator
+      .addField('.input-email', [
+        {
+          rule: Rules.Required,
+        },
+        {
+          rule: Rules.Email,
+        },
+      ])
+      .addField('.input-password', [
+        {
+          rule: Rules.Required,
+        },
+        {
+          rule: Rules.StrongPassword,
+        },
+      ])
+      .addField('.input-first-name', [
+        {
+          rule: Rules.Required,
+        },
+        {
+          rule: Rules.MinLength,
+          value: 1,
+        },
+        {
+          rule: Rules.CustomRegexp,
+          value: /^[A-Za-z\s]+$/,
+          errorMessage: 'Must contain no special characters or numbers',
+        },
+      ])
+      .addField('.input-last-name', [
+        {
+          rule: Rules.Required,
+        },
+        {
+          rule: Rules.MinLength,
+          value: 1,
+        },
+        {
+          rule: Rules.CustomRegexp,
+          value: /^[A-Za-z\s]+$/,
+          errorMessage: 'Must contain no special characters or numbers',
+        },
+      ])
+      .addField('.input-street', [
+        {
+          rule: Rules.Required,
+        },
+        {
+          rule: Rules.MinLength,
+          value: 1,
+        },
+      ])
+      .addField('.input-city', [
+        {
+          rule: Rules.Required,
+        },
+        {
+          rule: Rules.MinLength,
+          value: 1,
+        },
+        {
+          rule: Rules.CustomRegexp,
+          value: /^[A-Za-z\s]+$/,
+          errorMessage: 'Must contain no special characters or numbers',
+        },
+      ])
+      .addField('.input-postal-code', [
+        {
+          rule: Rules.Required,
+        },
+        {
+          validator: (value): boolean => {
+            const countryField = this.CONTAINER.querySelector('.select-country') as HTMLInputElement;
+            const countryValue = countryField.value;
+            return RegistrationPageValidation.isPostalCodeValid(countryValue, value as string);
+          },
+          // errorMessage: RegistrationPageValidation.getPostalCodeErrorMessage();
+        },
+      ])
+      .addField('.select-country', [
+        {
+          rule: Rules.Required,
+        },
+      ]);
   }
 
   private handleRegistrationResponse(response: ClientResponse<CustomerSignInResult>): void {
@@ -117,7 +209,7 @@ class RegistrationPage extends Page {
   };
 
   private assignRegistrationPageEventListeners(): void {
-    (this.CONTAINER.querySelector('#register-form') as HTMLFormElement).addEventListener(
+    (this.CONTAINER.querySelector('.register-form') as HTMLFormElement).addEventListener(
       'submit',
       this.handleRegistrationFormSubmit,
     );
@@ -126,6 +218,7 @@ class RegistrationPage extends Page {
   public renderPage(): HTMLElement {
     this.CONTAINER.innerHTML = this.REGISTRATION_PAGE_MARKUP;
     this.assignRegistrationPageEventListeners();
+    this.clientSideValidation();
     return this.CONTAINER;
   }
 }
