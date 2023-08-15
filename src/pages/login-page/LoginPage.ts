@@ -1,12 +1,10 @@
-/* eslint-disable no-console */
 import { ClientResponse, CustomerSignInResult, CustomerSignin, ErrorResponse } from '@commercetools/platform-sdk';
+import JustValidate, { Rules } from 'just-validate';
 import ToastifyHelper from '../../utils/TostifyHelper';
 import { CustomerLogin } from '../../backend/login/CustomerLogin';
 import Page from '../../components/templates/Page';
 import { ProjectPages } from '../../types/Enums';
 import Constants from '../../utils/Constants';
-import EmailValidator from '../../utils/ValidateEmail';
-import PasswordValidator from '../../utils/ValidatePassword';
 
 class LoginPage extends Page {
   private LOGIN_PAGE_MARKUP = `
@@ -16,12 +14,12 @@ class LoginPage extends Page {
     <form id="login-form">
       <div class="input-box">
         <span class="icon"><i class='bx bxs-envelope'></i></span>
-        <input type="email" autocomplete="current-email" name="email" required>
+        <input class="input-email" type="email" autocomplete="current-email" name="email" >
         <label for="email">Email</label>
       </div>
       <div class="input-box">
         <span class="icon icon-lock"><i class='bx bxs-lock-alt'></i></span>
-        <input type="password" autocomplete="current-password" name="password" class="input-password" required>
+        <input class="input-password" type="password" autocomplete="current-password" name="password">
         <label for="password">Password</label>
       </div>
       <button class="main-btn" type="submit">Login</button>
@@ -48,14 +46,14 @@ class LoginPage extends Page {
     event.preventDefault();
 
     const loginData: CustomerSignin = {
-      email: (this.CONTAINER.querySelector('input[name="email"]') as HTMLInputElement).value.trim(),
+      email: (this.CONTAINER.querySelector('.input-email') as HTMLInputElement).value.trim(),
       password: (this.CONTAINER.querySelector('input[name="password"]') as HTMLInputElement).value.trim(),
     };
 
     new CustomerLogin(loginData)
       .signIn()
-      .then((response) => this.handleLoginResponse(response))
-      .catch((error: ClientResponse<ErrorResponse>) => {
+      .then((response): void => this.handleLoginResponse(response))
+      .catch((error: ClientResponse<ErrorResponse>): void => {
         const errorMessage = error.body.statusCode === 400 ? Constants.LOGIN_ERROR : error.body.message;
         ToastifyHelper.showToast(errorMessage, Constants.TOAST_COLOR_RED);
       });
@@ -87,29 +85,24 @@ class LoginPage extends Page {
     );
   }
 
-  private setupRealTimeValidation(): void {
-    const emailInput = this.CONTAINER.querySelector('input[name="email"]') as HTMLInputElement;
-    emailInput.addEventListener('change', (): void => {
-      const email: string = emailInput.value;
-      if (typeof EmailValidator.validate(email) === 'boolean') return;
-      if (typeof EmailValidator.validate(email) === 'string') {
-        console.log(EmailValidator.validate(email));
-      }
-    });
+  // ! Just Validate --->
+  private clientSideValidation(): void {
+    const LOGIN_FORM = this.CONTAINER.querySelector('#login-form') as HTMLFormElement;
+    const ValidationConfig = {
+      validateBeforeSubmitting: true,
+      focusInvalidField: true,
+      testingMode: true,
+    };
 
-    const passInput = this.CONTAINER.querySelector('input[name="password"]') as HTMLInputElement;
-    passInput.addEventListener('change', (): void => {
-      const password: string = passInput.value;
-      if (typeof PasswordValidator.validate(password) === 'boolean') return;
-      if (typeof PasswordValidator.validate(password) === 'string') {
-        console.log(PasswordValidator.validate(password));
-      }
-    });
+    const validator = new JustValidate(LOGIN_FORM, ValidationConfig);
+    validator
+      .addField('.input-email', [{ rule: Rules.Required }, { rule: Rules.Email }])
+      .addField('.input-password', [{ rule: Rules.Required }, { rule: Rules.StrongPassword }]);
   }
 
   public renderPage(): HTMLElement {
     this.CONTAINER.innerHTML = this.LOGIN_PAGE_MARKUP;
-    this.setupRealTimeValidation();
+    this.clientSideValidation();
     this.assignLoginPageEventListeners();
     return this.CONTAINER;
   }

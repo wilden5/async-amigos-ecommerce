@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/dot-notation */
-import { CustomerSignin } from "@commercetools/platform-sdk";
-import { CtpClient } from "../../src/backend/ctpClient/ctpClient";
-import { CustomerLogin } from "../../src/backend/login/CustomerLogin";
+import { CustomerSignin } from '@commercetools/platform-sdk';
+import { CtpClient } from '../../src/backend/ctpClient/ctpClient';
+import { CustomerLogin } from '../../src/backend/login/CustomerLogin';
 
 describe('CustomerLogin', () => {
   let customerLogin: CustomerLogin;
@@ -42,14 +42,11 @@ describe('CustomerLogin', () => {
       });
       customerLogin.ctpClient.withPasswordFlow = mockWithPasswordFlow;
       await customerLogin.signIn();
-      expect(mockWithPasswordFlow).toHaveBeenCalledWith(
-        loginData.email,
-        loginData.password
-      );
+      expect(mockWithPasswordFlow).toHaveBeenCalledWith(loginData.email, loginData.password);
     });
 
-    it("should return a promise that resolves to a ClientResponse<CustomerSignInResult> object", async () => {
-      const mockResponse = { body: { customer: { id: "123" } } };
+    it('should return a promise that resolves to a ClientResponse<CustomerSignInResult> object', async () => {
+      const mockResponse = { body: { customer: { id: '123' } } };
       const mockWithPasswordFlow = jest.fn().mockReturnValue({
         login: jest.fn().mockReturnValue({
           post: jest.fn().mockReturnValue({
