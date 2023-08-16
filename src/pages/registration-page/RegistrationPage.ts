@@ -35,7 +35,6 @@ class RegistrationPage extends Page {
           <label for="lastName">Last Name</label>
         </div>
         <div class="input-box">
-          <span class="icon"><i class='bx bxs-calendar'></i></span>
           <input type="date" name="dob">
           <label for="dob">Date of Birth</label>
         </div>
@@ -57,11 +56,11 @@ class RegistrationPage extends Page {
         <div class="input-box">
           <span class="icon"><i class='bx bx-globe'></i></span>
           <select name="country" required>
-            <option value="" disabled selected>Select Country</option>
+            <option value="" disabled selected>...</option>
             <option value="US">United States</option>
             <option value="CA">Canada</option>
-            <!-- Add more countries here -->
           </select>
+            <label for="country">Country</label>
         </div>
         <div class="check">
           <label for="acceptTerms">

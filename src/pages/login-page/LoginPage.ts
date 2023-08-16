@@ -14,7 +14,7 @@ class LoginPage extends Page {
     <form id="login-form">
       <div class="input-box">
         <span class="icon"><i class='bx bxs-envelope'></i></span>
-        <input class="input-email" type="email" autocomplete="current-email" name="email" >
+        <input class="input-email" type="email" autocomplete="email" name="email" >
         <label for="email">Email</label>
       </div>
       <div class="input-box">
