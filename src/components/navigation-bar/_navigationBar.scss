@@ -8,9 +8,12 @@
 
   & a {
     color: #162938;
+    transition: color 0.4s ease-in-out, box-shadow 0.4s ease-in-out;
+
     &:hover {
       color: #b91313;
-      transform: scale(1.1);
+      transform: scale(1.05);
+      transition: 0.4s;
     }
   }
 }
