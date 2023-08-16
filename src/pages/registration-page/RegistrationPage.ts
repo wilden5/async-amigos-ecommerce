@@ -1,5 +1,4 @@
 import { ClientResponse, CustomerDraft, CustomerSignInResult } from '@commercetools/platform-sdk';
-import JustValidate, { Rules } from 'just-validate';
 import Page from '../../components/templates/Page';
 import { ProjectPages } from '../../types/Enums';
 import Constants from '../../utils/Constants';
@@ -79,96 +78,6 @@ class RegistrationPage extends Page {
     super(ProjectPages.Registration);
   }
 
-  private clientSideValidation(): void {
-    let countryValue: string;
-    const validator = new JustValidate(this.CONTAINER.querySelector('.register-form') as HTMLFormElement);
-    validator
-      .addField('.input-email', [
-        {
-          rule: Rules.Required,
-        },
-        {
-          rule: Rules.Email,
-        },
-      ])
-      .addField('.input-password', [
-        {
-          rule: Rules.Required,
-        },
-        {
-          rule: Rules.StrongPassword,
-        },
-      ])
-      .addField('.input-first-name', [
-        {
-          rule: Rules.Required,
-        },
-        {
-          rule: Rules.MinLength,
-          value: 1,
-        },
-        {
-          rule: Rules.CustomRegexp,
-          value: /^[A-Za-z\s]+$/,
-          errorMessage: 'Must contain no special characters or numbers',
-        },
-      ])
-      .addField('.input-last-name', [
-        {
-          rule: Rules.Required,
-        },
-        {
-          rule: Rules.MinLength,
-          value: 1,
-        },
-        {
-          rule: Rules.CustomRegexp,
-          value: /^[A-Za-z\s]+$/,
-          errorMessage: 'Must contain no special characters or numbers',
-        },
-      ])
-      .addField('.input-street', [
-        {
-          rule: Rules.Required,
-        },
-        {
-          rule: Rules.MinLength,
-          value: 1,
-        },
-      ])
-      .addField('.input-city', [
-        {
-          rule: Rules.Required,
-        },
-        {
-          rule: Rules.MinLength,
-          value: 1,
-        },
-        {
-          rule: Rules.CustomRegexp,
-          value: /^[A-Za-z\s]+$/,
-          errorMessage: 'Must contain no special characters or numbers',
-        },
-      ])
-      .addField('.input-postal-code', [
-        {
-          rule: Rules.Required,
-        },
-        {
-          validator: (value): boolean => {
-            countryValue = (this.CONTAINER.querySelector('.select-country') as HTMLInputElement).value;
-            return RegistrationPageValidation.isPostalCodeValid(countryValue, value as string);
-          },
-          errorMessage: (): string => RegistrationPageValidation.getPostalCodeErrorMessage(countryValue),
-        },
-      ])
-      .addField('.select-country', [
-        {
-          rule: Rules.Required,
-        },
-      ]);
-  }
-
   private handleRegistrationResponse(response: ClientResponse<CustomerSignInResult>): void {
     if (response.statusCode === 201) {
       ToastifyHelper.showToast(Constants.ACCOUNT_HAS_BEEN_CREATED, Constants.TOAST_COLOR_GREEN);
@@ -218,7 +127,7 @@ class RegistrationPage extends Page {
   public renderPage(): HTMLElement {
     this.CONTAINER.innerHTML = this.REGISTRATION_PAGE_MARKUP;
     this.assignRegistrationPageEventListeners();
-    this.clientSideValidation();
+    new RegistrationPageValidation().performRegistrationFormValidation(this.CONTAINER);
     return this.CONTAINER;
   }
 }
