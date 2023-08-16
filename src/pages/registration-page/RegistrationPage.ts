@@ -3,8 +3,8 @@ import Page from '../../components/templates/Page';
 import { ProjectPages } from '../../types/Enums';
 import Constants from '../../utils/Constants';
 import { CustomerRegistration } from '../../backend/registration/CustomerRegistration';
-import ToastifyHelper from '../../utils/TostifyHelper';
-import RegistrationPageValidation from './RegistrationPageValidation';
+import TostifyHelper from '../../utils/TostifyHelper';
+import RegistrationPageValidator from './RegistrationPageValidator';
 
 class RegistrationPage extends Page {
   private REGISTRATION_PAGE_MARKUP = `
@@ -80,9 +80,9 @@ class RegistrationPage extends Page {
 
   private handleRegistrationResponse(response: ClientResponse<CustomerSignInResult>): void {
     if (response.statusCode === 201) {
-      ToastifyHelper.showToast(Constants.ACCOUNT_HAS_BEEN_CREATED, Constants.TOAST_COLOR_GREEN);
+      TostifyHelper.showToast(Constants.ACCOUNT_HAS_BEEN_CREATED, Constants.TOAST_COLOR_GREEN);
     } else {
-      ToastifyHelper.showToast(Constants.ACCOUNT_CREATION_ERROR, Constants.TOAST_COLOR_RED);
+      TostifyHelper.showToast(Constants.ACCOUNT_CREATION_ERROR, Constants.TOAST_COLOR_RED);
     }
   }
 
@@ -113,7 +113,7 @@ class RegistrationPage extends Page {
       .catch((error: Error) => {
         const errorMessage =
           error.message === Constants.FAILED_TO_FETCH_ERROR_MESSAGE ? Constants.ACCOUNT_CREATION_ERROR : error.message;
-        ToastifyHelper.showToast(errorMessage, Constants.TOAST_COLOR_RED);
+        TostifyHelper.showToast(errorMessage, Constants.TOAST_COLOR_RED);
       });
   };
 
@@ -127,7 +127,7 @@ class RegistrationPage extends Page {
   public renderPage(): HTMLElement {
     this.CONTAINER.innerHTML = this.REGISTRATION_PAGE_MARKUP;
     this.assignRegistrationPageEventListeners();
-    new RegistrationPageValidation().performRegistrationFormValidation(this.CONTAINER);
+    new RegistrationPageValidator().performRegistrationFormValidation(this.CONTAINER);
     return this.CONTAINER;
   }
 }

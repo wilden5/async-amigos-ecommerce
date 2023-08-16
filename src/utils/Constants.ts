@@ -40,6 +40,18 @@ class Constants {
   static LOGIN_SUCCESS = 'You have successfully logged in. Welcome back';
 
   static LOGIN_ERROR = 'Invalid username or password. Please try again or register.';
+
+  static POSTAL_CODE_ERROR_USA = 'Postal code should be 5 digits for USA';
+
+  static POSTAL_CODE_ERROR_CANADA = 'Postal code should be in the format A1B 2C3 for Canada';
+
+  static POSTAL_CODE_ERROR_GENERIC = 'Invalid postal code';
+
+  static NO_NUMBERS_OR_SPECIAL_CHAR_ERROR = 'Must contain no special characters or numbers';
+
+  static INVALID_AGE_ERROR = 'Age should be above 13 years old';
+
+  static MIN_AGE_DATE = '2010-08-16';
 }
 
 export default Constants;
