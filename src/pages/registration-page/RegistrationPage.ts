@@ -80,6 +80,7 @@ class RegistrationPage extends Page {
   }
 
   private clientSideValidation(): void {
+    let countryValue: string;
     const validator = new JustValidate(this.CONTAINER.querySelector('.register-form') as HTMLFormElement);
     validator
       .addField('.input-email', [
@@ -155,11 +156,10 @@ class RegistrationPage extends Page {
         },
         {
           validator: (value): boolean => {
-            const countryField = this.CONTAINER.querySelector('.select-country') as HTMLInputElement;
-            const countryValue = countryField.value;
+            countryValue = (this.CONTAINER.querySelector('.select-country') as HTMLInputElement).value;
             return RegistrationPageValidation.isPostalCodeValid(countryValue, value as string);
           },
-          // errorMessage: RegistrationPageValidation.getPostalCodeErrorMessage();
+          errorMessage: (): string => RegistrationPageValidation.getPostalCodeErrorMessage(countryValue),
         },
       ])
       .addField('.select-country', [
