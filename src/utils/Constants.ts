@@ -40,6 +40,11 @@ class Constants {
   static LOGIN_SUCCESS = 'You have successfully logged in. Welcome back';
 
   static LOGIN_ERROR = 'Invalid username or password. Please try again or register.';
+
+  static INVALID_PASSWORD_ERROR_MESSAGE =
+    'Password should contain minimum eight characters, at least one uppercase letter, one lowercase letter, one number and one special character';
+
+  static INVALID_EMAIL_ERROR_MESSAGE = 'Email has invalid format';
 }
 
 export default Constants;

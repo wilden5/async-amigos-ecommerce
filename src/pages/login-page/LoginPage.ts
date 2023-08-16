@@ -1,4 +1,4 @@
-import { ClientResponse, CustomerSignInResult, CustomerSignin, ErrorResponse } from '@commercetools/platform-sdk';
+import { ClientResponse, CustomerSignInResult, CustomerSignin } from '@commercetools/platform-sdk';
 import JustValidate from 'just-validate';
 import ToastifyHelper from '../../utils/TostifyHelper';
 import { CustomerLogin } from '../../backend/login/CustomerLogin';
@@ -59,8 +59,9 @@ class LoginPage extends Page {
     new CustomerLogin(loginData)
       .signIn()
       .then((response): void => this.handleLoginResponse(response))
-      .catch((error: ClientResponse<ErrorResponse>): void => {
-        const errorMessage = error.body.statusCode === 400 ? Constants.LOGIN_ERROR : error.body.message;
+      .catch((error: Error): void => {
+        const errorMessage =
+          error.message === Constants.FAILED_TO_FETCH_ERROR_MESSAGE ? Constants.LOGIN_ERROR : error.message;
         ToastifyHelper.showToast(errorMessage, Constants.TOAST_COLOR_RED);
       });
   };

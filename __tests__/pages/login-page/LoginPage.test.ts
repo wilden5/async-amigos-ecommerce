@@ -1,5 +1,6 @@
 import { fireEvent } from '@testing-library/dom';
 import LoginPage from '../../../src/pages/login-page/LoginPage';
+import Constants from '../../../src/utils/Constants';
 
 describe('LoginPage', (): void => {
   let loginPage: LoginPage;
@@ -39,19 +40,24 @@ describe('LoginPage', (): void => {
   });
 
   // ! LoginPage clientSideValidation
-  it.skip('should perform client-side validation on login form', () => {
+  test('should perform client-side validation for Login Form', (done) => {
     const emailInput = actualPageMarkup.querySelector('.input-email') as HTMLInputElement;
-    const passwordInput = actualPageMarkup.querySelector('.input-password') as HTMLInputElement;
     const submitButton = actualPageMarkup.querySelector('.main-btn') as HTMLButtonElement;
-
-    fireEvent.click(submitButton);
+    const passwordInput = actualPageMarkup.querySelector('.input-password') as HTMLInputElement;
 
     fireEvent.change(emailInput, { target: { value: 'invalid-email' } });
+    fireEvent.change(passwordInput, { target: { value: '123' } });
     fireEvent.click(submitButton);
-    expect(emailInput.parentElement?.classList).toContain('js-validate-error');
 
-    fireEvent.change(passwordInput, { target: { value: 'invalid-email' } });
-    fireEvent.click(submitButton);
-    expect(passwordInput.parentElement?.classList).toContain('js-validate-error');
+    const checkInterval = setInterval(() => {
+      const emailErrorLabel = actualPageMarkup.querySelector('[data-test-id="error-label-1"]');
+      const passwordErrorLabel = actualPageMarkup.querySelector('[data-test-id="error-label-2"]');
+      if (emailErrorLabel !== null && passwordErrorLabel !== null) {
+        clearInterval(checkInterval);
+        expect(emailErrorLabel.textContent).toContain(Constants.INVALID_EMAIL_ERROR_MESSAGE);
+        expect(passwordErrorLabel.textContent).toContain(Constants.INVALID_PASSWORD_ERROR_MESSAGE);
+        done();
+      }
+    }, 100);
   });
 });
