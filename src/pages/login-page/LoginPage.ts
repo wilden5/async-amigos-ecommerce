@@ -1,10 +1,16 @@
 import { ClientResponse, CustomerSignInResult, CustomerSignin, ErrorResponse } from '@commercetools/platform-sdk';
-import JustValidate, { Rules } from 'just-validate';
+import JustValidate from 'just-validate';
 import ToastifyHelper from '../../utils/TostifyHelper';
 import { CustomerLogin } from '../../backend/login/CustomerLogin';
 import Page from '../../components/templates/Page';
 import { ProjectPages } from '../../types/Enums';
 import Constants from '../../utils/Constants';
+
+enum Rules {
+  Required = 'required',
+  Email = 'email',
+  StrongPassword = 'strongPassword',
+}
 
 class LoginPage extends Page {
   private LOGIN_PAGE_MARKUP = `

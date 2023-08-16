@@ -18,6 +18,7 @@
   "author": "async-amigos",
   "license": "MIT",
   "devDependencies": {
+    "@testing-library/dom": "^9.3.1",
     "@types/jest": "^29.5.3",
     "@types/toastify-js": "^1.12.0",
     "@typescript-eslint/eslint-plugin": "^5.59.7",
