@@ -1,5 +1,7 @@
 import RegistrationPage from '../../../src/pages/registration-page/RegistrationPage';
 
+jest.mock('./__mocks__/just-validate-plugin-date');
+
 describe('RegistrationPage', (): void => {
   let registrationPage: RegistrationPage;
   let actualPageMarkup: HTMLElement;
@@ -28,7 +30,7 @@ describe('RegistrationPage', (): void => {
   });
 
   test('Registration form should be present', () => {
-    const registerForm = actualPageMarkup.querySelector('form#register-form');
+    const registerForm = actualPageMarkup.querySelector('.register-form');
     expect(registerForm).not.toBeNull();
   });
 

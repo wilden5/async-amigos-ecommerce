@@ -21,9 +21,7 @@ describe('App', () => {
 
   test('init method should be called during app initialization', () => {
     const initSpy = jest.spyOn(app, 'init');
-
     app.init();
-
     expect(initSpy).toHaveBeenCalled();
   });
 });

@@ -78,6 +78,7 @@
     "install": "^0.13.0",
     "jest-mock": "^29.6.2",
     "just-validate": "^4.2.0",
+    "just-validate-plugin-date": "^1.2.0",
     "node-fetch": "^3.3.2",
     "npm": "^9.8.1",
     "toastify-js": "^1.12.0"
