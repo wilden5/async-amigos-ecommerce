@@ -1,4 +1,5 @@
-import JustValidate, { Rules } from 'just-validate';
+import JustValidate from 'just-validate';
+import { Rules } from '../../types/Enums';
 
 class LoginFormValidation {
   public validateLoginFormFields(container: HTMLElement): void {

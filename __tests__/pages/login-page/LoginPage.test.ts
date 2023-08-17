@@ -2,7 +2,7 @@ import { fireEvent } from '@testing-library/dom';
 import LoginPage from '../../../src/pages/login-page/LoginPage';
 import Constants from '../../../src/utils/Constants';
 
-describe.skip('LoginPage', (): void => {
+describe('LoginPage', (): void => {
   let loginPage: LoginPage;
   let actualPageMarkup: HTMLElement;
 
