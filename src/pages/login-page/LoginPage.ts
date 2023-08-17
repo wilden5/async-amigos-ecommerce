@@ -1,10 +1,10 @@
 import { ClientResponse, CustomerSignInResult, CustomerSignin } from '@commercetools/platform-sdk';
-import JustValidate, { Rules } from 'just-validate';
 import ToastifyHelper from '../../utils/TostifyHelper';
 import { CustomerLogin } from '../../backend/login/CustomerLogin';
 import Page from '../../components/templates/Page';
 import { ProjectPages } from '../../types/Enums';
 import Constants from '../../utils/Constants';
+import LoginFormValidation from './LoginFormValidation';
 
 class LoginPage extends Page {
   private LOGIN_PAGE_MARKUP = `
@@ -30,8 +30,11 @@ class LoginPage extends Page {
   </div>
 </div>`;
 
+  private readonly LOGIN_FORM_VALIDATION: LoginFormValidation;
+
   constructor() {
     super(ProjectPages.Login);
+    this.LOGIN_FORM_VALIDATION = new LoginFormValidation();
   }
 
   private handleLoginResponse(response: ClientResponse<CustomerSignInResult>): void {
@@ -54,7 +57,7 @@ class LoginPage extends Page {
       .signIn()
       .then((response): void => this.handleLoginResponse(response))
       .catch((error: Error): void => {
-        const errorMessage =
+        const errorMessage: string =
           error.message === Constants.FAILED_TO_FETCH_ERROR_MESSAGE ? Constants.LOGIN_ERROR : error.message;
         ToastifyHelper.showToast(errorMessage, Constants.TOAST_COLOR_RED);
       });
@@ -86,24 +89,9 @@ class LoginPage extends Page {
     );
   }
 
-  // ! Just Validate --->
-  private clientSideValidation(): void {
-    const LOGIN_FORM = this.CONTAINER.querySelector('#login-form') as HTMLFormElement;
-    const ValidationConfig = {
-      validateBeforeSubmitting: true,
-      focusInvalidField: true,
-      testingMode: true,
-    };
-
-    const validator = new JustValidate(LOGIN_FORM, ValidationConfig);
-    validator
-      .addField('.input-email', [{ rule: Rules.Required }, { rule: Rules.Email }])
-      .addField('.input-password', [{ rule: Rules.Required }, { rule: Rules.StrongPassword }]);
-  }
-
   public renderPage(): HTMLElement {
     this.CONTAINER.innerHTML = this.LOGIN_PAGE_MARKUP;
-    this.clientSideValidation();
+    this.LOGIN_FORM_VALIDATION.validateLoginFormFields(this.CONTAINER);
     this.assignLoginPageEventListeners();
     return this.CONTAINER;
   }
