@@ -2,7 +2,7 @@ import JustValidate, { Rules } from 'just-validate';
 import JustValidatePluginDate from 'just-validate-plugin-date';
 import Constants from '../../utils/Constants';
 
-class RegistrationPageValidator {
+class RegistrationFormValidation {
   private canada = 'CA';
 
   private USA = 'US';
@@ -27,8 +27,9 @@ class RegistrationPageValidator {
     return Constants.POSTAL_CODE_ERROR_GENERIC;
   }
 
-  public performRegistrationFormValidation(container: HTMLElement): void {
+  public validateRegistrationFormFields(container: HTMLElement, callback: (add: boolean) => void): void {
     let countryValue: string;
+    let validationResult;
     const validator = new JustValidate(container.querySelector('.register-form') as HTMLFormElement);
     validator
       .addField('.input-email', [{ rule: Rules.Required }, { rule: Rules.Email }])
@@ -78,7 +79,19 @@ class RegistrationPageValidator {
           errorMessage: Constants.INVALID_AGE_ERROR,
         },
       ]);
+
+    container.querySelectorAll('.input-box').forEach((inputElement) => {
+      inputElement.addEventListener('input', () => {
+        validationResult = validator.isValid;
+
+        if (validationResult) {
+          callback(true);
+        } else {
+          callback(false);
+        }
+      });
+    });
   }
 }
 
-export default RegistrationPageValidator;
+export default RegistrationFormValidation;

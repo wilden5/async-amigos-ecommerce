@@ -4,7 +4,7 @@ import { ProjectPages } from '../../types/Enums';
 import Constants from '../../utils/Constants';
 import { CustomerRegistration } from '../../backend/registration/CustomerRegistration';
 import TostifyHelper from '../../utils/TostifyHelper';
-import RegistrationPageValidator from './RegistrationPageValidator';
+import RegistrationFormValidation from './RegistrationFormValidation';
 
 class RegistrationPage extends Page {
   private REGISTRATION_PAGE_MARKUP = `
@@ -74,8 +74,11 @@ class RegistrationPage extends Page {
     </div>
   </div>`;
 
+  private REGISTRATION_FORM_VALIDATION: RegistrationFormValidation;
+
   constructor() {
     super(ProjectPages.Registration);
+    this.REGISTRATION_FORM_VALIDATION = new RegistrationFormValidation();
   }
 
   private handleRegistrationResponse(response: ClientResponse<CustomerSignInResult>): void {
@@ -86,7 +89,7 @@ class RegistrationPage extends Page {
     }
   }
 
-  private handleRegistrationFormSubmit = (event: Event): void => {
+  public submitRegistrationForm = (event: Event): void => {
     event.preventDefault();
 
     const customerData: CustomerDraft = {
@@ -117,17 +120,22 @@ class RegistrationPage extends Page {
       });
   };
 
-  private assignRegistrationPageEventListeners(): void {
-    (this.CONTAINER.querySelector('.register-form') as HTMLFormElement).addEventListener(
-      'submit',
-      this.handleRegistrationFormSubmit,
-    );
-  }
+  public manageRegistrationFormEventListener = (add: boolean): void => {
+    const form = this.CONTAINER.querySelector('.register-form') as HTMLFormElement;
+
+    if (add) {
+      form.addEventListener('submit', this.submitRegistrationForm);
+    } else {
+      form.removeEventListener('submit', this.submitRegistrationForm);
+    }
+  };
 
   public renderPage(): HTMLElement {
     this.CONTAINER.innerHTML = this.REGISTRATION_PAGE_MARKUP;
-    this.assignRegistrationPageEventListeners();
-    new RegistrationPageValidator().performRegistrationFormValidation(this.CONTAINER);
+    this.REGISTRATION_FORM_VALIDATION.validateRegistrationFormFields(
+      this.CONTAINER,
+      this.manageRegistrationFormEventListener,
+    );
     return this.CONTAINER;
   }
 }
