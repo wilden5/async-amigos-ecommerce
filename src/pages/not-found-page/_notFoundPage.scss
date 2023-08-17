@@ -58,10 +58,13 @@
 }
 
 @keyframes glitch-anim-1 {
-  0%, 100% {
+  0%,
+  100% {
     clip: rect(4.2rem, 45rem, 5.6rem, 0);
   }
-  20%, 40%, 60% {
+  20%,
+  40%,
+  60% {
     clip: rect(1.2rem, 45rem, 7.6rem, 0);
   }
   80% {
@@ -70,10 +73,13 @@
 }
 
 @keyframes glitch-anim-2 {
-  0%, 100% {
+  0%,
+  100% {
     clip: rect(4.6rem, 45rem, 5.6rem, 0);
   }
-  20%, 40%, 60% {
+  20%,
+  40%,
+  60% {
     clip: rect(0.6rem, 45rem, 6.4rem, 0);
   }
   80% {
