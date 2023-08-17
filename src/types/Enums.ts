@@ -21,3 +21,20 @@ export enum PasswordHints {
 export enum EmailHints {
   EmailFormatHint = 'Incorrect email format',
 }
+
+export enum Rules {
+  Required = 'required',
+  Email = 'email',
+  MinLength = 'minLength',
+  MaxLength = 'maxLength',
+  Password = 'password',
+  Number = 'number',
+  Integer = 'integer',
+  MaxNumber = 'maxNumber',
+  MinNumber = 'minNumber',
+  StrongPassword = 'strongPassword',
+  CustomRegexp = 'customRegexp',
+  MinFilesCount = 'minFilesCount',
+  MaxFilesCount = 'maxFilesCount',
+  Files = 'files',
+}

@@ -1,6 +1,7 @@
-import JustValidate, { Rules } from 'just-validate';
+import JustValidate from 'just-validate';
 import JustValidatePluginDate from 'just-validate-plugin-date';
 import Constants from '../../utils/Constants';
+import { Rules } from '../../types/Enums';
 
 class RegistrationFormValidation {
   private canada = 'CA';
