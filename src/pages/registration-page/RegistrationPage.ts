@@ -64,8 +64,8 @@ class RegistrationPage extends Page {
           <label for="postalCode">Postal Code</label>
         </div>
         <div class="check">
-          <label for="acceptTerms">
-            <input class='accept-terms' type="checkbox" id="acceptTerms">I accept terms and conditions</input>
+          <label for="use-same-address">
+            <input class='address-option' type="checkbox" checked id="use-same-address">Use the same address for both billing and shipping</input>
           </label>
         </div>
         <button class="main-btn" type="submit">Register me</button>
@@ -78,6 +78,19 @@ class RegistrationPage extends Page {
   constructor() {
     super(ProjectPages.Registration);
     this.REGISTRATION_FORM_VALIDATION = new RegistrationFormValidation();
+  }
+
+  private setBillingAddressAsSeparated(): void {
+    const checkbox = this.CONTAINER.querySelector('.address-option') as HTMLInputElement;
+    const acceptTermsContainer = this.CONTAINER.querySelector('.check') as HTMLDivElement;
+
+    checkbox.addEventListener('change', () => {
+      if (!checkbox.checked) {
+        acceptTermsContainer.insertAdjacentHTML('afterend', Constants.SEPARATED_BILLING_ADDRESS_MARKUP);
+      } else {
+        (this.CONTAINER.querySelector('.billing-address') as HTMLDivElement).remove();
+      }
+    });
   }
 
   private handleRegistrationResponse(response: ClientResponse<CustomerSignInResult>): void {
@@ -105,6 +118,8 @@ class RegistrationPage extends Page {
           country: (this.CONTAINER.querySelector('select[name="country"]') as HTMLSelectElement).value.trim(),
         },
       ],
+      billingAddresses: [0],
+      shippingAddresses: [0],
     };
 
     new CustomerRegistration(customerData)
@@ -135,6 +150,7 @@ class RegistrationPage extends Page {
       this.CONTAINER,
       this.manageRegistrationFormEventListener,
     );
+    this.setBillingAddressAsSeparated();
     return this.CONTAINER;
   }
 }
