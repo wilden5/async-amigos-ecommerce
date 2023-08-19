@@ -101,8 +101,7 @@ class RegistrationPage extends Page {
     }
   }
 
-  public submitRegistrationForm = (event: Event): void => {
-    event.preventDefault();
+  private collectCustomerData(): CustomerDraft {
     let customerData: CustomerDraft = {
       email: (this.CONTAINER.querySelector('input[name="email"]') as HTMLInputElement).value.trim(),
       password: (this.CONTAINER.querySelector('input[name="password"]') as HTMLInputElement).value.trim(),
@@ -139,8 +138,14 @@ class RegistrationPage extends Page {
         shippingAddresses: [0],
       };
     }
+    return customerData;
+  }
 
-    new CustomerRegistration(customerData)
+  public submitRegistrationForm = (event: Event): void => {
+    event.preventDefault();
+    const customer: CustomerDraft = this.collectCustomerData();
+
+    new CustomerRegistration(customer)
       .createCustomer()
       .then((response) => {
         this.handleRegistrationResponse(response);
