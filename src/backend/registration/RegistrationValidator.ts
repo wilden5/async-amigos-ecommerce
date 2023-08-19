@@ -19,6 +19,15 @@ class RegistrationValidator {
       throw new Error(Constants.BACKEND_LAST_NAME_VALIDATION_MESSAGE);
     }
 
+    if (customer.dateOfBirth) {
+      const minAgeDate = new Date(Constants.MIN_AGE_DATE);
+      const birthDate = new Date(customer.dateOfBirth);
+
+      if (birthDate > minAgeDate) {
+        throw new Error(Constants.INVALID_AGE_ERROR);
+      }
+    }
+
     if (customer.addresses) {
       if (
         customer.addresses.some(
