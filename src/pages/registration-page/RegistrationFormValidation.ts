@@ -31,7 +31,9 @@ class RegistrationFormValidation {
   public validateRegistrationFormFields(container: HTMLElement, callback: (add: boolean) => void): void {
     let countryValue: string;
     let validationResult;
-    const validator = new JustValidate(container.querySelector('.register-form') as HTMLFormElement);
+    const validator = new JustValidate(container.querySelector('.register-form') as HTMLFormElement, {
+      validateBeforeSubmitting: true,
+    });
     validator
       .addField('.input-email', [{ rule: Rules.Required }, { rule: Rules.Email }])
       .addField('.input-password', [{ rule: Rules.Required }, { rule: Rules.StrongPassword }])
@@ -84,7 +86,6 @@ class RegistrationFormValidation {
     container.querySelectorAll('.input-box').forEach((inputElement) => {
       inputElement.addEventListener('input', () => {
         validationResult = validator.isValid;
-
         if (validationResult) {
           callback(true);
         } else {

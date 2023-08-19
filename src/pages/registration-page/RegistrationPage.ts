@@ -103,8 +103,7 @@ class RegistrationPage extends Page {
 
   public submitRegistrationForm = (event: Event): void => {
     event.preventDefault();
-
-    const customerData: CustomerDraft = {
+    let customerData: CustomerDraft = {
       email: (this.CONTAINER.querySelector('input[name="email"]') as HTMLInputElement).value.trim(),
       password: (this.CONTAINER.querySelector('input[name="password"]') as HTMLInputElement).value.trim(),
       firstName: (this.CONTAINER.querySelector('input[name="firstName"]') as HTMLInputElement).value.trim(),
@@ -118,9 +117,28 @@ class RegistrationPage extends Page {
           country: (this.CONTAINER.querySelector('select[name="country"]') as HTMLSelectElement).value.trim(),
         },
       ],
-      billingAddresses: [0],
-      shippingAddresses: [0],
     };
+
+    if (this.CONTAINER.querySelector('.billing-address')) {
+      const billingAddressData = {
+        streetName: (this.CONTAINER.querySelector('input[name="b-street"]') as HTMLInputElement).value.trim(),
+        city: (this.CONTAINER.querySelector('input[name="b-city"]') as HTMLInputElement).value.trim(),
+        postalCode: (this.CONTAINER.querySelector('input[name="b-postalCode"]') as HTMLInputElement).value.trim(),
+        country: (this.CONTAINER.querySelector('select[name="country"]') as HTMLSelectElement).value.trim(),
+      };
+      customerData.addresses?.push(billingAddressData);
+      customerData = {
+        ...customerData,
+        shippingAddresses: [0],
+        billingAddresses: [1],
+      };
+    } else {
+      customerData = {
+        ...customerData,
+        billingAddresses: [0],
+        shippingAddresses: [0],
+      };
+    }
 
     new CustomerRegistration(customerData)
       .createCustomer()
