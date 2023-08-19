@@ -73,6 +73,13 @@ class Constants {
           <input class='input-billing-postal-code billing-part' type="text" name="b-postalCode">
           <label for="b-postalCode">Billing Postal Code</label>
         </div></div>`;
+
+  static BACKEND_STREET_VALIDATION_MESSAGE = 'Street: Must contain at least one character';
+
+  static BACKEND_CITY_VALIDATION_MESSAGE =
+    'City: Must contain at least one character and no special characters or numbers';
+
+  static BACKEND_UNSUPPORTED_COUNTRY_MESSAGE = 'Unsupported country';
 }
 
 export default Constants;
