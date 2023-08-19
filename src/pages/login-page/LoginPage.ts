@@ -24,13 +24,13 @@ class LoginPage extends Page {
       </div>
       <button class="main-btn" type="submit">Login</button>
       <div class="register">
-        <p class='new-customer-message'>New customer?<a href="#registration" class="register-link">Register</a></p>
+        <p class='customer-message'>New customer?<a href="#registration" class="register-link">Register</a></p>
       </div>
     </form>
   </div>
 </div>`;
 
-  private readonly LOGIN_FORM_VALIDATION: LoginFormValidation;
+  private LOGIN_FORM_VALIDATION: LoginFormValidation;
 
   constructor() {
     super(ProjectPages.Login);
@@ -63,6 +63,19 @@ class LoginPage extends Page {
       });
   };
 
+  public manageLoginFormEventListener = (add: boolean): void => {
+    const form = this.CONTAINER.querySelector('#login-form') as HTMLFormElement;
+    const mainButton = this.CONTAINER.querySelector('.main-btn') as HTMLButtonElement;
+
+    if (add) {
+      form.addEventListener('submit', this.handleLoginFormSubmit);
+      mainButton.disabled = false;
+    } else {
+      form.removeEventListener('submit', this.handleLoginFormSubmit);
+      mainButton.disabled = true;
+    }
+  };
+
   private handleLockIconClick = (event: Event): void => {
     const target = event.currentTarget as HTMLElement;
     const passwordInput = this.CONTAINER.querySelector('.input-password') as HTMLInputElement;
@@ -91,7 +104,7 @@ class LoginPage extends Page {
 
   public renderPage(): HTMLElement {
     this.CONTAINER.innerHTML = this.LOGIN_PAGE_MARKUP;
-    this.LOGIN_FORM_VALIDATION.validateLoginFormFields(this.CONTAINER);
+    this.LOGIN_FORM_VALIDATION.validateLoginFormFields(this.CONTAINER, this.manageLoginFormEventListener);
     this.assignLoginPageEventListeners();
     return this.CONTAINER;
   }

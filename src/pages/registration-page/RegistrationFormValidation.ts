@@ -31,7 +31,14 @@ class RegistrationFormValidation {
   public validateRegistrationFormFields(container: HTMLElement, callback: (add: boolean) => void): void {
     let countryValue: string;
     let validationResult;
-    const validator = new JustValidate(container.querySelector('.register-form') as HTMLFormElement);
+    const REGISTER_FORM = container.querySelector('.register-form') as HTMLFormElement;
+    const ValidationConfig = {
+      // validateBeforeSubmitting: true, // TODO: solve > tests fail if this rule is on
+      focusInvalidField: true,
+      testingMode: true,
+    };
+
+    const validator = new JustValidate(REGISTER_FORM, ValidationConfig);
     validator
       .addField('.input-email', [{ rule: Rules.Required }, { rule: Rules.Email }])
       .addField('.input-password', [{ rule: Rules.Required }, { rule: Rules.StrongPassword }])
@@ -66,7 +73,7 @@ class RegistrationFormValidation {
       .addField('.input-postal-code', [
         { rule: Rules.Required },
         {
-          validator: (value): boolean => {
+          validator: (value: string | boolean): boolean => {
             countryValue = (container.querySelector('.select-country') as HTMLInputElement).value;
             return this.isPostalCodeValid(countryValue, value as string);
           },

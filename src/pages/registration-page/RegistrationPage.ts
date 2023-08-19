@@ -68,7 +68,7 @@ class RegistrationPage extends Page {
             <input class='accept-terms' type="checkbox" id="acceptTerms">I accept terms and conditions</input>
           </label>
         </div>
-        <button class="main-btn" type="submit">Register me</button>
+        <button class="main-btn" type="submit" disabled>Register me</button>
       </form>
     </div>
   </div>`;
@@ -109,11 +109,11 @@ class RegistrationPage extends Page {
 
     new CustomerRegistration(customerData)
       .createCustomer()
-      .then((response) => {
+      .then((response): void => {
         this.handleRegistrationResponse(response);
       })
-      .catch((error: Error) => {
-        const errorMessage =
+      .catch((error: Error): void => {
+        const errorMessage: string =
           error.message === Constants.FAILED_TO_FETCH_ERROR_MESSAGE ? Constants.ACCOUNT_CREATION_ERROR : error.message;
         TostifyHelper.showToast(errorMessage, Constants.TOAST_COLOR_RED);
       });
@@ -121,13 +121,52 @@ class RegistrationPage extends Page {
 
   public manageRegistrationFormEventListener = (add: boolean): void => {
     const form = this.CONTAINER.querySelector('.register-form') as HTMLFormElement;
+    const mainButton = this.CONTAINER.querySelector('.main-btn') as HTMLButtonElement;
 
     if (add) {
       form.addEventListener('submit', this.submitRegistrationForm);
+      mainButton.disabled = false;
     } else {
       form.removeEventListener('submit', this.submitRegistrationForm);
+      mainButton.disabled = true;
     }
   };
+
+  private handleLockIconClick = (event: Event): void => {
+    const target = event.currentTarget as HTMLElement;
+    const passwordInput = this.CONTAINER.querySelector('.input-password') as HTMLInputElement;
+
+    if (!passwordInput.value) {
+      return;
+    }
+
+    if (passwordInput.type === 'password') {
+      target.innerHTML = Constants.OPENED_LOCK_ICON_MARKUP;
+      passwordInput.type = 'text';
+    } else if (passwordInput.type === 'text') {
+      target.innerHTML = Constants.CLOSED_LOCK_ICON_MARKUP;
+      passwordInput.type = 'password';
+    }
+  };
+
+  private handleTermsCheckboxChange = (): void => {
+    const checkbox = this.CONTAINER.querySelector('.accept-terms') as HTMLInputElement;
+    const submitButton = this.CONTAINER.querySelector('.main-btn') as HTMLButtonElement;
+
+    submitButton.disabled = !checkbox.checked;
+  };
+
+  private assignRegistrationPageEventListeners(): void {
+    const lockIcon = this.CONTAINER.querySelector(Constants.LOCK_ICON_SELECTOR) as HTMLElement;
+    const termsCheckbox = this.CONTAINER.querySelector('.accept-terms') as HTMLInputElement;
+
+    lockIcon.addEventListener('click', this.handleLockIconClick);
+    (this.CONTAINER.querySelector('.register-form') as HTMLFormElement).addEventListener(
+      'submit',
+      this.submitRegistrationForm,
+    );
+    termsCheckbox.addEventListener('change', this.handleTermsCheckboxChange);
+  }
 
   public renderPage(): HTMLElement {
     this.CONTAINER.innerHTML = this.REGISTRATION_PAGE_MARKUP;
@@ -135,6 +174,7 @@ class RegistrationPage extends Page {
       this.CONTAINER,
       this.manageRegistrationFormEventListener,
     );
+    this.assignRegistrationPageEventListeners();
     return this.CONTAINER;
   }
 }

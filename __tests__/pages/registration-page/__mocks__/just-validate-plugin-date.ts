@@ -1,4 +1,4 @@
-export default function JustValidatePluginDate(): { validate: () => boolean } {
+export default function JustValidatePluginDate(): { validate: () => boolean | string } {
   return {
     validate: (): boolean => true,
   };
