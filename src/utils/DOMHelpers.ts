@@ -1,3 +1,5 @@
+import Constants from './Constants';
+
 class DOMHelpers {
   static createElement<T extends HTMLElement = HTMLElement>(
     tagName: string,
@@ -19,6 +21,23 @@ class DOMHelpers {
 
   static appendChildToElement<T extends HTMLElement>(parent: HTMLElement, child: T): void {
     parent.appendChild(child);
+  }
+
+  static handleLockIconClick(container: HTMLElement): void {
+    const target = container.querySelector('.icon-lock') as HTMLSpanElement;
+    const passwordInput = container.querySelector('.input-password') as HTMLInputElement;
+
+    if (!passwordInput.value) {
+      return;
+    }
+
+    if (passwordInput.type === 'password') {
+      target.innerHTML = Constants.OPENED_LOCK_ICON_MARKUP;
+      passwordInput.type = 'text';
+    } else if (passwordInput.type === 'text') {
+      target.innerHTML = Constants.CLOSED_LOCK_ICON_MARKUP;
+      passwordInput.type = 'password';
+    }
   }
 }
 

@@ -5,6 +5,7 @@ import Page from '../../components/templates/Page';
 import { ProjectPages } from '../../types/Enums';
 import Constants from '../../utils/Constants';
 import LoginFormValidation from './LoginFormValidation';
+import DOMHelpers from '../../utils/DOMHelpers';
 
 class LoginPage extends Page {
   private LOGIN_PAGE_MARKUP = `
@@ -22,7 +23,7 @@ class LoginPage extends Page {
         <input class="input-password" type="password" autocomplete="current-password" name="password">
         <label for="password">Password</label>
       </div>
-      <button class="main-btn" type="submit">Login</button>
+      <button class="main-btn" type="submit" disabled>Login</button>
       <div class="register">
         <p class='customer-message'>New customer?<a href="#registration" class="register-link">Register</a></p>
       </div>
@@ -65,41 +66,20 @@ class LoginPage extends Page {
 
   public manageLoginFormEventListener = (add: boolean): void => {
     const form = this.CONTAINER.querySelector('#login-form') as HTMLFormElement;
-    const mainButton = this.CONTAINER.querySelector('.main-btn') as HTMLButtonElement;
 
     if (add) {
       form.addEventListener('submit', this.handleLoginFormSubmit);
-      mainButton.disabled = false;
     } else {
       form.removeEventListener('submit', this.handleLoginFormSubmit);
-      mainButton.disabled = true;
-    }
-  };
-
-  private handleLockIconClick = (event: Event): void => {
-    const target = event.currentTarget as HTMLElement;
-    const passwordInput = this.CONTAINER.querySelector('.input-password') as HTMLInputElement;
-
-    if (!passwordInput.value) {
-      return;
-    }
-
-    if (passwordInput.type === 'password') {
-      target.innerHTML = Constants.OPENED_LOCK_ICON_MARKUP;
-      passwordInput.type = 'text';
-    } else if (passwordInput.type === 'text') {
-      target.innerHTML = Constants.CLOSED_LOCK_ICON_MARKUP;
-      passwordInput.type = 'password';
     }
   };
 
   private assignLoginPageEventListeners(): void {
     const lockIcon = this.CONTAINER.querySelector(Constants.LOCK_ICON_SELECTOR) as HTMLElement;
-    lockIcon.addEventListener('click', this.handleLockIconClick);
-    (this.CONTAINER.querySelector('#login-form') as HTMLFormElement).addEventListener(
-      'submit',
-      this.handleLoginFormSubmit,
-    );
+
+    lockIcon.addEventListener('click', () => {
+      DOMHelpers.handleLockIconClick(this.CONTAINER);
+    });
   }
 
   public renderPage(): HTMLElement {

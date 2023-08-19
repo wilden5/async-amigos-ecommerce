@@ -3,16 +3,13 @@ import { Rules } from '../../types/Enums';
 
 class LoginFormValidation {
   public validateLoginFormFields(container: HTMLElement, callback: (add: boolean) => void): void {
+    const mainButton = container.querySelector('.main-btn') as HTMLButtonElement;
     let validationResult;
     const LOGIN_FORM = container.querySelector('#login-form') as HTMLFormElement;
     const ValidationConfig = {
       validateBeforeSubmitting: true,
       focusInvalidField: true,
       testingMode: true,
-      errorFieldStyle: {
-        color: '#f70303',
-        borderBottom: '2px solid #f70303',
-      },
     };
 
     const validator = new JustValidate(LOGIN_FORM, ValidationConfig);
@@ -25,8 +22,10 @@ class LoginFormValidation {
         validationResult = validator.isValid;
 
         if (validationResult) {
+          mainButton.disabled = false;
           callback(true);
         } else {
+          mainButton.disabled = true;
           callback(false);
         }
       });

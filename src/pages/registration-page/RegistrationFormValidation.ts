@@ -93,6 +93,9 @@ class RegistrationFormValidation {
         validationResult = validator.isValid;
 
         if (validationResult) {
+          const checkbox = container.querySelector('.accept-terms') as HTMLInputElement;
+          const submitButton = container.querySelector('.main-btn') as HTMLButtonElement;
+          submitButton.disabled = !checkbox.checked;
           callback(true);
         } else {
           callback(false);

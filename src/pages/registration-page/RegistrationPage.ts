@@ -5,6 +5,7 @@ import Constants from '../../utils/Constants';
 import { CustomerRegistration } from '../../backend/registration/CustomerRegistration';
 import TostifyHelper from '../../utils/TostifyHelper';
 import RegistrationFormValidation from './RegistrationFormValidation';
+import DOMHelpers from '../../utils/DOMHelpers';
 
 class RegistrationPage extends Page {
   private REGISTRATION_PAGE_MARKUP = `
@@ -132,40 +133,12 @@ class RegistrationPage extends Page {
     }
   };
 
-  private handleLockIconClick = (event: Event): void => {
-    const target = event.currentTarget as HTMLElement;
-    const passwordInput = this.CONTAINER.querySelector('.input-password') as HTMLInputElement;
-
-    if (!passwordInput.value) {
-      return;
-    }
-
-    if (passwordInput.type === 'password') {
-      target.innerHTML = Constants.OPENED_LOCK_ICON_MARKUP;
-      passwordInput.type = 'text';
-    } else if (passwordInput.type === 'text') {
-      target.innerHTML = Constants.CLOSED_LOCK_ICON_MARKUP;
-      passwordInput.type = 'password';
-    }
-  };
-
-  private handleTermsCheckboxChange = (): void => {
-    const checkbox = this.CONTAINER.querySelector('.accept-terms') as HTMLInputElement;
-    const submitButton = this.CONTAINER.querySelector('.main-btn') as HTMLButtonElement;
-
-    submitButton.disabled = !checkbox.checked;
-  };
-
   private assignRegistrationPageEventListeners(): void {
     const lockIcon = this.CONTAINER.querySelector(Constants.LOCK_ICON_SELECTOR) as HTMLElement;
-    const termsCheckbox = this.CONTAINER.querySelector('.accept-terms') as HTMLInputElement;
 
-    lockIcon.addEventListener('click', this.handleLockIconClick);
-    (this.CONTAINER.querySelector('.register-form') as HTMLFormElement).addEventListener(
-      'submit',
-      this.submitRegistrationForm,
-    );
-    termsCheckbox.addEventListener('change', this.handleTermsCheckboxChange);
+    lockIcon.addEventListener('click', () => {
+      DOMHelpers.handleLockIconClick(this.CONTAINER);
+    });
   }
 
   public renderPage(): HTMLElement {
