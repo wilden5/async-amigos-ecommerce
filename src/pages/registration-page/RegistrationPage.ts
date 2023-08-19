@@ -64,8 +64,8 @@ class RegistrationPage extends Page {
           <label for="postalCode">Postal Code</label>
         </div>
         <div class="check">
-          <label for="acceptTerms">
-            <input class='accept-terms' type="checkbox" id="acceptTerms">I accept terms and conditions</input>
+          <label for="use-same-address">
+            <input class='address-option' type="checkbox" checked id="use-same-address">Use the same address for both billing and shipping</input>
           </label>
         </div>
         <button class="main-btn" type="submit">Register me</button>
@@ -80,6 +80,19 @@ class RegistrationPage extends Page {
     this.REGISTRATION_FORM_VALIDATION = new RegistrationFormValidation();
   }
 
+  private setBillingAddressAsSeparated(): void {
+    const checkbox = this.CONTAINER.querySelector('.address-option') as HTMLInputElement;
+    const acceptTermsContainer = this.CONTAINER.querySelector('.check') as HTMLDivElement;
+
+    checkbox.addEventListener('change', () => {
+      if (!checkbox.checked) {
+        acceptTermsContainer.insertAdjacentHTML('afterend', Constants.SEPARATED_BILLING_ADDRESS_MARKUP);
+      } else {
+        (this.CONTAINER.querySelector('.billing-address') as HTMLDivElement).remove();
+      }
+    });
+  }
+
   private handleRegistrationResponse(response: ClientResponse<CustomerSignInResult>): void {
     if (response.statusCode === 201) {
       TostifyHelper.showToast(Constants.ACCOUNT_HAS_BEEN_CREATED, Constants.TOAST_COLOR_GREEN);
@@ -88,10 +101,8 @@ class RegistrationPage extends Page {
     }
   }
 
-  public submitRegistrationForm = (event: Event): void => {
-    event.preventDefault();
-
-    const customerData: CustomerDraft = {
+  private collectCustomerData(): CustomerDraft {
+    let customerData: CustomerDraft = {
       email: (this.CONTAINER.querySelector('input[name="email"]') as HTMLInputElement).value.trim(),
       password: (this.CONTAINER.querySelector('input[name="password"]') as HTMLInputElement).value.trim(),
       firstName: (this.CONTAINER.querySelector('input[name="firstName"]') as HTMLInputElement).value.trim(),
@@ -107,7 +118,34 @@ class RegistrationPage extends Page {
       ],
     };
 
-    new CustomerRegistration(customerData)
+    if (this.CONTAINER.querySelector('.billing-address')) {
+      const billingAddressData = {
+        streetName: (this.CONTAINER.querySelector('input[name="b-street"]') as HTMLInputElement).value.trim(),
+        city: (this.CONTAINER.querySelector('input[name="b-city"]') as HTMLInputElement).value.trim(),
+        postalCode: (this.CONTAINER.querySelector('input[name="b-postalCode"]') as HTMLInputElement).value.trim(),
+        country: (this.CONTAINER.querySelector('select[name="country"]') as HTMLSelectElement).value.trim(),
+      };
+      customerData.addresses?.push(billingAddressData);
+      customerData = {
+        ...customerData,
+        shippingAddresses: [0],
+        billingAddresses: [1],
+      };
+    } else {
+      customerData = {
+        ...customerData,
+        billingAddresses: [0],
+        shippingAddresses: [0],
+      };
+    }
+    return customerData;
+  }
+
+  public submitRegistrationForm = (event: Event): void => {
+    event.preventDefault();
+    const customer: CustomerDraft = this.collectCustomerData();
+
+    new CustomerRegistration(customer)
       .createCustomer()
       .then((response) => {
         this.handleRegistrationResponse(response);
@@ -135,6 +173,7 @@ class RegistrationPage extends Page {
       this.CONTAINER,
       this.manageRegistrationFormEventListener,
     );
+    this.setBillingAddressAsSeparated();
     return this.CONTAINER;
   }
 }
