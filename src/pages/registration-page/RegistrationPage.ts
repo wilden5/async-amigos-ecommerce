@@ -1,4 +1,4 @@
-import { ClientResponse, CustomerDraft, CustomerSignInResult } from '@commercetools/platform-sdk';
+import { BaseAddress, ClientResponse, CustomerDraft, CustomerSignInResult } from '@commercetools/platform-sdk';
 import Page from '../../components/templates/Page';
 import { ProjectPages } from '../../types/Enums';
 import Constants from '../../utils/Constants';
@@ -107,30 +107,37 @@ class RegistrationPage extends Page {
     }
   }
 
+  private getInputElementValue(selector: string): string {
+    const inputElement = this.CONTAINER.querySelector(selector) as HTMLInputElement;
+    return inputElement ? inputElement.value.trim() : '';
+  }
+
+  private getSelectElementValue(selector: string): string {
+    const selectElement = this.CONTAINER.querySelector(selector) as HTMLSelectElement;
+    return selectElement ? selectElement.value.trim() : '';
+  }
+
+  private collectAddressData(prefix: string): BaseAddress {
+    return {
+      streetName: this.getInputElementValue(`input[name="${prefix}street"]`),
+      city: this.getInputElementValue(`input[name="${prefix}city"]`),
+      postalCode: this.getInputElementValue(`input[name="${prefix}postalCode"]`),
+      country: this.getSelectElementValue(`select[name="country"]`),
+    };
+  }
+
   private collectCustomerData(): CustomerDraft {
     let customerData: CustomerDraft = {
-      email: (this.CONTAINER.querySelector('input[name="email"]') as HTMLInputElement).value.trim(),
-      password: (this.CONTAINER.querySelector('input[name="password"]') as HTMLInputElement).value.trim(),
-      firstName: (this.CONTAINER.querySelector('input[name="firstName"]') as HTMLInputElement).value.trim(),
-      lastName: (this.CONTAINER.querySelector('input[name="lastName"]') as HTMLInputElement).value.trim(),
-      dateOfBirth: (this.CONTAINER.querySelector('input[name="dob"]') as HTMLInputElement).value.trim(),
-      addresses: [
-        {
-          streetName: (this.CONTAINER.querySelector('input[name="street"]') as HTMLInputElement).value.trim(),
-          city: (this.CONTAINER.querySelector('input[name="city"]') as HTMLInputElement).value.trim(),
-          postalCode: (this.CONTAINER.querySelector('input[name="postalCode"]') as HTMLInputElement).value.trim(),
-          country: (this.CONTAINER.querySelector('select[name="country"]') as HTMLSelectElement).value.trim(),
-        },
-      ],
+      email: this.getInputElementValue('input[name="email"]'),
+      password: this.getInputElementValue('input[name="password"]'),
+      firstName: this.getInputElementValue('input[name="firstName"]'),
+      lastName: this.getInputElementValue('input[name="lastName"]'),
+      dateOfBirth: this.getInputElementValue('input[name="dob"]'),
+      addresses: [this.collectAddressData('')], // we don't add any prefix since it's for first set of fields
     };
 
     if (this.CONTAINER.querySelector('.billing-address')) {
-      const billingAddressData = {
-        streetName: (this.CONTAINER.querySelector('input[name="b-street"]') as HTMLInputElement).value.trim(),
-        city: (this.CONTAINER.querySelector('input[name="b-city"]') as HTMLInputElement).value.trim(),
-        postalCode: (this.CONTAINER.querySelector('input[name="b-postalCode"]') as HTMLInputElement).value.trim(),
-        country: (this.CONTAINER.querySelector('select[name="country"]') as HTMLSelectElement).value.trim(),
-      };
+      const billingAddressData = this.collectAddressData('b-');
       customerData.addresses?.push(billingAddressData);
       customerData = {
         ...customerData,
@@ -156,7 +163,6 @@ class RegistrationPage extends Page {
         billingAddresses: [0],
         shippingAddresses: [0],
       };
-
       if ((this.CONTAINER.querySelector('.default-address-option') as HTMLInputElement).checked) {
         customerData = {
           ...customerData,
