@@ -39,6 +39,25 @@ class DOMHelpers {
       passwordInput.type = 'password';
     }
   }
+
+  static showHeaderMenu(container: HTMLElement): void {
+    const burgerBtn = container.querySelector('.header-container__burger') as HTMLButtonElement;
+    const burgerMenu = container.querySelector('.navigation-bar') as HTMLElement;
+
+    if (
+      burgerBtn.closest('.header-container__item') ||
+      burgerBtn.closest('.header-container.active') ||
+      burgerBtn.closest('.header-container__burger')
+    ) {
+      setTimeout((): void => {
+        if (burgerBtn && burgerMenu) {
+          burgerBtn.classList.toggle('active');
+          burgerMenu.classList.toggle('active');
+          container.querySelector('body')?.classList.toggle('lock-scroll');
+        }
+      }, 300);
+    }
+  }
 }
 
 export default DOMHelpers;
