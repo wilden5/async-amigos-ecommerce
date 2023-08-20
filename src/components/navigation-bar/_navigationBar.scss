@@ -25,6 +25,9 @@
     }
 
     @media (max-width: $breakPoint-2) {
+      display: block;
+      position: relative;
+      z-index: 1000;
       text-align: center;
       padding-bottom: 18px;
     }

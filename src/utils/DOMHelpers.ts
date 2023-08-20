@@ -6,7 +6,7 @@ class DOMHelpers {
     properties: Partial<T>,
     parentElement?: Element,
   ): T | HTMLElement {
-    const element = document.createElement(tagName);
+    const element: HTMLElement = document.createElement(tagName);
     parentElement?.append(element);
     return Object.assign(element, properties);
   }
@@ -37,25 +37,6 @@ class DOMHelpers {
     } else if (passwordInput.type === 'text') {
       target.innerHTML = Constants.CLOSED_LOCK_ICON_MARKUP;
       passwordInput.type = 'password';
-    }
-  }
-
-  static showHeaderMenu(container: HTMLElement): void {
-    const burgerBtn = container.querySelector('.header-container__burger') as HTMLButtonElement;
-    const burgerMenu = container.querySelector('.navigation-bar') as HTMLElement;
-
-    if (
-      burgerBtn.closest('.header-container__item') ||
-      burgerBtn.closest('.header-container.active') ||
-      burgerBtn.closest('.header-container__burger')
-    ) {
-      setTimeout((): void => {
-        if (burgerBtn && burgerMenu) {
-          burgerBtn.classList.toggle('active');
-          burgerMenu.classList.toggle('active');
-          container.querySelector('body')?.classList.toggle('lock-scroll');
-        }
-      }, 300);
     }
   }
 }

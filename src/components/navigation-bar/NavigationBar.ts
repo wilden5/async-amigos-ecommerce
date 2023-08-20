@@ -20,18 +20,8 @@ class NavigationBar extends Component {
     super('nav', `${Constants.NAVIGATION_BAR_SELECTOR}`);
   }
 
-  // private handleBurgerIconClick(): void {
-  //   const burgerBtn = this.CONTAINER.querySelector('.header-container__burger') as HTMLButtonElement;
-  //
-  //   if (!burgerBtn) return;
-  //   burgerBtn.addEventListener('click', (): void => {
-  //     DOMHelpers.showHeaderMenu(this.CONTAINER);
-  //   });
-  // }
-
   public renderComponent(): HTMLElement {
     this.CONTAINER.innerHTML = this.NAVIGATION_BAR_MARKUP;
-    // this.handleBurgerIconClick();
     return this.CONTAINER;
   }
 }

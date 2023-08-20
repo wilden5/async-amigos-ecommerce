@@ -1,7 +1,8 @@
 import Component from '../templates/Component';
 import headerLogo from '../../assets/header-logo2.png';
 import Constants from '../../utils/Constants';
-import DOMHelpers from '../../utils/DOMHelpers';
+
+// import DOMHelpers from '../../utils/DOMHelpers';
 
 class Header extends Component {
   private HEADER_MARKUP = `
@@ -20,18 +21,31 @@ class Header extends Component {
     super('header', `${Constants.HEADER}`);
   }
 
-  private handleBurgerIconClick(): void {
-    const burgerBtn = this.CONTAINER.querySelector('.header-container__burger') as HTMLButtonElement;
+  private showHeaderMenu(): void {
+    this.CONTAINER.addEventListener('click', (event: MouseEvent): void => {
+      const targetElement = event.target as HTMLElement;
+      const burgerBtn = this.CONTAINER.querySelector('.header-container__burger') as HTMLButtonElement;
+      const burgerMenu = this.CONTAINER.querySelector('.navigation-bar') as HTMLElement;
 
-    if (!burgerBtn) return;
-    burgerBtn.addEventListener('click', (): void => {
-      DOMHelpers.showHeaderMenu(this.CONTAINER);
+      if (
+        targetElement.closest('.header-container__item') ||
+        targetElement.closest('.header-container.active') ||
+        targetElement.closest('.header-container__burger')
+      ) {
+        setTimeout((): void => {
+          if (burgerBtn && burgerMenu) {
+            burgerBtn.classList.toggle('active');
+            burgerMenu.classList.toggle('active');
+          }
+        }, 300);
+      }
     });
   }
 
   public renderComponent(): HTMLElement {
     this.CONTAINER.innerHTML = this.HEADER_MARKUP;
-    this.handleBurgerIconClick();
+    // this.handleBurgerIconClick();
+    this.showHeaderMenu();
     return this.CONTAINER;
   }
 }
