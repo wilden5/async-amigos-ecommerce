@@ -20,5 +20,5 @@
     "class-methods-use-this": "off",
     "@typescript-eslint/no-explicit-any": "error",
     "@typescript-eslint/explicit-function-return-type": "error"
-    }
+  }
 }

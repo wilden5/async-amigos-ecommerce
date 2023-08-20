@@ -52,6 +52,34 @@ class Constants {
   static INVALID_AGE_ERROR = 'Age should be above 13 years old';
 
   static MIN_AGE_DATE = '2010-08-16';
+
+  static INVALID_PASSWORD_ERROR_MESSAGE =
+    'Password should contain minimum eight characters, at least one uppercase letter, one lowercase letter, one number and one special character';
+
+  static INVALID_EMAIL_ERROR_MESSAGE = 'Email has invalid format';
+
+  static SEPARATED_BILLING_ADDRESS_MARKUP = `<div class='billing-address'><div class="input-box">
+          <span class="icon"><i class='bx bxs-city'></i></span>
+          <input class='input-billing-city billing-part' type="text" name="b-city">
+          <label for="b-city">Billing City</label>
+        </div>
+        <div class="input-box">
+          <span class="icon"><i class='bx bxs-traffic'></i></span>
+          <input class='input-billing-street billing-part' type="text" name="b-street">
+          <label for="b-street">Billing Street</label>
+        </div>
+        <div class="input-box">
+          <span class="icon"><i class='bx bxs-building-house'></i></span>
+          <input class='input-billing-postal-code billing-part' type="text" name="b-postalCode">
+          <label for="b-postalCode">Billing Postal Code</label>
+        </div></div>`;
+
+  static BACKEND_STREET_VALIDATION_MESSAGE = 'Street: Must contain at least one character';
+
+  static BACKEND_CITY_VALIDATION_MESSAGE =
+    'City: Must contain at least one character and no special characters or numbers';
+
+  static BACKEND_UNSUPPORTED_COUNTRY_MESSAGE = 'Unsupported country';
 }
 
 export default Constants;

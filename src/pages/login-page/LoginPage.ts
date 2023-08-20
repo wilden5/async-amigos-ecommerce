@@ -1,13 +1,11 @@
 /* eslint-disable no-console */
 import { ClientResponse, CustomerSignInResult, CustomerSignin, ErrorResponse } from '@commercetools/platform-sdk';
-import { apiRoot } from '../../backend/ctpClient/apiRoot';
 import ToastifyHelper from '../../utils/TostifyHelper';
 import { CustomerLogin } from '../../backend/login/CustomerLogin';
 import Page from '../../components/templates/Page';
 import { ProjectPages } from '../../types/Enums';
 import Constants from '../../utils/Constants';
-import EmailValidator from '../../utils/ValidateEmail';
-import PasswordValidator from '../../utils/ValidatePassword';
+import LoginFormValidation from './LoginFormValidation';
 
 class LoginPage extends Page {
   private LOGIN_PAGE_MARKUP = `
@@ -17,12 +15,12 @@ class LoginPage extends Page {
     <form id="login-form">
       <div class="input-box">
         <span class="icon"><i class='bx bxs-envelope'></i></span>
-        <input type="email" autocomplete="current-email" name="email" required>
+        <input class="input-email" type="email" autocomplete="email" name="email" >
         <label for="email">Email</label>
       </div>
       <div class="input-box">
         <span class="icon icon-lock"><i class='bx bxs-lock-alt'></i></span>
-        <input type="password" autocomplete="current-password" name="password" class="input-password" required>
+        <input class="input-password" type="password" autocomplete="current-password" name="password">
         <label for="password">Password</label>
       </div>
       <button class="main-btn" type="submit">Login</button>
@@ -33,8 +31,11 @@ class LoginPage extends Page {
   </div>
 </div>`;
 
+  private readonly LOGIN_FORM_VALIDATION: LoginFormValidation;
+
   constructor() {
     super(ProjectPages.Login);
+    this.LOGIN_FORM_VALIDATION = new LoginFormValidation();
   }
 
   private handleLoginResponse(response: ClientResponse<CustomerSignInResult>): void {
@@ -49,16 +50,13 @@ class LoginPage extends Page {
     event.preventDefault();
 
     const loginData: CustomerSignin = {
-      email: (this.CONTAINER.querySelector('input[name="email"]') as HTMLInputElement).value.trim(),
+      email: (this.CONTAINER.querySelector('.input-email') as HTMLInputElement).value.trim(),
       password: (this.CONTAINER.querySelector('input[name="password"]') as HTMLInputElement).value.trim(),
     };
     const customerLogin = new CustomerLogin(loginData);
     customerLogin
       .signIn()
-      .then((response) => {
-        this.handleLoginResponse(response);
-        apiRoot.request = customerLogin.getApiRootWithToken();
-      })
+      .then((response) => this.handleLoginResponse(response))
       .catch((error: ClientResponse<ErrorResponse>) => {
         const errorMessage = error.body.statusCode === 400 ? Constants.LOGIN_ERROR : error.body.message;
         ToastifyHelper.showToast(errorMessage, Constants.TOAST_COLOR_RED);
@@ -91,29 +89,9 @@ class LoginPage extends Page {
     );
   }
 
-  private setupRealTimeValidation(): void {
-    const emailInput = this.CONTAINER.querySelector('input[name="email"]') as HTMLInputElement;
-    emailInput.addEventListener('change', (): void => {
-      const email: string = emailInput.value;
-      if (typeof EmailValidator.validate(email) === 'boolean') return;
-      if (typeof EmailValidator.validate(email) === 'string') {
-        console.log(EmailValidator.validate(email));
-      }
-    });
-
-    const passInput = this.CONTAINER.querySelector('input[name="password"]') as HTMLInputElement;
-    passInput.addEventListener('change', (): void => {
-      const password: string = passInput.value;
-      if (typeof PasswordValidator.validate(password) === 'boolean') return;
-      if (typeof PasswordValidator.validate(password) === 'string') {
-        console.log(PasswordValidator.validate(password));
-      }
-    });
-  }
-
   public renderPage(): HTMLElement {
     this.CONTAINER.innerHTML = this.LOGIN_PAGE_MARKUP;
-    this.setupRealTimeValidation();
+    this.LOGIN_FORM_VALIDATION.validateLoginFormFields(this.CONTAINER);
     this.assignLoginPageEventListeners();
     return this.CONTAINER;
   }

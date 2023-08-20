@@ -1,15 +1,17 @@
-// import RegistrationPage from '../../../src/pages/registration-page/RegistrationPage';
+import RegistrationPage from '../../../src/pages/registration-page/RegistrationPage';
 
-describe.skip('RegistrationPage', (): void => {
-  // let registrationPage: RegistrationPage;
+jest.mock('./__mocks__/just-validate-plugin-date');
+
+describe('RegistrationPage', (): void => {
+  let registrationPage: RegistrationPage;
   let actualPageMarkup: HTMLElement;
 
   beforeEach((): void => {
-    // registrationPage = new RegistrationPage();
+    registrationPage = new RegistrationPage();
 
     const container = document.createElement('div');
     container.className = 'test-container';
-    // actualPageMarkup = registrationPage.renderPage();
+    actualPageMarkup = registrationPage.renderPage();
 
     document.body.appendChild(container);
     container.appendChild(actualPageMarkup);
@@ -28,7 +30,7 @@ describe.skip('RegistrationPage', (): void => {
   });
 
   test('Registration form should be present', () => {
-    const registerForm = actualPageMarkup.querySelector('form#register-form');
+    const registerForm = actualPageMarkup.querySelector('.register-form');
     expect(registerForm).not.toBeNull();
   });
 

@@ -29,7 +29,7 @@ const config = {
     rules: [
       { test: /\.(tsx?)$/i, loader: 'ts-loader' },
       { test: /\.scss$/i, use: [MiniCssExtractPlugin.loader, 'css-loader', 'postcss-loader', 'sass-loader'] },
-      { test: /\.(png|jpe?g|gif|svg)$/i, type: 'asset/resource' }
+      { test: /\.(png|jpe?g|gif|svg)$/i, type: 'asset/resource' },
     ],
   },
   resolve: { extensions: ['.ts', '.json', '.scss', '.html', '...'] },

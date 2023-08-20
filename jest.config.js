@@ -15,4 +15,5 @@ module.exports = {
       statements: 25,
     },
   },
+  testPathIgnorePatterns: ['/node_modules/', '/__mocks__/'],
 };
