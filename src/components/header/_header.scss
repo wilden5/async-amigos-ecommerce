@@ -12,11 +12,68 @@
     padding: 20px 20px;
 
     @media screen and (max-width: $breakPoint-2) {
-      flex-wrap: wrap;
+      max-width: $breakPoint-2;
+      //flex-wrap: wrap;
     }
 
     &__logo {
       height: 2rem;
+    }
+
+    &__burger {
+      display: none;
+      @media (max-width: $breakPoint-2) {
+        display: block;
+        position: relative;
+        z-index: 3;
+        width: 40px;
+        height: 26px;
+        background-color: transparent;
+
+        &::before,
+        &::after {
+          content: "";
+          position: absolute;
+          width: 100%;
+          height: 2px;
+          left: 0;
+          background-color: $textColor;
+          transition: all 0.3s ease 0s;
+        }
+        & > span {
+          position: absolute;
+          left: 0;
+          width: 100%;
+          height: 2px;
+          background-color: $textColor;
+          transition: all 0.3s ease 0s;
+
+          &:nth-child(1) {
+            top: 8px;
+          }
+
+          &:nth-child(2) {
+            top: 16px;
+          }
+        }
+        &::before {
+          top: 0;
+        }
+        &::after {
+          bottom: 0;
+        }
+        &.active::before {
+          transform: rotate(135deg);
+          top: 12px;
+        }
+        &.active::after {
+          transform: rotate(45deg);
+          bottom: 12px;
+        }
+        &.active > span {
+          transform: scale(0);
+        }
+      }
     }
   }
 }

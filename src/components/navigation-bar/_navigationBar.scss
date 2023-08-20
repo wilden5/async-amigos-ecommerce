@@ -23,5 +23,43 @@
       transform: scale(1.05);
       transition: 0.4s;
     }
+
+    @media (max-width: $breakPoint-2) {
+      text-align: center;
+      padding-bottom: 18px;
+    }
+  }
+
+  @media (max-width: $breakPoint-2) {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    position: fixed;
+    top: 0;
+    right: -100%;
+
+    width: 100%;
+    height: 100%;
+    padding: 100px 0;
+
+    background-color: lightslategrey;
+    overflow: auto;
+    transition: all 0.4s ease 0s;
+
+    &__list {
+      display: block;
+      position: relative;
+      z-index: 2;
+
+      font-size: 2rem;
+      line-height: 1.8;
+      gap: 0;
+    }
+
+    &.active {
+      right: 0;
+      transition: all 0.4s ease 0.1s;
+    }
   }
 }

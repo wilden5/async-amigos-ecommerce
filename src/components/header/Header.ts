@@ -11,7 +11,6 @@ class Header extends Component {
       <button class='${Constants.HEADER_CONTAINER_SELECTOR}__burger'>
         <span></span>
         <span></span>
-        <span></span>
       </button>
     </div>
   `;
