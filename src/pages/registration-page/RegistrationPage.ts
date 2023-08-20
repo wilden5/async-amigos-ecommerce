@@ -1,10 +1,11 @@
-import { ClientResponse, CustomerDraft, CustomerSignInResult } from '@commercetools/platform-sdk';
+import { BaseAddress, ClientResponse, CustomerDraft, CustomerSignInResult } from '@commercetools/platform-sdk';
 import Page from '../../components/templates/Page';
 import { ProjectPages } from '../../types/Enums';
 import Constants from '../../utils/Constants';
 import { CustomerRegistration } from '../../backend/registration/CustomerRegistration';
 import TostifyHelper from '../../utils/TostifyHelper';
 import RegistrationFormValidation from './RegistrationFormValidation';
+import DOMHelpers from '../../utils/DOMHelpers';
 
 class RegistrationPage extends Page {
   private REGISTRATION_PAGE_MARKUP = `
@@ -63,12 +64,17 @@ class RegistrationPage extends Page {
           <input class='input-postal-code address-part' type="text" name="postalCode">
           <label for="postalCode">Postal Code</label>
         </div>
+        <div class="default-address">
+          <label for="default-add" title="If one address entered, same address will be set as default for both shipping and billing">
+            <input class='default-address-option' type="checkbox" checked id="default-add">Set entered address as a default one</input>
+          </label>
+        </div>
         <div class="check">
           <label for="use-same-address">
             <input class='address-option' type="checkbox" checked id="use-same-address">Use the same address for both billing and shipping</input>
           </label>
         </div>
-        <button class="main-btn" type="submit">Register me</button>
+        <button class="main-btn" type="submit" disabled>Register me</button>
       </form>
     </div>
   </div>`;
@@ -101,42 +107,69 @@ class RegistrationPage extends Page {
     }
   }
 
+  private getInputElementValue(selector: string): string {
+    const inputElement = this.CONTAINER.querySelector(selector) as HTMLInputElement;
+    return inputElement ? inputElement.value.trim() : '';
+  }
+
+  private getSelectElementValue(selector: string): string {
+    const selectElement = this.CONTAINER.querySelector(selector) as HTMLSelectElement;
+    return selectElement ? selectElement.value.trim() : '';
+  }
+
+  private collectAddressData(prefix: string): BaseAddress {
+    return {
+      streetName: this.getInputElementValue(`input[name="${prefix}street"]`),
+      city: this.getInputElementValue(`input[name="${prefix}city"]`),
+      postalCode: this.getInputElementValue(`input[name="${prefix}postalCode"]`),
+      country: this.getSelectElementValue(`select[name="country"]`),
+    };
+  }
+
   private collectCustomerData(): CustomerDraft {
     let customerData: CustomerDraft = {
-      email: (this.CONTAINER.querySelector('input[name="email"]') as HTMLInputElement).value.trim(),
-      password: (this.CONTAINER.querySelector('input[name="password"]') as HTMLInputElement).value.trim(),
-      firstName: (this.CONTAINER.querySelector('input[name="firstName"]') as HTMLInputElement).value.trim(),
-      lastName: (this.CONTAINER.querySelector('input[name="lastName"]') as HTMLInputElement).value.trim(),
-      dateOfBirth: (this.CONTAINER.querySelector('input[name="dob"]') as HTMLInputElement).value.trim(),
-      addresses: [
-        {
-          streetName: (this.CONTAINER.querySelector('input[name="street"]') as HTMLInputElement).value.trim(),
-          city: (this.CONTAINER.querySelector('input[name="city"]') as HTMLInputElement).value.trim(),
-          postalCode: (this.CONTAINER.querySelector('input[name="postalCode"]') as HTMLInputElement).value.trim(),
-          country: (this.CONTAINER.querySelector('select[name="country"]') as HTMLSelectElement).value.trim(),
-        },
-      ],
+      email: this.getInputElementValue('input[name="email"]'),
+      password: this.getInputElementValue('input[name="password"]'),
+      firstName: this.getInputElementValue('input[name="firstName"]'),
+      lastName: this.getInputElementValue('input[name="lastName"]'),
+      dateOfBirth: this.getInputElementValue('input[name="dob"]'),
+      addresses: [this.collectAddressData('')], // we don't add any prefix since it's for first set of fields
     };
 
     if (this.CONTAINER.querySelector('.billing-address')) {
-      const billingAddressData = {
-        streetName: (this.CONTAINER.querySelector('input[name="b-street"]') as HTMLInputElement).value.trim(),
-        city: (this.CONTAINER.querySelector('input[name="b-city"]') as HTMLInputElement).value.trim(),
-        postalCode: (this.CONTAINER.querySelector('input[name="b-postalCode"]') as HTMLInputElement).value.trim(),
-        country: (this.CONTAINER.querySelector('select[name="country"]') as HTMLSelectElement).value.trim(),
-      };
+      const billingAddressData = this.collectAddressData('b-');
       customerData.addresses?.push(billingAddressData);
       customerData = {
         ...customerData,
         shippingAddresses: [0],
         billingAddresses: [1],
       };
+
+      if ((this.CONTAINER.querySelector('.default-billing-address-option') as HTMLInputElement).checked) {
+        customerData = {
+          ...customerData,
+          defaultBillingAddress: 1,
+        };
+      }
+      if ((this.CONTAINER.querySelector('.default-address-option') as HTMLInputElement).checked) {
+        customerData = {
+          ...customerData,
+          defaultShippingAddress: 0,
+        };
+      }
     } else {
       customerData = {
         ...customerData,
         billingAddresses: [0],
         shippingAddresses: [0],
       };
+      if ((this.CONTAINER.querySelector('.default-address-option') as HTMLInputElement).checked) {
+        customerData = {
+          ...customerData,
+          defaultShippingAddress: 0,
+          defaultBillingAddress: 0,
+        };
+      }
     }
     return customerData;
   }
@@ -147,11 +180,11 @@ class RegistrationPage extends Page {
 
     new CustomerRegistration(customer)
       .createCustomer()
-      .then((response) => {
+      .then((response): void => {
         this.handleRegistrationResponse(response);
       })
-      .catch((error: Error) => {
-        const errorMessage =
+      .catch((error: Error): void => {
+        const errorMessage: string =
           error.message === Constants.FAILED_TO_FETCH_ERROR_MESSAGE ? Constants.ACCOUNT_CREATION_ERROR : error.message;
         TostifyHelper.showToast(errorMessage, Constants.TOAST_COLOR_RED);
       });
@@ -159,13 +192,24 @@ class RegistrationPage extends Page {
 
   public manageRegistrationFormEventListener = (add: boolean): void => {
     const form = this.CONTAINER.querySelector('.register-form') as HTMLFormElement;
+    const mainButton = this.CONTAINER.querySelector('.main-btn') as HTMLButtonElement;
 
     if (add) {
       form.addEventListener('submit', this.submitRegistrationForm);
+      mainButton.disabled = false;
     } else {
       form.removeEventListener('submit', this.submitRegistrationForm);
+      mainButton.disabled = true;
     }
   };
+
+  private handleLockIconClickRegistrationPage(): void {
+    const lockIcon = this.CONTAINER.querySelector(Constants.LOCK_ICON_SELECTOR) as HTMLElement;
+
+    lockIcon.addEventListener('click', () => {
+      DOMHelpers.showEnteredPassword(this.CONTAINER);
+    });
+  }
 
   public renderPage(): HTMLElement {
     this.CONTAINER.innerHTML = this.REGISTRATION_PAGE_MARKUP;
@@ -174,6 +218,7 @@ class RegistrationPage extends Page {
       this.manageRegistrationFormEventListener,
     );
     this.setBillingAddressAsSeparated();
+    this.handleLockIconClickRegistrationPage();
     return this.CONTAINER;
   }
 }

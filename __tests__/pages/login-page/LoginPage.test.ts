@@ -47,6 +47,7 @@ describe('LoginPage', (): void => {
 
     fireEvent.change(emailInput, { target: { value: 'invalid-email' } });
     fireEvent.change(passwordInput, { target: { value: '123' } });
+    submitButton.disabled = false;
     fireEvent.click(submitButton);
 
     const checkInterval = setInterval(() => {
