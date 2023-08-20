@@ -1,3 +1,5 @@
+@import "../../globalVariables.scss";
+
 .header {
   width: 100%;
 
@@ -5,9 +7,13 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    max-width: 1200px;
+    max-width: $breakPoint-1;
     margin: 0 auto;
     padding: 20px 20px;
+
+    @media screen and (max-width: $breakPoint-2) {
+      flex-wrap: wrap;
+    }
 
     &__logo {
       height: 2rem;
@@ -16,8 +22,3 @@
 }
 
 
-@media screen and (max-width: 400px) {
-  .header-container {
-    flex-wrap: wrap;
-  }
-}
