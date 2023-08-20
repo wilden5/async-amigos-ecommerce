@@ -109,7 +109,7 @@
     }
   }
 }
-
+.logout,
 .main-btn {
   width: 100%;
   height: 43px;
@@ -123,6 +123,16 @@
   &:hover {
     border: 1px solid #ffffff;
     background: #203545;
+  }
+}
+
+.logout {
+  width: 7%;
+  font-size: 1.4rem;
+  height: 30px;
+  transition: all 0.5s ease-in-out;
+  &:active {
+    scale: 0.9;
   }
 }
 

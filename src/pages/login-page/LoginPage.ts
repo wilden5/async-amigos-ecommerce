@@ -54,6 +54,10 @@ class LoginPage extends Page {
     login.style.display = 'none';
     const registration = document.querySelector('.registration') as HTMLLinkElement;
     registration.style.display = 'none';
+    const bntLogOut = document.createElement('button');
+    bntLogOut.classList.add('logout');
+    bntLogOut.textContent = 'Log out';
+    document.querySelector('.header-container')?.appendChild(bntLogOut);
   }
 
   private handleLoginResponse(response: ClientResponse<CustomerSignInResult>): void {
