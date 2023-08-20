@@ -1,7 +1,7 @@
 import { ClientResponse, CustomerSignInResult, CustomerSignin } from '@commercetools/platform-sdk';
 import { createBrowserHistory } from 'history';
-import DOMHelpers from '../../utils/DOMHelpers';
 import ToastifyHelper from '../../utils/TostifyHelper';
+import DOMHelpers from '../../utils/DOMHelpers';
 import { CustomerLogin } from '../../backend/login/CustomerLogin';
 import Page from '../../components/templates/Page';
 import { ProjectPages } from '../../types/Enums';
