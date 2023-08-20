@@ -26,25 +26,21 @@ class Header extends Component {
       const targetElement = event.target as HTMLElement;
       const burgerBtn = this.CONTAINER.querySelector('.header-container__burger') as HTMLButtonElement;
       const burgerMenu = this.CONTAINER.querySelector('.navigation-bar') as HTMLElement;
-
       if (
-        targetElement.closest('.header-container__item') ||
-        targetElement.closest('.header-container.active') ||
+        targetElement.closest('.navigation-bar__item') ||
+        targetElement.closest('.navigation-bar.active') ||
         targetElement.closest('.header-container__burger')
       ) {
-        setTimeout((): void => {
-          if (burgerBtn && burgerMenu) {
-            burgerBtn.classList.toggle('active');
-            burgerMenu.classList.toggle('active');
-          }
-        }, 300);
+        if (burgerBtn && burgerMenu) {
+          burgerBtn.classList.toggle('active');
+          burgerMenu.classList.toggle('active');
+        }
       }
     });
   }
 
   public renderComponent(): HTMLElement {
     this.CONTAINER.innerHTML = this.HEADER_MARKUP;
-    // this.handleBurgerIconClick();
     this.showHeaderMenu();
     return this.CONTAINER;
   }
