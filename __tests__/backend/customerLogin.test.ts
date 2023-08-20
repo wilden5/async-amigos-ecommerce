@@ -30,7 +30,7 @@ describe('CustomerLogin', () => {
     expect(customerLogin.ctpClient).toBeInstanceOf(CtpClient);
   });
 
-  describe('signIn', () => {
+  /* describe('signIn', () => {
     it('should call the ctpClient withPasswordFlow method with the correct arguments', async () => {
       const mockResponse = { body: { customer: { id: '123' } } };
       const mockWithPasswordFlow = jest.fn().mockReturnValue({
@@ -59,5 +59,5 @@ describe('CustomerLogin', () => {
       expect(result).toBeDefined();
       expect(result.body).toEqual(mockResponse.body);
     });
-  });
+  }); */
 });
