@@ -1,10 +1,8 @@
 import Component from '../templates/Component';
 import Constants from '../../utils/Constants';
 
-// import DOMHelpers from '../../utils/DOMHelpers';
-
 class NavigationBar extends Component {
-  private NAVIGATION_BAR_MARKUP = `
+  public NAVIGATION_BAR_MARKUP = `
     <ul class="${Constants.NAVIGATION_BAR_SELECTOR}__list">
       <li class="${Constants.NAVIGATION_BAR_SELECTOR}__item"><a href='#'>Home</a></li>
       <li class="${Constants.NAVIGATION_BAR_SELECTOR}__item"><a href='#catalog'>Catalog</a></li>
