@@ -64,6 +64,11 @@ class RegistrationPage extends Page {
           <input class='input-postal-code address-part' type="text" name="postalCode">
           <label for="postalCode">Postal Code</label>
         </div>
+        <div class="default-address">
+          <label for="default-add" title="If one address entered, same address will be set as default for both shipping and billing">
+            <input class='default-address-option' type="checkbox" checked id="default-add">Set entered address as a default one</input>
+          </label>
+        </div>
         <div class="check">
           <label for="use-same-address">
             <input class='address-option' type="checkbox" checked id="use-same-address">Use the same address for both billing and shipping</input>
@@ -132,12 +137,33 @@ class RegistrationPage extends Page {
         shippingAddresses: [0],
         billingAddresses: [1],
       };
+
+      if ((this.CONTAINER.querySelector('.default-billing-address-option') as HTMLInputElement).checked) {
+        customerData = {
+          ...customerData,
+          defaultBillingAddress: 1,
+        };
+      }
+      if ((this.CONTAINER.querySelector('.default-address-option') as HTMLInputElement).checked) {
+        customerData = {
+          ...customerData,
+          defaultShippingAddress: 0,
+        };
+      }
     } else {
       customerData = {
         ...customerData,
         billingAddresses: [0],
         shippingAddresses: [0],
       };
+
+      if ((this.CONTAINER.querySelector('.default-address-option') as HTMLInputElement).checked) {
+        customerData = {
+          ...customerData,
+          defaultShippingAddress: 0,
+          defaultBillingAddress: 0,
+        };
+      }
     }
     return customerData;
   }

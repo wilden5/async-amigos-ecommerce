@@ -72,7 +72,13 @@ class Constants {
           <span class="icon"><i class='bx bxs-building-house'></i></span>
           <input class='input-billing-postal-code billing-part' type="text" name="b-postalCode">
           <label for="b-postalCode">Billing Postal Code</label>
-        </div></div>`;
+        </div>
+        <div class="default-billing-address">
+          <label for="default-bil-add">
+            <input class='default-billing-address-option' type="checkbox" checked id="default-bil-add">Set entered billing address as a default one</input>
+          </label>
+        </div>
+        </div>`;
 
   static BACKEND_STREET_VALIDATION_MESSAGE = 'Street: Must contain at least one character';
 
