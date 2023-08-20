@@ -31,14 +31,13 @@ class RegistrationFormValidation {
   public validateRegistrationFormFields(container: HTMLElement, callback: (add: boolean) => void): void {
     let countryValue: string;
     let validationResult;
-    const REGISTER_FORM = container.querySelector('.register-form') as HTMLFormElement;
-    const ValidationConfig = {
-      // validateBeforeSubmitting: true, // TODO: solve > tests fail if this rule is on
+    const validator = new JustValidate(container.querySelector('.register-form') as HTMLFormElement, {
+      validateBeforeSubmitting: true,
       focusInvalidField: true,
       testingMode: true,
-    };
-
-    const validator = new JustValidate(REGISTER_FORM, ValidationConfig);
+    });
+    // added second instance since plugin-date is conflicting with option "validateBeforeSubmitting: true"
+    const validator2 = new JustValidate(container.querySelector('.register-form') as HTMLFormElement);
     validator
       .addField('.input-email', [{ rule: Rules.Required }, { rule: Rules.Email }])
       .addField('.input-password', [{ rule: Rules.Required }, { rule: Rules.StrongPassword }])
@@ -73,20 +72,20 @@ class RegistrationFormValidation {
       .addField('.input-postal-code', [
         { rule: Rules.Required },
         {
-          validator: (value: string | boolean): boolean => {
+          validator: (value): boolean => {
             countryValue = (container.querySelector('.select-country') as HTMLInputElement).value;
             return this.isPostalCodeValid(countryValue, value as string);
           },
           errorMessage: (): string => this.getPostalCodeErrorMessage(countryValue),
         },
       ])
-      .addField('.select-country', [{ rule: Rules.Required }])
-      .addField('.input-date-of-birth', [
-        {
-          plugin: JustValidatePluginDate(() => ({ required: true, isBefore: Constants.MIN_AGE_DATE })),
-          errorMessage: Constants.INVALID_AGE_ERROR,
-        },
-      ]);
+      .addField('.select-country', [{ rule: Rules.Required }]);
+    validator2.addField('.input-date-of-birth', [
+      {
+        plugin: JustValidatePluginDate(() => ({ required: true, isBefore: Constants.MIN_AGE_DATE })),
+        errorMessage: Constants.INVALID_AGE_ERROR,
+      },
+    ]);
 
     container.querySelectorAll('.input-box').forEach((inputElement) => {
       inputElement.addEventListener('input', () => {
