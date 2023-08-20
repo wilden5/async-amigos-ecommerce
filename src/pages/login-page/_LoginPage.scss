@@ -85,6 +85,8 @@
   cursor: pointer;
 }
 
+.default-billing-address,
+.default-address,
 .check {
   margin-bottom: 20px;
 
@@ -114,15 +116,24 @@
   width: 100%;
   height: 43px;
   border-radius: 8px;
-  background: #162938;
   font-size: 1.7rem;
   font-weight: 600;
-  color: #ffffff;
-  cursor: pointer;
 
-  &:hover {
-    border: 1px solid #ffffff;
-    background: #203545;
+  &:disabled {
+    background-color: gray;
+    color: black;
+    cursor: not-allowed;
+  }
+
+  &:not(:disabled) {
+    background: #162938;
+    color: #ffffff;
+    cursor: pointer;
+
+    &:hover {
+      border: 1px solid #ffffff;
+      background: #203545;
+    }
   }
 }
 
@@ -137,7 +148,7 @@
 }
 
 .register {
-  padding: 25px 0px;
+  padding: 25px 0;
   text-align: center;
   font-size: 1.5rem;
   font-weight: 500;
@@ -159,9 +170,13 @@
   }
 }
 
-.new-customer-message {
-  color: #f70303;
+.customer-message {
+  color: rgb(13, 99, 156);
   font-weight: 800;
+
+  & .register-link, .login-link {
+    color: rgb(37, 213, 245);
+  }
 }
 
 .just-validate-error-label {
