@@ -31,6 +31,8 @@ class RegistrationFormValidation {
   public validateRegistrationFormFields(container: HTMLElement, callback: (add: boolean) => void): void {
     let countryValue: string;
     let validationResult;
+    const checkbox = container.querySelector('.address-option') as HTMLInputElement;
+    const submitButton = container.querySelector('.main-btn') as HTMLButtonElement;
     const validator = new JustValidate(container.querySelector('.register-form') as HTMLFormElement, {
       validateBeforeSubmitting: true,
       focusInvalidField: true,
@@ -92,8 +94,6 @@ class RegistrationFormValidation {
         validationResult = validator.isValid;
 
         if (validationResult) {
-          const checkbox = container.querySelector('.accept-terms') as HTMLInputElement;
-          const submitButton = container.querySelector('.main-btn') as HTMLButtonElement;
           submitButton.disabled = !checkbox.checked;
           callback(true);
         } else {

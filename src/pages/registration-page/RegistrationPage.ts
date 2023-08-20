@@ -171,11 +171,11 @@ class RegistrationPage extends Page {
     }
   };
 
-  private assignRegistrationPageEventListeners(): void {
+  private handleLockIconClickRegistrationPage(): void {
     const lockIcon = this.CONTAINER.querySelector(Constants.LOCK_ICON_SELECTOR) as HTMLElement;
 
     lockIcon.addEventListener('click', () => {
-      DOMHelpers.handleLockIconClick(this.CONTAINER);
+      DOMHelpers.showEnteredPassword(this.CONTAINER);
     });
   }
 
@@ -186,7 +186,7 @@ class RegistrationPage extends Page {
       this.manageRegistrationFormEventListener,
     );
     this.setBillingAddressAsSeparated();
-    this.assignRegistrationPageEventListeners();
+    this.handleLockIconClickRegistrationPage();
     return this.CONTAINER;
   }
 }

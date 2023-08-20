@@ -74,18 +74,18 @@ class LoginPage extends Page {
     }
   };
 
-  private assignLoginPageEventListeners(): void {
+  private handleLockIconClickLoginPage(): void {
     const lockIcon = this.CONTAINER.querySelector(Constants.LOCK_ICON_SELECTOR) as HTMLElement;
 
     lockIcon.addEventListener('click', () => {
-      DOMHelpers.handleLockIconClick(this.CONTAINER);
+      DOMHelpers.showEnteredPassword(this.CONTAINER);
     });
   }
 
   public renderPage(): HTMLElement {
     this.CONTAINER.innerHTML = this.LOGIN_PAGE_MARKUP;
     this.LOGIN_FORM_VALIDATION.validateLoginFormFields(this.CONTAINER, this.manageLoginFormEventListener);
-    this.assignLoginPageEventListeners();
+    this.handleLockIconClickLoginPage();
     return this.CONTAINER;
   }
 }

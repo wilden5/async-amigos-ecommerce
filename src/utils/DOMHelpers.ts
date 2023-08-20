@@ -23,7 +23,7 @@ class DOMHelpers {
     parent.appendChild(child);
   }
 
-  static handleLockIconClick(container: HTMLElement): void {
+  static showEnteredPassword(container: HTMLElement): void {
     const target = container.querySelector('.icon-lock') as HTMLSpanElement;
     const passwordInput = container.querySelector('.input-password') as HTMLInputElement;
 
