@@ -1,17 +1,23 @@
 .navigation-bar {
-  display: flex;
-  justify-content: center;
-  flex-wrap: wrap;
-  padding: 20px 40px;
-  font-size: 2rem;
-  gap: 2rem;
+  &__list {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    font-size: 2rem;
+    gap: 2rem;
+  }
 
-  & a {
+  &__item a {
     color: #162938;
     transition: color 0.4s ease-in-out, box-shadow 0.4s ease-in-out;
 
     &:hover {
       color: #b91313;
+    }
+  }
+
+  &__item {
+    &:hover {
       transform: scale(1.05);
       transition: 0.4s;
     }

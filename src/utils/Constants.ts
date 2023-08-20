@@ -1,6 +1,8 @@
 class Constants {
   static PAGE_CONTAINER_SELECTOR = 'page-content-container';
 
+  static HEADER = 'header';
+
   static HEADER_CONTAINER_SELECTOR = 'header-container';
 
   static NAVIGATION_BAR_SELECTOR = 'navigation-bar';

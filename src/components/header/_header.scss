@@ -1,13 +1,20 @@
-.header-container {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+.header {
+  width: 100%;
+
+  &-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px 20px;
+
+    &__logo {
+      height: 2rem;
+    }
+  }
 }
 
-.e-header-logo {
-  height: 2rem;
-  padding-left: 2rem;
-}
 
 @media screen and (max-width: 400px) {
   .header-container {
