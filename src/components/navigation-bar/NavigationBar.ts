@@ -1,6 +1,7 @@
 import Component from '../templates/Component';
 import Constants from '../../utils/Constants';
-import DOMHelpers from '../../utils/DOMHelpers';
+
+// import DOMHelpers from '../../utils/DOMHelpers';
 
 class NavigationBar extends Component {
   private NAVIGATION_BAR_MARKUP = `
@@ -19,18 +20,18 @@ class NavigationBar extends Component {
     super('nav', `${Constants.NAVIGATION_BAR_SELECTOR}`);
   }
 
-  private handleBurgerIconClick(): void {
-    const burgerBtn = this.CONTAINER.querySelector('.header-container__burger') as HTMLButtonElement;
-
-    burgerBtn?.addEventListener('click', (): void => {
-      DOMHelpers.showHeaderMenu(this.CONTAINER);
-    });
-    console.log(burgerBtn);
-  }
+  // private handleBurgerIconClick(): void {
+  //   const burgerBtn = this.CONTAINER.querySelector('.header-container__burger') as HTMLButtonElement;
+  //
+  //   if (!burgerBtn) return;
+  //   burgerBtn.addEventListener('click', (): void => {
+  //     DOMHelpers.showHeaderMenu(this.CONTAINER);
+  //   });
+  // }
 
   public renderComponent(): HTMLElement {
     this.CONTAINER.innerHTML = this.NAVIGATION_BAR_MARKUP;
-    this.handleBurgerIconClick();
+    // this.handleBurgerIconClick();
     return this.CONTAINER;
   }
 }

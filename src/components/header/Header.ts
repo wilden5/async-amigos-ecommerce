@@ -1,8 +1,7 @@
 import Component from '../templates/Component';
 import headerLogo from '../../assets/header-logo2.png';
 import Constants from '../../utils/Constants';
-
-// import BurgerMenuHandler from '../templates/BurgerMenuHandler';
+import DOMHelpers from '../../utils/DOMHelpers';
 
 class Header extends Component {
   private HEADER_MARKUP = `
@@ -21,10 +20,18 @@ class Header extends Component {
     super('header', `${Constants.HEADER}`);
   }
 
-  // const burgerMenuHandler = new BurgerMenuHandler();
+  private handleBurgerIconClick(): void {
+    const burgerBtn = this.CONTAINER.querySelector('.header-container__burger') as HTMLButtonElement;
+
+    if (!burgerBtn) return;
+    burgerBtn.addEventListener('click', (): void => {
+      DOMHelpers.showHeaderMenu(this.CONTAINER);
+    });
+  }
 
   public renderComponent(): HTMLElement {
     this.CONTAINER.innerHTML = this.HEADER_MARKUP;
+    this.handleBurgerIconClick();
     return this.CONTAINER;
   }
 }
