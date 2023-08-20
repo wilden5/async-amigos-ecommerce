@@ -1,5 +1,6 @@
 /* eslint-disable no-console */
 import { ClientResponse, CustomerSignInResult, CustomerSignin, ErrorResponse } from '@commercetools/platform-sdk';
+import { apiRoot } from '../../backend/ctpClient/apiRoot';
 import ToastifyHelper from '../../utils/TostifyHelper';
 import { CustomerLogin } from '../../backend/login/CustomerLogin';
 import Page from '../../components/templates/Page';
@@ -57,7 +58,10 @@ class LoginPage extends Page {
     const customerLogin = new CustomerLogin(loginData);
     customerLogin
       .signIn()
-      .then((response) => this.handleLoginResponse(response))
+      .then((response) => {
+        this.handleLoginResponse(response);
+        apiRoot.request = customerLogin.getApiRootWithToken();
+      })
       .catch((error: ClientResponse<ErrorResponse>) => {
         const errorMessage = error.body.statusCode === 400 ? Constants.LOGIN_ERROR : error.body.message;
         ToastifyHelper.showToast(errorMessage, Constants.TOAST_COLOR_RED);
