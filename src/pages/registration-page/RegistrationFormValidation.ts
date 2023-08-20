@@ -31,8 +31,12 @@ class RegistrationFormValidation {
   public validateRegistrationFormFields(container: HTMLElement, callback: (add: boolean) => void): void {
     let countryValue: string;
     let validationResult;
+    const checkbox = container.querySelector('.address-option') as HTMLInputElement;
+    const submitButton = container.querySelector('.main-btn') as HTMLButtonElement;
     const validator = new JustValidate(container.querySelector('.register-form') as HTMLFormElement, {
       validateBeforeSubmitting: true,
+      focusInvalidField: true,
+      testingMode: true,
     });
     // added second instance since plugin-date is conflicting with option "validateBeforeSubmitting: true"
     const validator2 = new JustValidate(container.querySelector('.register-form') as HTMLFormElement);
@@ -88,7 +92,9 @@ class RegistrationFormValidation {
     container.querySelectorAll('.input-box').forEach((inputElement) => {
       inputElement.addEventListener('input', () => {
         validationResult = validator.isValid;
+
         if (validationResult) {
+          submitButton.disabled = !checkbox.checked;
           callback(true);
         } else {
           callback(false);

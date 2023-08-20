@@ -5,6 +5,7 @@ import Page from '../../components/templates/Page';
 import { ProjectPages } from '../../types/Enums';
 import Constants from '../../utils/Constants';
 import LoginFormValidation from './LoginFormValidation';
+import DOMHelpers from '../../utils/DOMHelpers';
 
 class LoginPage extends Page {
   private LOGIN_PAGE_MARKUP = `
@@ -22,15 +23,15 @@ class LoginPage extends Page {
         <input class="input-password" type="password" autocomplete="current-password" name="password">
         <label for="password">Password</label>
       </div>
-      <button class="main-btn" type="submit">Login</button>
+      <button class="main-btn" type="submit" disabled>Login</button>
       <div class="register">
-        <p class='new-customer-message'>New customer?<a href="#registration" class="register-link">Register</a></p>
+        <p class='customer-message'>New customer?<a href="#registration" class="register-link">Register</a></p>
       </div>
     </form>
   </div>
 </div>`;
 
-  private readonly LOGIN_FORM_VALIDATION: LoginFormValidation;
+  private LOGIN_FORM_VALIDATION: LoginFormValidation;
 
   constructor() {
     super(ProjectPages.Login);
@@ -63,36 +64,28 @@ class LoginPage extends Page {
       });
   };
 
-  private handleLockIconClick = (event: Event): void => {
-    const target = event.currentTarget as HTMLElement;
-    const passwordInput = this.CONTAINER.querySelector('.input-password') as HTMLInputElement;
+  public manageLoginFormEventListener = (add: boolean): void => {
+    const form = this.CONTAINER.querySelector('#login-form') as HTMLFormElement;
 
-    if (!passwordInput.value) {
-      return;
-    }
-
-    if (passwordInput.type === 'password') {
-      target.innerHTML = Constants.OPENED_LOCK_ICON_MARKUP;
-      passwordInput.type = 'text';
-    } else if (passwordInput.type === 'text') {
-      target.innerHTML = Constants.CLOSED_LOCK_ICON_MARKUP;
-      passwordInput.type = 'password';
+    if (add) {
+      form.addEventListener('submit', this.handleLoginFormSubmit);
+    } else {
+      form.removeEventListener('submit', this.handleLoginFormSubmit);
     }
   };
 
-  private assignLoginPageEventListeners(): void {
+  private handleLockIconClickLoginPage(): void {
     const lockIcon = this.CONTAINER.querySelector(Constants.LOCK_ICON_SELECTOR) as HTMLElement;
-    lockIcon.addEventListener('click', this.handleLockIconClick);
-    (this.CONTAINER.querySelector('#login-form') as HTMLFormElement).addEventListener(
-      'submit',
-      this.handleLoginFormSubmit,
-    );
+
+    lockIcon.addEventListener('click', () => {
+      DOMHelpers.showEnteredPassword(this.CONTAINER);
+    });
   }
 
   public renderPage(): HTMLElement {
     this.CONTAINER.innerHTML = this.LOGIN_PAGE_MARKUP;
-    this.LOGIN_FORM_VALIDATION.validateLoginFormFields(this.CONTAINER);
-    this.assignLoginPageEventListeners();
+    this.LOGIN_FORM_VALIDATION.validateLoginFormFields(this.CONTAINER, this.manageLoginFormEventListener);
+    this.handleLockIconClickLoginPage();
     return this.CONTAINER;
   }
 }
