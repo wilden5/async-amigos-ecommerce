@@ -88,6 +88,8 @@ class Constants {
     'City: Must contain at least one character and no special characters or numbers';
 
   static BACKEND_UNSUPPORTED_COUNTRY_MESSAGE = 'Unsupported country';
+
+  static SUCCESSFUL_LOGIN_AFTER_REGISTRATION_MESSAGE = 'Your account has been created and you already logged in!';
 }
 
 export default Constants;
