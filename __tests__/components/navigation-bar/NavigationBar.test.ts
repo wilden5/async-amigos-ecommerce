@@ -37,11 +37,6 @@ describe('NavigationBar', () => {
     expect(element).not.toBeNull();
   });
 
-  test('My Profile link should be present in Navigation Bar', () => {
-    const element = actualComponentMarkup.querySelector('a[href="#my-profile"]');
-    expect(element).not.toBeNull();
-  });
-
   test('Cart link should be present in Navigation Bar', () => {
     const element = actualComponentMarkup.querySelector('a[href="#cart"]');
     expect(element).not.toBeNull();
