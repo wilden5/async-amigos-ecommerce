@@ -1,4 +1,10 @@
-import { BaseAddress, ClientResponse, CustomerDraft, CustomerSignInResult } from '@commercetools/platform-sdk';
+import {
+  BaseAddress,
+  ClientResponse,
+  CustomerDraft,
+  CustomerSignin,
+  CustomerSignInResult,
+} from '@commercetools/platform-sdk';
 import Page from '../../components/templates/Page';
 import { ProjectPages } from '../../types/Enums';
 import Constants from '../../utils/Constants';
@@ -6,6 +12,8 @@ import { CustomerRegistration } from '../../backend/registration/CustomerRegistr
 import TostifyHelper from '../../utils/TostifyHelper';
 import RegistrationFormValidation from './RegistrationFormValidation';
 import DOMHelpers from '../../utils/DOMHelpers';
+import LocalStorage from '../../utils/LocalStorage';
+import { CustomerLogin } from '../../backend/login/CustomerLogin';
 
 class RegistrationPage extends Page {
   private REGISTRATION_PAGE_MARKUP = `
@@ -81,9 +89,12 @@ class RegistrationPage extends Page {
 
   private REGISTRATION_FORM_VALIDATION: RegistrationFormValidation;
 
+  private LOCAL_STORAGE: LocalStorage;
+
   constructor() {
     super(ProjectPages.Registration);
     this.REGISTRATION_FORM_VALIDATION = new RegistrationFormValidation();
+    this.LOCAL_STORAGE = new LocalStorage();
   }
 
   private setBillingAddressAsSeparated(): void {
@@ -101,9 +112,31 @@ class RegistrationPage extends Page {
 
   private handleRegistrationResponse(response: ClientResponse<CustomerSignInResult>): void {
     if (response.statusCode === 201) {
+      this.LOCAL_STORAGE.setLocalStorageItem(Constants.SUCCESSFUL_REGISTRATION_LOCAL_STORAGE_KEY, 'true');
       TostifyHelper.showToast(Constants.ACCOUNT_HAS_BEEN_CREATED, Constants.TOAST_COLOR_GREEN);
+      this.redirectUserToHomePage();
     } else {
       TostifyHelper.showToast(Constants.ACCOUNT_CREATION_ERROR, Constants.TOAST_COLOR_RED);
+    }
+  }
+
+  private redirectUserToHomePage(): void {
+    const loginData: CustomerSignin = {
+      email: (this.CONTAINER.querySelector('.input-email') as HTMLInputElement).value,
+      password: (this.CONTAINER.querySelector('.input-password') as HTMLInputElement).value,
+    };
+
+    if (this.LOCAL_STORAGE.isLocalStorageItemExists(Constants.SUCCESSFUL_REGISTRATION_LOCAL_STORAGE_KEY)) {
+      new CustomerLogin(loginData)
+        .signIn()
+        .then(() => {
+          window.location.href = ProjectPages.Home;
+        })
+        .catch((error: Error): void => {
+          const errorMessage: string =
+            error.message === Constants.FAILED_TO_FETCH_ERROR_MESSAGE ? Constants.LOGIN_ERROR : error.message;
+          TostifyHelper.showToast(errorMessage, Constants.TOAST_COLOR_RED);
+        });
     }
   }
 
