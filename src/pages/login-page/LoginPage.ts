@@ -47,7 +47,6 @@ class LoginPage extends Page {
       if (!this.LOCAL_STORAGE.isLocalStorageItemExists(Constants.SUCCESSFUL_REGISTRATION_LOCAL_STORAGE_KEY)) {
         this.LOCAL_STORAGE.setLocalStorageItem(Constants.SUCCESSFUL_REGISTRATION_LOCAL_STORAGE_KEY, 'true');
       }
-      ToastifyHelper.showToast(Constants.LOGIN_SUCCESS, Constants.TOAST_COLOR_GREEN);
     } else {
       ToastifyHelper.showToast(Constants.LOGIN_ERROR, Constants.TOAST_COLOR_RED);
     }
@@ -66,8 +65,6 @@ class LoginPage extends Page {
       .then((response): void => this.handleLoginResponse(response))
       .then(() => {
         window.location.href = ProjectPages.Home;
-      })
-      .then(() => {
         ToastifyHelper.showToast(Constants.LOGIN_SUCCESS, Constants.TOAST_COLOR_GREEN);
       })
       .catch((error: Error): void => {
