@@ -6,6 +6,7 @@ import Page from '../../components/templates/Page';
 import { ProjectPages } from '../../types/Enums';
 import Constants from '../../utils/Constants';
 import LoginFormValidation from './LoginFormValidation';
+import LocalStorage from '../../utils/LocalStorage';
 
 class LoginPage extends Page {
   private LOGIN_PAGE_MARKUP = `
@@ -33,13 +34,19 @@ class LoginPage extends Page {
 
   private LOGIN_FORM_VALIDATION: LoginFormValidation;
 
+  private LOCAL_STORAGE: LocalStorage;
+
   constructor() {
     super(ProjectPages.Login);
     this.LOGIN_FORM_VALIDATION = new LoginFormValidation();
+    this.LOCAL_STORAGE = new LocalStorage();
   }
 
   private handleLoginResponse(response: ClientResponse<CustomerSignInResult>): void {
     if (response.statusCode === 200) {
+      if (!this.LOCAL_STORAGE.isLocalStorageItemExists(Constants.SUCCESSFUL_REGISTRATION_LOCAL_STORAGE_KEY)) {
+        this.LOCAL_STORAGE.setLocalStorageItem(Constants.SUCCESSFUL_REGISTRATION_LOCAL_STORAGE_KEY, 'true');
+      }
       ToastifyHelper.showToast(Constants.LOGIN_SUCCESS, Constants.TOAST_COLOR_GREEN);
     } else {
       ToastifyHelper.showToast(Constants.LOGIN_ERROR, Constants.TOAST_COLOR_RED);
@@ -57,6 +64,12 @@ class LoginPage extends Page {
     new CustomerLogin(loginData)
       .signIn()
       .then((response): void => this.handleLoginResponse(response))
+      .then(() => {
+        window.location.href = ProjectPages.Home;
+      })
+      .then(() => {
+        ToastifyHelper.showToast(Constants.LOGIN_SUCCESS, Constants.TOAST_COLOR_GREEN);
+      })
       .catch((error: Error): void => {
         const errorMessage: string =
           error.message === Constants.FAILED_TO_FETCH_ERROR_MESSAGE ? Constants.LOGIN_ERROR : error.message;
