@@ -3,7 +3,7 @@ import HomePage from '../../../src/pages/home-page/HomePage';
 describe('HomePage', () => {
   let homePage: HomePage;
   const containerId = 'test-container';
-  const expectedPageMarkup = `<h1 class="header">Home Page</h1>`;
+  const expectedPageMarkup = `<h1 class="page-title">Home Page</h1>`;
 
   beforeEach(() => {
     const container = document.createElement('div');

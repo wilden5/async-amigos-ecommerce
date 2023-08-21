@@ -3,7 +3,7 @@ import { ProjectPages } from '../../types/Enums';
 
 class CatalogPage extends Page {
   private CATALOG_PAGE_MARKUP = `
-     <h1 class='header'>Catalog Page</h1>`;
+     <h1 class='page-title'>Catalog Page</h1>`;
 
   constructor() {
     super(ProjectPages.Catalog);
