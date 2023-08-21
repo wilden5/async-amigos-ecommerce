@@ -1,3 +1,5 @@
+import Constants from './Constants';
+
 class LocalStorage {
   public setLocalStorageItem(item: string, value: string): void {
     localStorage.setItem(item, value);
@@ -8,8 +10,15 @@ class LocalStorage {
       const value = localStorage.getItem(item);
       return value !== null;
     } catch (error) {
-      console.error('Error checking local storage:', error);
       return false;
+    }
+  }
+
+  public removeLocalStorageItem(item: string): void {
+    try {
+      localStorage.removeItem(item);
+    } catch (error) {
+      throw new Error(Constants.REMOVE_LOCAL_STORAGE_ITEM_ERROR);
     }
   }
 }

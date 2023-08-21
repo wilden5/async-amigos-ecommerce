@@ -94,6 +94,8 @@ class Constants {
   // Local Storage
 
   static SUCCESSFUL_REGISTRATION_LOCAL_STORAGE_KEY = 'registration-successful';
+
+  static REMOVE_LOCAL_STORAGE_ITEM_ERROR = 'Error removing item from local storage';
 }
 
 export default Constants;
