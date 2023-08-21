@@ -1,4 +1,5 @@
 @import url(https://fonts.googleapis.com/css?family=MuseoModerno:300,regular,500,600,700,800&display=swap);
+@import "./globalVariables";
 
 * {
   padding: 0;
@@ -10,8 +11,6 @@
 *::before,
 *::after {
   box-sizing: border-box;
-  -moz-box-sizing: border-box;
-  -webkit-box-sizing: border-box;
 }
 
 :focus,
@@ -85,8 +84,8 @@ img {
   vertical-align: top;
 }
 
-[class*=-container] {
-  width: 1080px;
-  padding: 0 20px;
-  margin: 0 auto;
-}
+//[class*=-container] {
+//  width: 1080px;
+//  padding: 0 20px;
+//  margin: 0 auto;
+//}

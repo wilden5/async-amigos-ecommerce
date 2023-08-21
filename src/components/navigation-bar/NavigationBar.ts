@@ -2,15 +2,17 @@ import Component from '../templates/Component';
 import Constants from '../../utils/Constants';
 
 class NavigationBar extends Component {
-  private NAVIGATION_BAR_MARKUP = `
-    <a href='#'>Home</a>
-    <a href='#catalog'>Catalog</a>
-    <a href='#about-us'>About Us</a>
-    <a href='#cart'>Cart</a>
-    <a href='#my-profile'>My Profile</a>
-    <a class='login' href='#login'>Login</a>
-    <a class='registration' href='#registration'>Registration</a>
-`;
+  public NAVIGATION_BAR_MARKUP = `
+    <ul class="${Constants.NAVIGATION_BAR_SELECTOR}__list">
+      <li class="${Constants.NAVIGATION_BAR_SELECTOR}__item"><a href='#'>Home</a></li>
+      <li class="${Constants.NAVIGATION_BAR_SELECTOR}__item"><a href='#catalog'>Catalog</a></li>
+      <li class="${Constants.NAVIGATION_BAR_SELECTOR}__item"><a href='#about-us'>About Us</a></li>
+      <li class="${Constants.NAVIGATION_BAR_SELECTOR}__item"><a href='#cart'>Cart</a></li>
+      <li class="${Constants.NAVIGATION_BAR_SELECTOR}__item"><a href='#my-profile'>My Profile</a></li>
+      <li class="${Constants.NAVIGATION_BAR_SELECTOR}__item"><a href='#login'>Login</a></li>
+      <li class="${Constants.NAVIGATION_BAR_SELECTOR}__item"><a href='#registration'>Registration</a></li>
+    </ul>
+  `;
 
   constructor() {
     super('nav', `${Constants.NAVIGATION_BAR_SELECTOR}`);

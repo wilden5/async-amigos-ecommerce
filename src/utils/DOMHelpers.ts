@@ -6,7 +6,7 @@ class DOMHelpers {
     properties: Partial<T>,
     parentElement?: Element,
   ): T | HTMLElement {
-    const element = document.createElement(tagName);
+    const element: HTMLElement = document.createElement(tagName);
     parentElement?.append(element);
     return Object.assign(element, properties);
   }

@@ -3,7 +3,7 @@ import { ProjectPages } from '../../types/Enums';
 
 class MyProfilePage extends Page {
   private MY_PROFILE_PAGE_MARKUP = `
-     <h1 class='header'>My Profile Page</h1>`;
+     <h1 class='page-title'>My Profile Page</h1>`;
 
   constructor() {
     super(ProjectPages.MyProfile);

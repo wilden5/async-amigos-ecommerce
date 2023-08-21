@@ -13,16 +13,25 @@
   &-login {
     width: 460px;
     height: 530px;
+    @media (max-width: $breakPoint-4) {
+      width: 390px;
+    }
   }
 
   &-register {
     width: 550px;
+    @media (max-width: $breakPoint-4) {
+      width: 390px;
+    }
   }
 }
 
 .main-box {
   width: 100%;
   padding: 50px;
+  @media (max-width: $breakPoint-4) {
+    padding: 30px;
+  }
 
   & h2 {
     padding: 20px;
@@ -31,11 +40,20 @@
     font-weight: 800;
     color: #162938;
     user-select: none;
+
+    @media (max-width: $breakPoint-4) {
+      font-size: 3rem;
+      font-weight: 600;
+    }
   }
 }
 
 #login-form > .input-box:nth-child(2) {
   margin-bottom: 50px;
+
+  @media (max-width: $breakPoint-4) {
+    margin-bottom: 60px;
+  }
 }
 
 .input-box {
@@ -45,6 +63,10 @@
   margin: 20px 0 20px 0;
   border-bottom: 1.5px solid #162938;
   font-size: 1.7rem;
+
+  @media (max-width: $breakPoint-4) {
+    height: 44px;
+  }
 
   & label {
     position: absolute;
@@ -56,6 +78,10 @@
     color: rgba(22, 41, 56, 0.71);
     transition: all ease 0.45s;
     user-select: none;
+
+    @media (max-width: $breakPoint-4) {
+      font-size: 1.4rem;
+    }
   }
 
   & input {
@@ -66,6 +92,11 @@
     font-size: 1.6rem;
     font-weight: 600;
     color: #162938;
+
+    @media (max-width: $breakPoint-4) {
+      font-size: 1.5rem;
+      font-weight: 500;
+    }
 
     &:focus ~ label {
       top: -3px;
@@ -144,6 +175,13 @@
   font-weight: 500;
   color: #162938;
 
+  @media (max-width: $breakPoint-3) {
+    padding: 25px 15px;
+  }
+  @media (max-width: $breakPoint-4) {
+
+  }
+
   & p {
     display: flex;
     justify-content: flex-end;
@@ -171,8 +209,12 @@
 
 .just-validate-error-label {
   width: 100%;
-  padding: 6px 0;
+  padding: 5px 0;
   text-align: right;
   font-size: 1.2rem;
   font-weight: 300;
+
+  @media (max-width: $breakPoint-4) {
+    font-size: 0.8rem;
+  }
 }

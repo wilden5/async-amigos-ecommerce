@@ -3,7 +3,7 @@ import AboutUsPage from '../../../src/pages/about-us-page/AboutUsPage';
 describe('MyProfilePage', () => {
   let aboutUsPage: AboutUsPage;
   const containerId = 'test-container';
-  const expectedPageMarkup = `<h1 class="header">About Us Page</h1>`;
+  const expectedPageMarkup = `<h1 class="page-title">About Us Page</h1>`;
 
   beforeEach(() => {
     const container = document.createElement('div');
