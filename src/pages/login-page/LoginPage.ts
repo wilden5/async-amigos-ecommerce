@@ -1,5 +1,4 @@
 import { ClientResponse, CustomerSignInResult, CustomerSignin } from '@commercetools/platform-sdk';
-import { createBrowserHistory } from 'history';
 import ToastifyHelper from '../../utils/TostifyHelper';
 import DOMHelpers from '../../utils/DOMHelpers';
 import { CustomerLogin } from '../../backend/login/CustomerLogin';
@@ -7,8 +6,6 @@ import Page from '../../components/templates/Page';
 import { ProjectPages } from '../../types/Enums';
 import Constants from '../../utils/Constants';
 import LoginFormValidation from './LoginFormValidation';
-import HomePage from '../home-page/HomePage';
-import { Customer } from '../../backend/configure/Customer';
 
 class LoginPage extends Page {
   private LOGIN_PAGE_MARKUP = `
@@ -41,30 +38,9 @@ class LoginPage extends Page {
     this.LOGIN_FORM_VALIDATION = new LoginFormValidation();
   }
 
-  private redirectMainPage(): void {
-    const history = createBrowserHistory();
-    history.push('/');
-    DOMHelpers.getElement(`${Constants.PAGE_CONTAINER_SELECTOR}`).innerHTML = '';
-    const currentPage = new HomePage();
-    DOMHelpers.appendChildToElement(
-      DOMHelpers.getElement(`${Constants.PAGE_CONTAINER_SELECTOR}`),
-      currentPage.renderPage(),
-    );
-    const login = document.querySelector('.login') as HTMLLinkElement;
-    login.style.display = 'none';
-    const registration = document.querySelector('.registration') as HTMLLinkElement;
-    registration.style.display = 'none';
-    const bntLogOut = document.createElement('button');
-    bntLogOut.classList.add('logout');
-    bntLogOut.textContent = 'Log out';
-    document.querySelector('.header-container')?.appendChild(bntLogOut);
-  }
-
   private handleLoginResponse(response: ClientResponse<CustomerSignInResult>): void {
     if (response.statusCode === 200) {
-      Customer.login = true;
       ToastifyHelper.showToast(Constants.LOGIN_SUCCESS, Constants.TOAST_COLOR_GREEN);
-      this.redirectMainPage();
     } else {
       ToastifyHelper.showToast(Constants.LOGIN_ERROR, Constants.TOAST_COLOR_RED);
     }
