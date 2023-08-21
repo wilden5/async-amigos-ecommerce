@@ -112,7 +112,7 @@ class RegistrationPage extends Page {
 
   private handleRegistrationResponse(response: ClientResponse<CustomerSignInResult>): void {
     if (response.statusCode === 201) {
-      this.LOCAL_STORAGE.setLocalStorageItem('reg-status', 'true');
+      this.LOCAL_STORAGE.setLocalStorageItem(Constants.SUCCESSFUL_REGISTRATION_LOCAL_STORAGE_KEY, 'true');
       TostifyHelper.showToast(Constants.ACCOUNT_HAS_BEEN_CREATED, Constants.TOAST_COLOR_GREEN);
       this.redirectUserToHomePage();
     } else {
@@ -126,7 +126,7 @@ class RegistrationPage extends Page {
       password: (this.CONTAINER.querySelector('.input-password') as HTMLInputElement).value,
     };
 
-    if (this.LOCAL_STORAGE.isLocalStorageItemExists('reg-status')) {
+    if (this.LOCAL_STORAGE.isLocalStorageItemExists(Constants.SUCCESSFUL_REGISTRATION_LOCAL_STORAGE_KEY)) {
       new CustomerLogin(loginData)
         .signIn()
         .then(() => {

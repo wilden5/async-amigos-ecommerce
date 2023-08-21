@@ -10,6 +10,7 @@ import CatalogPage from '../pages/catalog-page/CatalogPage';
 import MyProfilePage from '../pages/my-profile-page/MyProfilePage';
 import CartPage from '../pages/cart-page/CartPage';
 import AboutUsPage from '../pages/about-us-page/AboutUsPage';
+import LocalStorage from './LocalStorage';
 
 class Router {
   private renderSpecificPage(pageID: string): void {
@@ -21,7 +22,12 @@ class Router {
         currentPage = new HomePage();
         break;
       case ProjectPages.Login:
-        currentPage = new LoginPage();
+        if (new LocalStorage().isLocalStorageItemExists(Constants.SUCCESSFUL_REGISTRATION_LOCAL_STORAGE_KEY)) {
+          window.location.href = ProjectPages.Home;
+          currentPage = new HomePage();
+        } else {
+          currentPage = new LoginPage();
+        }
         break;
       case ProjectPages.Registration:
         currentPage = new RegistrationPage();
