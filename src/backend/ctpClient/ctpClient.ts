@@ -20,10 +20,8 @@ export class CtpClient {
       host: hostApi,
       fetch,
     };
-    this.ctpClient = new ClientBuilder()
-      .withProjectKey(projectKey)
-      .withHttpMiddleware(this.httpMiddlewareOptions)
-      .withLoggerMiddleware();
+    this.ctpClient = new ClientBuilder().withProjectKey(projectKey).withHttpMiddleware(this.httpMiddlewareOptions);
+    // .withLoggerMiddleware(); for dev usage
   }
 
   withPasswordFlow(email: string, password: string): ByProjectKeyRequestBuilder {
