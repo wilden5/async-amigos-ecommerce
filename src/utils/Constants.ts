@@ -53,7 +53,7 @@ class Constants {
 
   static INVALID_AGE_ERROR = 'Age should be above 13 years old';
 
-  static MIN_AGE_DATE = '2010-08-16';
+  static MIN_AGE_DATE = '2010-08-22';
 
   static INVALID_PASSWORD_ERROR_MESSAGE =
     'Password should contain minimum eight characters, at least one uppercase letter, one lowercase letter, one number and one special character';

@@ -30,7 +30,12 @@ class Router {
         }
         break;
       case ProjectPages.Registration:
-        currentPage = new RegistrationPage();
+        if (new LocalStorage().isLocalStorageItemExists(Constants.SUCCESSFUL_REGISTRATION_LOCAL_STORAGE_KEY)) {
+          window.location.href = '#';
+          currentPage = new HomePage();
+        } else {
+          currentPage = new RegistrationPage();
+        }
         break;
       case ProjectPages.Catalog:
         currentPage = new CatalogPage();
