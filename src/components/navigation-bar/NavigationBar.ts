@@ -6,6 +6,8 @@ import { ProjectPages } from '../../types/Enums';
 class NavigationBar extends Component {
   private LOCAL_STORAGE: LocalStorage;
 
+  private static instance: NavigationBar | null = null;
+
   public NAVIGATION_BAR_MARKUP_GUEST = `
     <ul class="${Constants.NAVIGATION_BAR_SELECTOR}__list">
       <li class="${Constants.NAVIGATION_BAR_SELECTOR}__item"><a href='#'>Home</a></li>
@@ -33,6 +35,13 @@ class NavigationBar extends Component {
     this.LOCAL_STORAGE = new LocalStorage();
   }
 
+  public static getInstance(): NavigationBar {
+    if (!NavigationBar.instance) {
+      NavigationBar.instance = new NavigationBar();
+    }
+    return NavigationBar.instance;
+  }
+
   private handleLogoutLinkClick(): void {
     if (this.LOCAL_STORAGE.isLocalStorageItemExists(Constants.SUCCESSFUL_REGISTRATION_LOCAL_STORAGE_KEY)) {
       (document.querySelector('.user-logout') as HTMLAnchorElement).addEventListener('click', () => {
@@ -42,7 +51,7 @@ class NavigationBar extends Component {
     }
   }
 
-  private handleNavigationBarType(): void {
+  public handleNavigationBarType(): void {
     if (this.LOCAL_STORAGE.isLocalStorageItemExists(Constants.SUCCESSFUL_REGISTRATION_LOCAL_STORAGE_KEY)) {
       this.CONTAINER.innerHTML = this.NAVIGATION_BAR_MARKUP_AUTH_USER;
       setTimeout(() => {

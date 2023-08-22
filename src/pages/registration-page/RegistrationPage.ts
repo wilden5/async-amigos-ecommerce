@@ -14,6 +14,7 @@ import RegistrationFormValidation from './RegistrationFormValidation';
 import DOMHelpers from '../../utils/DOMHelpers';
 import LocalStorage from '../../utils/LocalStorage';
 import { CustomerLogin } from '../../backend/login/CustomerLogin';
+import NavigationBar from '../../components/navigation-bar/NavigationBar';
 
 class RegistrationPage extends Page {
   private REGISTRATION_PAGE_MARKUP = `
@@ -115,6 +116,11 @@ class RegistrationPage extends Page {
       this.LOCAL_STORAGE.setLocalStorageItem(Constants.SUCCESSFUL_REGISTRATION_LOCAL_STORAGE_KEY, 'true');
       TostifyHelper.showToast(Constants.ACCOUNT_HAS_BEEN_CREATED, Constants.TOAST_COLOR_GREEN);
       this.redirectUserToHomePage();
+      window.location.href = '#';
+      const nav = NavigationBar.getInstance();
+      if (nav) {
+        nav.handleNavigationBarType();
+      }
     } else {
       TostifyHelper.showToast(Constants.ACCOUNT_CREATION_ERROR, Constants.TOAST_COLOR_RED);
     }
@@ -127,16 +133,11 @@ class RegistrationPage extends Page {
     };
 
     if (this.LOCAL_STORAGE.isLocalStorageItemExists(Constants.SUCCESSFUL_REGISTRATION_LOCAL_STORAGE_KEY)) {
-      new CustomerLogin(loginData)
-        .signIn()
-        .then(() => {
-          window.location.href = ProjectPages.Home;
-        })
-        .catch((error: Error): void => {
-          const errorMessage: string =
-            error.message === Constants.FAILED_TO_FETCH_ERROR_MESSAGE ? Constants.LOGIN_ERROR : error.message;
-          TostifyHelper.showToast(errorMessage, Constants.TOAST_COLOR_RED);
-        });
+      new CustomerLogin(loginData).signIn().catch((error: Error): void => {
+        const errorMessage: string =
+          error.message === Constants.FAILED_TO_FETCH_ERROR_MESSAGE ? Constants.LOGIN_ERROR : error.message;
+        TostifyHelper.showToast(errorMessage, Constants.TOAST_COLOR_RED);
+      });
     }
   }
 
