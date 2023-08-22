@@ -46,6 +46,8 @@ class LoginPage extends Page {
     if (response.statusCode === 200) {
       if (!this.LOCAL_STORAGE.isLocalStorageItemExists(Constants.SUCCESSFUL_REGISTRATION_LOCAL_STORAGE_KEY)) {
         this.LOCAL_STORAGE.setLocalStorageItem(Constants.SUCCESSFUL_REGISTRATION_LOCAL_STORAGE_KEY, 'true');
+        window.location.href = '#';
+        ToastifyHelper.showToast(Constants.LOGIN_SUCCESS, Constants.TOAST_COLOR_GREEN);
       }
     } else {
       ToastifyHelper.showToast(Constants.LOGIN_ERROR, Constants.TOAST_COLOR_RED);
@@ -63,10 +65,6 @@ class LoginPage extends Page {
     new CustomerLogin(loginData)
       .signIn()
       .then((response): void => this.handleLoginResponse(response))
-      .then(() => {
-        window.location.href = ProjectPages.Home;
-        ToastifyHelper.showToast(Constants.LOGIN_SUCCESS, Constants.TOAST_COLOR_GREEN);
-      })
       .catch((error: Error): void => {
         const errorMessage: string =
           error.message === Constants.FAILED_TO_FETCH_ERROR_MESSAGE ? Constants.LOGIN_ERROR : error.message;

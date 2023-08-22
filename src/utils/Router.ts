@@ -23,7 +23,7 @@ class Router {
         break;
       case ProjectPages.Login:
         if (new LocalStorage().isLocalStorageItemExists(Constants.SUCCESSFUL_REGISTRATION_LOCAL_STORAGE_KEY)) {
-          window.location.href = ProjectPages.Home;
+          window.location.href = '#';
           currentPage = new HomePage();
         } else {
           currentPage = new LoginPage();

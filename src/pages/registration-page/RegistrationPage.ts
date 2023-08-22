@@ -130,7 +130,7 @@ class RegistrationPage extends Page {
       new CustomerLogin(loginData)
         .signIn()
         .then(() => {
-          window.location.href = ProjectPages.Home;
+          window.location.href = '#';
         })
         .catch((error: Error): void => {
           const errorMessage: string =
