@@ -18,7 +18,7 @@ class App {
   constructor() {
     this.ROUTER = new Router();
     this.HEADER = new Header();
-    this.NAVIGATION_BAR = new NavigationBar();
+    this.NAVIGATION_BAR = NavigationBar.getInstance();
     DOMHelpers.appendChildToElement(document.body, this.HEADER.renderComponent()); // append header container
     DOMHelpers.appendChildToElement(
       DOMHelpers.getElement(`${Constants.HEADER_CONTAINER_SELECTOR}`),

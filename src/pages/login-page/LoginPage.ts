@@ -7,6 +7,7 @@ import { ProjectPages } from '../../types/Enums';
 import Constants from '../../utils/Constants';
 import LoginFormValidation from './LoginFormValidation';
 import LocalStorage from '../../utils/LocalStorage';
+import NavigationBar from '../../components/navigation-bar/NavigationBar';
 
 class LoginPage extends Page {
   private LOGIN_PAGE_MARKUP = `
@@ -48,6 +49,11 @@ class LoginPage extends Page {
         this.LOCAL_STORAGE.setLocalStorageItem(Constants.SUCCESSFUL_REGISTRATION_LOCAL_STORAGE_KEY, 'true');
         window.location.href = '#';
         ToastifyHelper.showToast(Constants.LOGIN_SUCCESS, Constants.TOAST_COLOR_GREEN);
+
+        const nav = NavigationBar.getInstance();
+        if (nav) {
+          nav.handleNavigationBarType();
+        }
       }
     } else {
       ToastifyHelper.showToast(Constants.LOGIN_ERROR, Constants.TOAST_COLOR_RED);
