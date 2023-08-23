@@ -9,7 +9,7 @@ module.exports = merge(config, {
     allowedHosts: 'auto',
     client: { overlay: true },
     compress: true,
-    host: 'localhost',
+    host: '0.0.0.0',
     hot: true,
     open: true,
     port: 4200,

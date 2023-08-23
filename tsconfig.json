@@ -3,7 +3,10 @@
     "baseUrl": "./",
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
-    "lib": ["DOM", "ESNext"],
+    "lib": [
+      "DOM",
+      "ESNext"
+    ],
     "module": "ESNext",
     "moduleResolution": "node",
     "noImplicitAny": true,
@@ -15,5 +18,9 @@
     "strict": true,
     "target": "es5"
   },
-  "exclude": ["node_modules", "test", "dist", "**/*spec.ts"]
+  "exclude": [
+    "node_modules",
+    "dist",
+    "/__tests__"
+  ]
 }

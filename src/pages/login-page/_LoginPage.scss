@@ -1,0 +1,220 @@
+.container {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  margin: 0 auto;
+  background: transparent;
+  backdrop-filter: blur(25px);
+  border-radius: 24px;
+  transition: all ease 0.35s;
+
+  &-login {
+    width: 460px;
+    height: 530px;
+    @media (max-width: $breakPoint-4) {
+      width: 390px;
+    }
+  }
+
+  &-register {
+    width: 550px;
+    @media (max-width: $breakPoint-4) {
+      width: 390px;
+    }
+  }
+}
+
+.main-box {
+  width: 100%;
+  padding: 50px;
+  @media (max-width: $breakPoint-4) {
+    padding: 30px;
+  }
+
+  & h2 {
+    padding: 20px;
+    text-align: center;
+    font-size: 4rem;
+    font-weight: 800;
+    color: #162938;
+    user-select: none;
+
+    @media (max-width: $breakPoint-4) {
+      font-size: 3rem;
+      font-weight: 600;
+    }
+  }
+}
+
+#login-form > .input-box:nth-child(2) {
+  margin-bottom: 50px;
+
+  @media (max-width: $breakPoint-4) {
+    margin-bottom: 60px;
+  }
+}
+
+.input-box {
+  position: relative;
+  width: 100%;
+  height: 52px;
+  margin: 20px 0 20px 0;
+  border-bottom: 1.5px solid #162938;
+  font-size: 1.7rem;
+
+  @media (max-width: $breakPoint-4) {
+    height: 44px;
+  }
+
+  & label {
+    position: absolute;
+    left: 6px;
+    top: 2%;
+    transform: translateY(-50%);
+    pointer-events: none;
+    font-weight: 500;
+    color: rgba(22, 41, 56, 0.71);
+    transition: all ease 0.45s;
+    user-select: none;
+
+    @media (max-width: $breakPoint-4) {
+      font-size: 1.4rem;
+    }
+  }
+
+  & input {
+    width: 100%;
+    height: 100%;
+    padding: 0 30px 0 6px;
+    background: transparent;
+    font-size: 1.6rem;
+    font-weight: 600;
+    color: #162938;
+
+    @media (max-width: $breakPoint-4) {
+      font-size: 1.5rem;
+      font-weight: 500;
+    }
+
+    &:focus ~ label {
+      top: -3px;
+    }
+  }
+
+  & .icon {
+    position: absolute;
+    right: 9px;
+    font-size: 1.9rem;
+    color: #162938;
+    line-height: 55px;
+  }
+}
+
+.icon-lock:hover {
+  cursor: pointer;
+}
+
+.default-billing-address,
+.default-address,
+.check {
+  margin-bottom: 20px;
+
+  & label {
+    display: flex;
+    font-size: 1.5rem;
+    font-weight: 500;
+    color: #162938;
+    user-select: none;
+
+    & input {
+      margin-right: 15px;
+      accent-color: #162938;
+    }
+  }
+
+  & a {
+    color: #162938;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+}
+
+.main-btn {
+  width: 100%;
+  height: 43px;
+  border-radius: 8px;
+  font-size: 1.7rem;
+  font-weight: 600;
+
+  &:disabled {
+    background-color: gray;
+    color: black;
+    cursor: not-allowed;
+  }
+
+  &:not(:disabled) {
+    background: #162938;
+    color: #ffffff;
+    cursor: pointer;
+
+    &:hover {
+      border: 1px solid #ffffff;
+      background: #203545;
+    }
+  }
+}
+
+.register {
+  padding: 25px 0;
+  text-align: center;
+  font-size: 1.5rem;
+  font-weight: 500;
+  color: #162938;
+
+  @media (max-width: $breakPoint-3) {
+    padding: 25px 15px;
+  }
+  @media (max-width: $breakPoint-4) {
+
+  }
+
+  & p {
+    display: flex;
+    justify-content: flex-end;
+    gap: 30px;
+
+    & a {
+      font-weight: 600;
+      color: #162938;
+
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+  }
+}
+
+.customer-message {
+  color: rgb(13, 99, 156);
+  font-weight: 800;
+
+  & .register-link, .login-link {
+    color: rgb(37, 213, 245);
+  }
+}
+
+.just-validate-error-label {
+  width: 100%;
+  padding: 5px 0;
+  text-align: right;
+  font-size: 1.2rem;
+  font-weight: 300;
+
+  @media (max-width: $breakPoint-4) {
+    font-size: 0.8rem;
+  }
+}

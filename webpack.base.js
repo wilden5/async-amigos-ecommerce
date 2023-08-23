@@ -18,18 +18,18 @@ const config = {
     new MiniCssExtractPlugin({ filename: 'css/[name].[contenthash].css' }),
     new HTMLWebpackPlugin({
       template: resolve('src', 'template'),
-      title: 'Shop&Comp',
+      title: 'Shop&Comp: Your Source for Premium PC Parts',
       chunks: ['main'],
       inject: true,
       hash: false,
-      favicon: resolve('public', 'favicon.png'),
+      favicon: resolve('public', 'shop-n-comp-favicon.png'),
     }),
   ],
   module: {
     rules: [
       { test: /\.(tsx?)$/i, loader: 'ts-loader' },
       { test: /\.scss$/i, use: [MiniCssExtractPlugin.loader, 'css-loader', 'postcss-loader', 'sass-loader'] },
-      { test: /\.(png)$/i, type: 'asset' },
+      { test: /\.(png|jpe?g|gif|svg)$/i, type: 'asset/resource' },
     ],
   },
   resolve: { extensions: ['.ts', '.json', '.scss', '.html', '...'] },
