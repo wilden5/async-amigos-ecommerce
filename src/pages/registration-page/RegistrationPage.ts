@@ -113,7 +113,10 @@ class RegistrationPage extends Page {
 
   private handleRegistrationResponse(response: ClientResponse<CustomerSignInResult>): void {
     if (response.statusCode === 201) {
-      this.LOCAL_STORAGE.setLocalStorageItem(Constants.SUCCESSFUL_REGISTRATION_LOCAL_STORAGE_KEY, 'true');
+      this.LOCAL_STORAGE.setLocalStorageItem(
+        Constants.SUCCESSFUL_REGISTRATION_LOCAL_STORAGE_KEY,
+        JSON.stringify(response.body.customer.id),
+      );
       TostifyHelper.showToast(Constants.ACCOUNT_HAS_BEEN_CREATED, Constants.TOAST_COLOR_GREEN);
       this.redirectUserToHomePage();
       window.location.href = '#';
