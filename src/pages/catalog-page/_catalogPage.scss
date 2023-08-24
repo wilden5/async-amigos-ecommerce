@@ -12,6 +12,8 @@
 }
 
 .product-item {
+  align-items: flex-end;
+  padding: 1rem;
   margin: 1rem;
   width: 29rem;
   display: flex;
@@ -40,8 +42,8 @@
 }
 
 .order-me {
+  max-height: 3.5rem;
   font-family: MuseoModerno, sans-serif, cursive;
-  margin-bottom: 1rem;
   display: inline-block;
   padding: 1rem 1.5rem;
   font-size: 1.5rem;

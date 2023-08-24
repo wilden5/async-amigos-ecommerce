@@ -96,6 +96,22 @@ class Constants {
   static SUCCESSFUL_REGISTRATION_LOCAL_STORAGE_KEY = 'registration-successful';
 
   static REMOVE_LOCAL_STORAGE_ITEM_ERROR = 'Error removing item from local storage';
+
+  static FETCH_CATALOG_ERROR = 'Something went wrong during receiving products catalog, please try visit us later!';
+
+  static PRODUCT_DESCRIPTION_NOT_FOUND = 'Product description was not found :(';
+
+  static IMAGE_NOT_FOUND_LABEL = 'image-not-found';
+
+  static PRODUCT_ITEM_CLASSNAME = 'product-item';
+
+  static PRODUCT_IMAGE_CLASSNAME = 'product-image';
+
+  static PRODUCT_TITLE_CLASSNAME = 'product-title';
+
+  static PRODUCT_DESCRIPTION_CLASSNAME = 'product-description';
+
+  static PRODUCT_BUTTON_CLASSNAME = 'order-me';
 }
 
 export default Constants;
