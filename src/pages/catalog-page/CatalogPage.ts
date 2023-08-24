@@ -4,6 +4,7 @@ import { ProjectPages } from '../../types/Enums';
 import QueryProducts from '../../backend/products/QueryProducts';
 import Constants from '../../utils/Constants';
 import TostifyHelper from '../../utils/TostifyHelper';
+import DOMHelpers from '../../utils/DOMHelpers';
 
 class CatalogPage extends Page {
   private CATALOG_PAGE_MARKUP = `
@@ -16,7 +17,9 @@ class CatalogPage extends Page {
 
   private buildProductCard(product: Product, parentContainer: HTMLDivElement): void {
     const usLocaleKey = 'en-US';
-    const productElement = document.createElement('div');
+    const productElement = DOMHelpers.createElement('div', {
+      className: `${product.id} ${Constants.PRODUCT_ITEM_CLASSNAME}`,
+    });
     const productKey = product.key as string;
     const productName = product.masterData.current.name[usLocaleKey];
     const productDescription = product.masterData.current.description?.[usLocaleKey];
@@ -24,7 +27,6 @@ class CatalogPage extends Page {
       url: '',
       label: Constants.IMAGE_NOT_FOUND_LABEL,
     };
-    productElement.className = `${product.id} ${Constants.PRODUCT_ITEM_CLASSNAME}`;
     productElement.innerHTML = `
             <img class="${productKey} ${Constants.PRODUCT_IMAGE_CLASSNAME}" src="${imageURL}" alt="${
               imageLabel || Constants.IMAGE_NOT_FOUND_LABEL
