@@ -1,4 +1,4 @@
-import { Product } from '@commercetools/platform-sdk';
+import { Price, Product } from '@commercetools/platform-sdk';
 import QueryDetails from '../../backend/products/QueryProductDetails';
 
 class DetailedProductDialog {
@@ -12,13 +12,14 @@ class DetailedProductDialog {
   }
 
   private createDialogElement(): HTMLDivElement {
-    const dialog = document.createElement('div');
+    const dialog: HTMLDivElement = document.createElement('div');
     dialog.classList.add('dialog');
     dialog.innerHTML = `
       <div class="dialog-content">
         <h2 class="dialog-title">Dialog Title</h2>
         <img class="dialog-image" src="" alt="product-image">
-        <p class="dialog-message">This is the dialog message.</p>
+        <p class="dialog-message">This is the dialog message</p>
+        <p class="dialog-price">This is the dialog price</p>
         <button class="dialog-close">Close</button>
         <button class="dialog-close-window">Back to Catalog</button>
       </div>
@@ -27,7 +28,7 @@ class DetailedProductDialog {
   }
 
   private createOverlayElement(): HTMLDivElement {
-    const overlay = document.createElement('div');
+    const overlay: HTMLDivElement = document.createElement('div');
     overlay.classList.add('overlay');
     return overlay;
   }
@@ -42,22 +43,36 @@ class DetailedProductDialog {
     }
   }
 
+  private closeDialogIfOverlayClicked(event: MouseEvent): void {
+    if (event.target === this.overlayElement) {
+      this.closeDialog();
+    }
+  }
+
   public openProductDetails(productId: string): void {
     const details = new QueryDetails();
     details
       .queryProductDetails(productId)
       .then((product: Product | null): void => {
         if (product) {
-          const productName = product.masterData.current.name['en-US'];
-          const productDescription = product.masterData.current.description?.['en-US'];
-          const imageURL = product.masterData.current.masterVariant.images?.[0]?.url || '';
+          const productName: string = product.masterData.current.name['en-US'];
+          const productDescription: string | undefined = product.masterData.current.description?.['en-US'];
+          const productPrice: number[] | undefined = product.masterData.current.masterVariant.prices?.map(
+            (v: Price) => v.value.centAmount / 100,
+          );
+          const imageURL: string = product.masterData.current.masterVariant.images?.[0]?.url || '';
 
-          const dialogTitle = this.dialogElement.querySelector('.dialog-title');
+          const dialogTitle: Element | null = this.dialogElement.querySelector('.dialog-title');
           if (dialogTitle) {
             dialogTitle.textContent = productName;
           }
 
-          const dialogMessage = this.dialogElement.querySelector('.dialog-message');
+          const dialogPrice: Element | null = this.dialogElement.querySelector('.dialog-price');
+          if (dialogPrice) {
+            dialogPrice.textContent = productPrice ? `Price: ${productPrice.join(', ')} USD` : 'Price: N/A';
+          }
+
+          const dialogMessage: Element | null = this.dialogElement.querySelector('.dialog-message');
           if (dialogMessage) {
             dialogMessage.textContent = productDescription || '';
           }
@@ -89,6 +104,11 @@ class DetailedProductDialog {
       .catch((error: Error): void => {
         throw new Error('Error fetching product details:', error);
       });
+
+    this.overlayElement.addEventListener('click', (event: MouseEvent): void => {
+      this.closeDialogIfOverlayClicked(event);
+    });
+
     this.dialogElement.addEventListener('click', (event: MouseEvent): void => {
       event.stopPropagation();
     });
