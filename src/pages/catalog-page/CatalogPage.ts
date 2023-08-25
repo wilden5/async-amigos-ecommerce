@@ -1,12 +1,16 @@
-import { Product } from '@commercetools/platform-sdk';
+import { Product, ProductPagedQueryResponse } from '@commercetools/platform-sdk';
 import Page from '../../components/templates/Page';
 import { ProjectPages } from '../../types/Enums';
 import QueryProducts from '../../backend/products/QueryProducts';
 import Constants from '../../utils/Constants';
 import TostifyHelper from '../../utils/TostifyHelper';
 import DOMHelpers from '../../utils/DOMHelpers';
+import QueryDetails from '../../backend/products/QueryProductDetails';
+import DetailedProductDialog from '../../components/dialog-window/DialogWindow';
 
 class CatalogPage extends Page {
+  private dialogWindow: DetailedProductDialog = new DetailedProductDialog();
+
   private CATALOG_PAGE_MARKUP = `
      <h1 class='page-title'>Search results:</h1>
      <div class='product-container'></div>`;
@@ -19,7 +23,7 @@ class CatalogPage extends Page {
     const usLocaleKey = 'en-US';
     const productElement = DOMHelpers.createElement('div', {
       className: `${product.id} ${Constants.PRODUCT_ITEM_CLASSNAME}`,
-    });
+    }) as Element;
     const productKey = product.key as string;
     const productName = product.masterData.current.name[usLocaleKey];
     const productDescription = product.masterData.current.description?.[usLocaleKey];
@@ -42,21 +46,41 @@ class CatalogPage extends Page {
     const productContainer = this.CONTAINER.querySelector('.product-container') as HTMLDivElement;
     new QueryProducts()
       .queryProductList()
-      .then((queriedProductList) => {
-        queriedProductList.results.forEach((product) => {
+      .then((queriedProductList: ProductPagedQueryResponse): void => {
+        queriedProductList.results.forEach((product: Product): void => {
           this.buildProductCard(product, productContainer);
         });
       })
-      .catch((error: Error) => {
+      .catch((error: Error): void => {
         const errorMessage: string =
           error.message === Constants.FAILED_TO_FETCH_ERROR_MESSAGE ? Constants.FETCH_CATALOG_ERROR : error.message;
         TostifyHelper.showToast(errorMessage, Constants.TOAST_COLOR_RED);
       });
   }
 
+  private getProductClicked(): void {
+    this.CONTAINER.addEventListener('click', (event: Event): void => {
+      const productClicked = event.target as Element | null;
+      const productItem = productClicked?.closest('.product-item') as Element | null;
+      const details: QueryDetails = new QueryDetails();
+
+      if (productItem) {
+        details
+          .queryProductDetails(productItem.classList[0])
+          .then((): void => {
+            this.dialogWindow.openProductDetails(productItem.classList[0]);
+          })
+          .catch((error: Error): void => {
+            throw new Error('Error fetching product details:', error);
+          });
+      }
+    });
+  }
+
   public renderPage(): HTMLElement {
     this.CONTAINER.innerHTML = this.CATALOG_PAGE_MARKUP;
     this.fillProductCatalog();
+    this.getProductClicked();
     return this.CONTAINER;
   }
 }
