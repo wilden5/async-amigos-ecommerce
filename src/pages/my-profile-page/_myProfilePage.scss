@@ -1,0 +1,57 @@
+.my-profile {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  font-size: 1.6rem;
+}
+
+.customer-personal-data {
+  padding: 5rem 0 3rem 0;
+}
+
+.customer-default-shipping-address {
+  margin-bottom: 3rem;
+}
+
+.customer-default-billing-address {
+  margin-bottom: 3rem;
+}
+
+.customer-default-shipping-address span,
+.customer-default-billing-address span,
+.customer-personal-data span {
+  color: #01619e;
+  padding-right: 1rem;
+}
+
+.customer-default-shipping-address div,
+.customer-default-billing-address div,
+.customer-personal-data div {
+  line-height: 2rem;
+}
+
+
+.customer-address-table {
+  border-collapse: separate;
+  border-spacing: 1rem;
+  border: 2px solid #01619e;
+}
+
+.customer-description-row {
+  text-align: center;
+  font-weight: bold;
+  color: #01619e;
+}
+
+.customer-address-item {
+  text-align: center;
+  max-width: 120px;
+  word-wrap: break-word;
+}
+
+@media (max-width: 480px) {
+  .customer-address-table {
+    border-spacing: .5rem;
+  }
+}

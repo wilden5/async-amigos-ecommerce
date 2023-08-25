@@ -23,14 +23,8 @@ export class GetCustomerInfo {
         .withId({ ID: this.customerId })
         .get()
         .execute();
-      // eslint-disable-next-line no-console
-      console.log(response);
-      // eslint-disable-next-line no-console
-      console.log({ ID: this.customerId });
       return response;
     } catch (error) {
-      // eslint-disable-next-line no-console
-      console.error('Error  getting  customer info:', error);
       return Promise.reject(error);
     }
   }
