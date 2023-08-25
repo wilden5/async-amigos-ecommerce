@@ -46,7 +46,10 @@ class LoginPage extends Page {
   private handleLoginResponse(response: ClientResponse<CustomerSignInResult>): void {
     if (response.statusCode === 200) {
       if (!this.LOCAL_STORAGE.isLocalStorageItemExists(Constants.SUCCESSFUL_REGISTRATION_LOCAL_STORAGE_KEY)) {
-        this.LOCAL_STORAGE.setLocalStorageItem(Constants.SUCCESSFUL_REGISTRATION_LOCAL_STORAGE_KEY, 'true');
+        this.LOCAL_STORAGE.setLocalStorageItem(
+          Constants.SUCCESSFUL_REGISTRATION_LOCAL_STORAGE_KEY,
+          JSON.stringify(response.body.customer.id),
+        );
         window.location.href = '#';
         ToastifyHelper.showToast(Constants.LOGIN_SUCCESS, Constants.TOAST_COLOR_GREEN);
 
