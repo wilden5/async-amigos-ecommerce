@@ -6,8 +6,11 @@ import Constants from '../../utils/Constants';
 import TostifyHelper from '../../utils/TostifyHelper';
 import DOMHelpers from '../../utils/DOMHelpers';
 import QueryDetails from '../../backend/products/QueryProductDetails';
+import DetailedProductDialog from '../../components/dialog-window/DialogWindow';
 
 class CatalogPage extends Page {
+  private dialogWindow: DetailedProductDialog = new DetailedProductDialog();
+
   private CATALOG_PAGE_MARKUP = `
      <h1 class='page-title'>Search results:</h1>
      <div class='product-container'></div>`;
@@ -64,7 +67,9 @@ class CatalogPage extends Page {
       if (productItem) {
         details
           .queryProductDetails(productItem.classList[0])
-          .then((): void => {})
+          .then((): void => {
+            this.dialogWindow.openProductDetails(productItem.classList[0]);
+          })
           .catch((error: Error): void => {
             throw new Error('Error fetching product details:', error);
           });

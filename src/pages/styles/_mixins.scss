@@ -1,0 +1,12 @@
+@mixin operationButton() {
+  max-height: 3.5rem;
+  font-family: MuseoModerno, sans-serif, cursive;
+  padding: 1rem 1.5rem;
+  font-size: 1.5rem;
+  background-color: #007bff;
+  color: #ffffff;
+  border: none;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  transition: transform 0.3s, background-color 0.3s;
+}

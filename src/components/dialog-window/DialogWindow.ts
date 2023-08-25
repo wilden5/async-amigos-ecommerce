@@ -20,6 +20,7 @@ class DetailedProductDialog {
         <img class="dialog-image" src="" alt="product-image">
         <p class="dialog-message">This is the dialog message.</p>
         <button class="dialog-close">Close</button>
+        <button class="dialog-close-window">Back to Catalog</button>
       </div>
     `;
     return dialog;
@@ -70,6 +71,13 @@ class DetailedProductDialog {
           const dialogClose: Element | null = this.dialogElement.querySelector('.dialog-close');
           if (dialogClose) {
             dialogClose.addEventListener('click', (): void => {
+              this.closeDialog();
+            });
+          }
+
+          const dialogCloseWindow: Element | null = this.dialogElement.querySelector('.dialog-close-window');
+          if (dialogCloseWindow) {
+            dialogCloseWindow.addEventListener('click', (): void => {
               this.closeDialog();
             });
           }
