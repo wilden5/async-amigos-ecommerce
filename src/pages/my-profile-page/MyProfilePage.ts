@@ -4,9 +4,9 @@ import { GetCustomerInfo } from '../../backend/customer/getCustomer';
 
 class MyProfilePage extends Page {
   private MY_PROFILE_PAGE_MARKUP = `
-     <h1 class='page-title'>My Profile</h1>
-     <div class='customer'></div>
-     `;
+  <h1 class='page-title'>My Profile Page</h1>
+  <div class='customer-container'></div>
+  `;
 
   constructor() {
     super(ProjectPages.MyProfile);
@@ -22,13 +22,13 @@ class MyProfilePage extends Page {
     customerInfoGetter
       .getProfileInfo()
       .then((response) => {
-        const customerDiv = this.CONTAINER.querySelector('.customer');
+        const customerDiv = this.CONTAINER.querySelector('.customer-container');
 
         if (response.statusCode === 200 && customerDiv) {
-          const defaultShippingAddress = response.body.addresses.find(
+          const defaultShippingAddress = response.body.addresses?.find(
             (item) => item.id === response.body.defaultShippingAddressId,
           );
-          const defaultBillingAddress = response.body.addresses.find(
+          const defaultBillingAddress = response.body.addresses?.find(
             (item) => item.id === response.body.defaultBillingAddressId,
           );
 
@@ -73,8 +73,8 @@ class MyProfilePage extends Page {
             <td>ZIP Code</td>
           </tr>
           ${response.body?.addresses
-            .filter((address) => address.id !== defaultShippingAddress?.id && address.id !== defaultBillingAddress?.id)
-            .map(
+            ?.filter((address) => address.id !== defaultShippingAddress?.id && address.id !== defaultBillingAddress?.id)
+            ?.map(
               (address) => `
               <tr class='customer-address-row'>
                 <td class='customer-address-item'>${address.country || ''}</td>
@@ -84,7 +84,7 @@ class MyProfilePage extends Page {
               </tr>
             `,
             )
-            .join('')}
+            ?.join('')}
         </table>
           `;
         }

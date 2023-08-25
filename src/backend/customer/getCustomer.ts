@@ -12,10 +12,6 @@ export class GetCustomerInfo {
   }
 
   async getProfileInfo(): Promise<ClientResponse<Customer>> {
-    if (this.customerId === '') {
-      return Promise.reject();
-    }
-
     try {
       const response = await this.ctpClient
         .withClientCredentialsFlow()
