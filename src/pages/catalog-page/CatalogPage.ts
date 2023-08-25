@@ -15,6 +15,38 @@ class CatalogPage extends Page {
     super(ProjectPages.Catalog);
   }
 
+  private convertProductPrice(price: number): string {
+    if (price !== undefined) {
+      const dollars = Math.floor(price / 100);
+      const cents = (price % 100).toString().padStart(2, '0');
+      return `${dollars}.${cents}$`;
+    }
+    return '0';
+  }
+
+  private getProductPrice(product: Product): string {
+    const priceInCents = product.masterData.current.masterVariant.prices?.[0].value.centAmount as number;
+    return this.convertProductPrice(priceInCents);
+  }
+
+  private getProductDiscountedPrice(product: Product): string {
+    const discountedPriceInCents = product.masterData.current.masterVariant.prices?.[0].discounted?.value
+      .centAmount as number;
+    return this.convertProductPrice(discountedPriceInCents);
+  }
+
+  private buildPriceContainer(productPrice: string, productDiscountedPrice: string): string {
+    if (productPrice && Number(productDiscountedPrice.split('$')[0]) > 0) {
+      return `<div class='price-container'>
+        <span class='product-price'>${productPrice}</span>
+        <span class='product-discounted-price'>${productDiscountedPrice}</span>
+        <div/>`;
+    }
+    return `<div class='price-container'>
+      <span class='product-price'>${productPrice}</span>
+      <div/>`;
+  }
+
   private buildProductCard(product: Product, parentContainer: HTMLDivElement): void {
     const usLocaleKey = 'en-US';
     const productElement = DOMHelpers.createElement('div', {
@@ -27,6 +59,10 @@ class CatalogPage extends Page {
       url: '',
       label: Constants.IMAGE_NOT_FOUND_LABEL,
     };
+    const productPriceContainer = this.buildPriceContainer(
+      this.getProductPrice(product),
+      this.getProductDiscountedPrice(product),
+    );
     productElement.innerHTML = `
             <img class="${productKey} ${Constants.PRODUCT_IMAGE_CLASSNAME}" src="${imageURL}" alt="${
               imageLabel || Constants.IMAGE_NOT_FOUND_LABEL
@@ -34,7 +70,9 @@ class CatalogPage extends Page {
             <h2 class="${productKey} ${Constants.PRODUCT_TITLE_CLASSNAME}">${productName}</h2>
             <p class="${productKey} ${Constants.PRODUCT_DESCRIPTION_CLASSNAME}">${
               productDescription || Constants.PRODUCT_DESCRIPTION_NOT_FOUND
-            }</p> <a class=${Constants.PRODUCT_BUTTON_CLASSNAME} href=#product/${productKey}>ADD TO CART</a>`;
+            }</p> ${productPriceContainer} <a class=${
+              Constants.PRODUCT_BUTTON_CLASSNAME
+            } href=#product/${productKey}>ADD TO CART</a>`;
     parentContainer.appendChild(productElement);
   }
 
