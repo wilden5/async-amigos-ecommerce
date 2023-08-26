@@ -7,6 +7,8 @@ export enum ProjectPages {
   Cart = 'cart',
   AboutUs = 'about-us',
   NotFound = 'not-found',
+
+  ProductDetails = 'product',
 }
 
 export enum PasswordHints {
