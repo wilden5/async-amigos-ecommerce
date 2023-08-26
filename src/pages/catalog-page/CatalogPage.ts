@@ -37,14 +37,10 @@ class CatalogPage extends Page {
 
   private buildPriceContainer(productPrice: string, productDiscountedPrice: string): string {
     if (productPrice && Number(productDiscountedPrice.split('$')[0]) > 0) {
-      return `<div class='price-container'>
-        <span class='product-price'>${productPrice}</span>
-        <span class='product-discounted-price'>${productDiscountedPrice}</span>
-        <div/>`;
+      return `<span class='product-price price-strikethrough'>${productPrice}</span>
+              <span class='product-discounted-price'>${productDiscountedPrice}</span>`;
     }
-    return `<div class='price-container'>
-      <span class='product-price'>${productPrice}</span>
-      <div/>`;
+    return `<span class='product-price'>${productPrice}</span>`;
   }
 
   private buildProductCard(product: Product, parentContainer: HTMLDivElement): void {
@@ -56,7 +52,7 @@ class CatalogPage extends Page {
     const productName = product.masterData.current.name[usLocaleKey];
     const productDescription = product.masterData.current.description?.[usLocaleKey];
     const { url: imageURL, label: imageLabel } = product.masterData.current.masterVariant.images?.[0] ?? {
-      url: '',
+      url: Constants.IMAGE_NOT_FOUND_MOCK_IMAGE,
       label: Constants.IMAGE_NOT_FOUND_LABEL,
     };
     const productPriceContainer = this.buildPriceContainer(
@@ -70,9 +66,11 @@ class CatalogPage extends Page {
             <h2 class="${productKey} ${Constants.PRODUCT_TITLE_CLASSNAME}">${productName}</h2>
             <p class="${productKey} ${Constants.PRODUCT_DESCRIPTION_CLASSNAME}">${
               productDescription || Constants.PRODUCT_DESCRIPTION_NOT_FOUND
-            }</p> ${productPriceContainer} <a class=${
-              Constants.PRODUCT_BUTTON_CLASSNAME
-            } href=#product/${productKey}>ADD TO CART</a>`;
+            }</p> 
+            <div class='${Constants.PRICE_CONTAINER_CLASSNAME}'>${productPriceContainer}</div>
+            <a class=${Constants.PRODUCT_BUTTON_CLASSNAME} href='#product/${productKey}'>${
+              Constants.CART_BUTTON_TEXT
+            }</a>`;
     parentContainer.appendChild(productElement);
   }
 
