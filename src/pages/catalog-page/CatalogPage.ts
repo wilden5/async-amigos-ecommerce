@@ -19,7 +19,7 @@ class CatalogPage extends Page {
     super(ProjectPages.Catalog);
   }
 
-  private convertProductPrice(price: number): string {
+  static convertProductPrice(price: number): string {
     if (price !== undefined) {
       const dollars = Math.floor(price / 100);
       const cents = (price % 100).toString().padStart(2, '0');
@@ -28,18 +28,18 @@ class CatalogPage extends Page {
     return '0';
   }
 
-  private getProductPrice(product: Product): string {
+  static getProductPrice(product: Product): string {
     const priceInCents = product.masterData.current.masterVariant.prices?.[0].value.centAmount as number;
     return this.convertProductPrice(priceInCents);
   }
 
-  private getProductDiscountedPrice(product: Product): string {
+  static getProductDiscountedPrice(product: Product): string {
     const discountedPriceInCents = product.masterData.current.masterVariant.prices?.[0].discounted?.value
       .centAmount as number;
     return this.convertProductPrice(discountedPriceInCents);
   }
 
-  private buildPriceContainer(productPrice: string, productDiscountedPrice: string): string {
+  static buildPriceContainer(productPrice: string, productDiscountedPrice: string): string {
     if (productPrice && Number(productDiscountedPrice.split('$')[0]) > 0) {
       return `<span class='product-price price-strikethrough'>${productPrice}</span>
               <span class='product-discounted-price'>${productDiscountedPrice}</span>`;
@@ -59,9 +59,9 @@ class CatalogPage extends Page {
       url: Constants.IMAGE_NOT_FOUND_MOCK_IMAGE,
       label: Constants.IMAGE_NOT_FOUND_LABEL,
     };
-    const productPriceContainer = this.buildPriceContainer(
-      this.getProductPrice(product),
-      this.getProductDiscountedPrice(product),
+    const productPriceContainer = CatalogPage.buildPriceContainer(
+      CatalogPage.getProductPrice(product),
+      CatalogPage.getProductDiscountedPrice(product),
     );
     productElement.innerHTML = `
             <img class="${productKey} ${Constants.PRODUCT_IMAGE_CLASSNAME}" src="${imageURL}" alt="${
@@ -94,7 +94,7 @@ class CatalogPage extends Page {
       });
   }
 
-  private getProductClicked(): void {
+  private onProductClick(): void {
     this.CONTAINER.addEventListener('click', (event: Event): void => {
       const productClicked = event.target as Element | null;
       const productItem = productClicked?.closest('.product-item') as Element | null;
@@ -116,7 +116,7 @@ class CatalogPage extends Page {
   public renderPage(): HTMLElement {
     this.CONTAINER.innerHTML = this.CATALOG_PAGE_MARKUP;
     this.fillProductCatalog();
-    this.getProductClicked();
+    this.onProductClick();
     return this.CONTAINER;
   }
 }
