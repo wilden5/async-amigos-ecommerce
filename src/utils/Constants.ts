@@ -112,6 +112,13 @@ class Constants {
   static PRODUCT_DESCRIPTION_CLASSNAME = 'product-description';
 
   static PRODUCT_BUTTON_CLASSNAME = 'order-me';
+
+  static PRICE_CONTAINER_CLASSNAME = 'price-container';
+
+  static IMAGE_NOT_FOUND_MOCK_IMAGE =
+    'https://static.vecteezy.com/system/resources/previews/005/337/799/original/icon-image-not-found-free-vector.jpg';
+
+  static CART_BUTTON_TEXT = 'ADD TO CART';
 }
 
 export default Constants;
