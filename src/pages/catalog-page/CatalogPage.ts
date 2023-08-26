@@ -5,7 +5,6 @@ import QueryProducts from '../../backend/products/QueryProducts';
 import Constants from '../../utils/Constants';
 import TostifyHelper from '../../utils/TostifyHelper';
 import DOMHelpers from '../../utils/DOMHelpers';
-import QueryDetails from '../../backend/products/QueryProductDetails';
 import DetailedProductDialog from '../../components/dialog-window/DialogWindow';
 
 class CatalogPage extends Page {
@@ -98,17 +97,10 @@ class CatalogPage extends Page {
     this.CONTAINER.addEventListener('click', (event: Event): void => {
       const productClicked = event.target as Element | null;
       const productItem = productClicked?.closest('.product-item') as Element | null;
-      const details: QueryDetails = new QueryDetails();
 
       if (productItem) {
-        details
-          .queryProductDetails(productItem.classList[0])
-          .then((): void => {
-            this.dialogWindow.openProductDetails(productItem.classList[0]);
-          })
-          .catch((error: Error): void => {
-            throw new Error('Error fetching product details:', error);
-          });
+        const productId = productItem.classList[0];
+        window.location.hash = `#product/${productId}`;
       }
     });
   }
