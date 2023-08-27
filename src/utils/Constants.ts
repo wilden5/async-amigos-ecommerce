@@ -105,11 +105,15 @@ class Constants {
 
   static PRODUCT_DETAILS_CLASSNAME = 'product-details-container';
 
+  static PRODUCT_CONTENT_CLASSNAME = 'product-details-content';
+
   static PRODUCT_ITEM_CLASSNAME = 'product-item';
 
   static PRODUCT_IMAGE_CLASSNAME = 'product-image';
 
   static PRODUCT_TITLE_CLASSNAME = 'product-title';
+
+  static PRODUCT_TEXT_CLASSNAME = 'product-text';
 
   static PRODUCT_DESCRIPTION_CLASSNAME = 'product-description';
 

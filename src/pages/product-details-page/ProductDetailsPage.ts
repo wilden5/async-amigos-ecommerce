@@ -5,6 +5,7 @@ import Constants from '../../utils/Constants';
 import QueryDetails from '../../backend/products/QueryProductDetails';
 import ToastifyHelper from '../../utils/TostifyHelper';
 import DOMHelpers from '../../utils/DOMHelpers';
+import CatalogPage from '../catalog-page/CatalogPage';
 
 class ProductDetailsPage extends Page {
   private readonly PRODUCT_PAGE_ID: string;
@@ -21,7 +22,7 @@ class ProductDetailsPage extends Page {
 
   private buildProductDetails(product: Product, parentContainer: HTMLDivElement): void {
     const productElement = DOMHelpers.createElement('div', {
-      className: `${this.PRODUCT_PAGE_ID} ${Constants.PRODUCT_DETAILS_CLASSNAME}`,
+      className: `${this.PRODUCT_PAGE_ID} ${Constants.PRODUCT_CONTENT_CLASSNAME}`,
     });
     const usLocaleKey = 'en-US';
     const productKey = product.key as string;
@@ -31,16 +32,22 @@ class ProductDetailsPage extends Page {
       url: Constants.IMAGE_NOT_FOUND_MOCK_IMAGE,
       label: Constants.IMAGE_NOT_FOUND_LABEL,
     };
+    const productPriceContainer: string = CatalogPage.buildPriceContainer(
+      CatalogPage.getProductPrice(product),
+      CatalogPage.getProductDiscountedPrice(product),
+    );
     productElement.innerHTML = `
       <img class="${productKey} ${Constants.PRODUCT_IMAGE_CLASSNAME}" src="${imageURL}" alt="${
         imageLabel || Constants.IMAGE_NOT_FOUND_LABEL
       }">
-      <h2 class="${productKey} ${Constants.PRODUCT_TITLE_CLASSNAME}">${productName}</h2>
-      <p class="${productKey} ${Constants.PRODUCT_DESCRIPTION_CLASSNAME}">${
-        productDescription || Constants.PRODUCT_DESCRIPTION_NOT_FOUND
-      }</p>
-      // TODO: add price container
-      <a class=${Constants.PRODUCT_BUTTON_CLASSNAME} href='#product/${productKey}'>${Constants.CART_BUTTON_TEXT}</a>
+      <div class="${productKey} ${Constants.PRODUCT_TEXT_CLASSNAME}">
+        <h2 class="${productKey} ${Constants.PRODUCT_TITLE_CLASSNAME}">${productName}</h2>
+        <p class="${productKey} ${Constants.PRODUCT_DESCRIPTION_CLASSNAME}">  ${
+          productDescription || Constants.PRODUCT_DESCRIPTION_NOT_FOUND
+        }</p>
+        <div class="${Constants.PRICE_CONTAINER_CLASSNAME}">${productPriceContainer}</div>
+        <a class=${Constants.PRODUCT_BUTTON_CLASSNAME} href='#product/${productKey}'>${Constants.CART_BUTTON_TEXT}</a>
+      </div>
     `;
     parentContainer.appendChild(productElement);
   }
