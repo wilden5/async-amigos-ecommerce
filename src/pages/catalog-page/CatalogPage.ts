@@ -5,14 +5,17 @@ import QueryProducts from '../../backend/products/QueryProducts';
 import Constants from '../../utils/Constants';
 import TostifyHelper from '../../utils/TostifyHelper';
 import DOMHelpers from '../../utils/DOMHelpers';
-import DetailedProductDialog from '../../components/dialog-window/DialogWindow';
+
+// import DetailedProductDialog from '../../components/dialog-window/DialogWindow';
 
 class CatalogPage extends Page {
-  private dialogWindow: DetailedProductDialog = new DetailedProductDialog();
+  // private dialogWindow: DetailedProductDialog = new DetailedProductDialog();
 
   private CATALOG_PAGE_MARKUP = `
-     <h1 class='page-title'>Search results:</h1>
-     <div class='product-container'></div>`;
+    <div class="catalog__container">
+      <h1 class='page-title'>Search results:</h1>
+      <div class='product-container'></div>
+    </div>`;
 
   constructor() {
     super(ProjectPages.Catalog);

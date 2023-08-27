@@ -103,6 +103,8 @@ class Constants {
 
   static IMAGE_NOT_FOUND_LABEL = 'image-not-found';
 
+  static PRODUCT_DETAILS_CLASSNAME = 'product-details-container';
+
   static PRODUCT_ITEM_CLASSNAME = 'product-item';
 
   static PRODUCT_IMAGE_CLASSNAME = 'product-image';

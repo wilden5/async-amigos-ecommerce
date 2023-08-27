@@ -1,9 +1,16 @@
 @import '../styles/mixins';
+@import '../../globalVariables';
 
 .catalog {
   display: flex;
   align-items: center;
   flex-direction: column;
+
+  &__container {
+    max-width: $breakPoint-1;
+    margin: 0 auto;
+    padding: 0 20px;
+  }
 }
 
 .product {

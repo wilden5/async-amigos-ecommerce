@@ -3,7 +3,9 @@ import { ProjectPages } from '../../types/Enums';
 
 class CartPage extends Page {
   private CART_PAGE_MARKUP = `
-     <h1 class='page-title'>Cart Page</h1>`;
+    <div class="cart__container">
+      <h1 class='page-title'>Cart Page</h1>
+    </div>`;
 
   constructor() {
     super(ProjectPages.Cart);
