@@ -3,8 +3,9 @@ import Page from '../../components/templates/Page';
 import { ProjectPages } from '../../types/Enums';
 import QueryProducts from '../../backend/products/QueryProducts';
 import Constants from '../../utils/Constants';
-import TostifyHelper from '../../utils/TostifyHelper';
 import DOMHelpers from '../../utils/DOMHelpers';
+import PromiseHelpers from '../../utils/PromiseHelpers';
+import CatalogPageFilters from './CatalogPageFilters';
 
 class CatalogPage extends Page {
   private CATALOG_PAGE_MARKUP = `
@@ -31,7 +32,7 @@ class CatalogPage extends Page {
         </div>
         <div class="launch-date-filter filter">
           <h2 class='filter-header'>Launch date</h2>
-          <select class="type-select filter-select">
+          <select class="type-launch-date filter-select">
             <option value="type-default" selected>Select Launch date</option>
          </select>
         </div>
@@ -117,9 +118,7 @@ class CatalogPage extends Page {
         });
       })
       .catch((error: Error): void => {
-        const errorMessage: string =
-          error.message === Constants.FAILED_TO_FETCH_ERROR_MESSAGE ? Constants.FETCH_CATALOG_ERROR : error.message;
-        TostifyHelper.showToast(errorMessage, Constants.TOAST_COLOR_RED);
+        PromiseHelpers.catchBlockHelper(error, Constants.FETCH_CATALOG_ERROR);
       });
   }
 
@@ -139,6 +138,7 @@ class CatalogPage extends Page {
     this.CONTAINER.innerHTML = this.CATALOG_PAGE_MARKUP;
     this.fillProductCatalog();
     this.onProductClick();
+    CatalogPageFilters.initAllFilters(this.CONTAINER);
     return this.CONTAINER;
   }
 }

@@ -99,6 +99,10 @@ class Constants {
 
   static FETCH_CATALOG_ERROR = 'Something went wrong during receiving products catalog, please try visit us later!';
 
+  static FETCH_PRODUCT_ERROR = 'Something went wrong during receiving specific product, please try visit us later!';
+
+  static FETCH_PRODUCT_TYPES_ERROR = 'Something went wrong during receiving product types!';
+
   static PRODUCT_DESCRIPTION_NOT_FOUND = 'Product description was not found :(';
 
   static IMAGE_NOT_FOUND_LABEL = 'image-not-found';

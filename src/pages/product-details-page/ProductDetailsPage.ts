@@ -3,9 +3,9 @@ import Page from '../../components/templates/Page';
 import { ProjectPages } from '../../types/Enums';
 import Constants from '../../utils/Constants';
 import QueryDetails from '../../backend/products/QueryProductDetails';
-import ToastifyHelper from '../../utils/TostifyHelper';
 import DOMHelpers from '../../utils/DOMHelpers';
 import CatalogPage from '../catalog-page/CatalogPage';
+import PromiseHelpers from '../../utils/PromiseHelpers';
 
 class ProductDetailsPage extends Page {
   private readonly PRODUCT_PAGE_ID: string;
@@ -60,9 +60,7 @@ class ProductDetailsPage extends Page {
         this.buildProductDetails(queriedProductDetails, productContainer);
       })
       .catch((error: Error): void => {
-        const errorMessage: string =
-          error.message === Constants.FAILED_TO_FETCH_ERROR_MESSAGE ? Constants.FETCH_CATALOG_ERROR : error.message;
-        ToastifyHelper.showToast(errorMessage, Constants.TOAST_COLOR_RED);
+        PromiseHelpers.catchBlockHelper(error, Constants.FETCH_PRODUCT_ERROR);
       });
   }
 
