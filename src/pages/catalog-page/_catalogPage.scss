@@ -22,6 +22,7 @@
   }
 
   &-item {
+    cursor: pointer;
     align-items: flex-end;
     padding: 1rem;
     margin: 1rem;
@@ -78,3 +79,70 @@
 .price-strikethrough {
   text-decoration: line-through;
 }
+
+.catalog-filters {
+  display: flex;
+  justify-content: center;
+}
+
+.filters-wrapper {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2rem;
+  border: 0.1rem solid #ddd;
+  padding: 1rem;
+  margin-top: 1rem;
+  border-radius: 0.5rem;
+  box-shadow: 0 0 0.5rem rgba(0, 0, 0, 0.1);
+}
+
+.filter-header {
+    font-size: 1.8rem;
+    margin-bottom: 1rem;
+}
+
+.filter-select,
+.price-slider {
+  width: 100%;
+  padding: 0.5rem;
+}
+
+.filter-select {
+  cursor: pointer;
+  background-color: #f8f8f8;
+  border: 0.1rem solid #ddd;
+  border-radius: 0.4rem;
+  transition: border-color 0.2s;
+
+  &:hover, &:focus {
+    border-color: #777;
+  }
+}
+
+.price-slider {
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  cursor: pointer;
+}
+
+output {
+  display: block;
+  margin-top: 0.5rem;
+  font-size: 1.4rem;
+  color: #777;
+}
+
+.input-on-sale {
+  width: 3rem;
+  height: 2.7rem;
+}
+
+@media screen and (max-width: 700px) {
+ .filters-wrapper {
+   flex-direction: column;
+   padding-left: 7rem;
+   padding-right: 7rem;
+ }
+}
+
