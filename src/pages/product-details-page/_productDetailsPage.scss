@@ -1,0 +1,50 @@
+@import '../../globalVariables';
+
+.page-content-container {
+  width: 100%;
+}
+
+.product {
+  max-width: $breakPoint-1;
+  margin: 0 auto;
+  padding: 0 20px;
+
+  &__container {
+    max-width: $breakPoint-1;
+  }
+
+  &-details-content {
+    display: flex;
+    padding: 20px 0;
+  }
+
+  &-text {
+    display: flex;
+    flex-direction: column;
+    align-items: baseline;
+    padding: 10px 30px;
+
+
+    & > .product-title {
+      margin-bottom: 30px;
+      font-size: 2rem;
+      line-height: 1.4;
+    }
+
+    & > .product-description {
+      margin-bottom: 2.5rem;
+      font-size: 1.4rem;
+      line-height: 1.5;
+      text-align: left;
+    }
+
+    & > .price-container {
+      display: flex;
+      justify-content: flex-start;
+      width: 100%;
+      margin-bottom: 2.5rem;
+      font-size: 2rem;
+      gap: 2rem;
+    }
+  }
+}
