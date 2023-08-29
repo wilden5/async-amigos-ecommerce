@@ -4,8 +4,8 @@ import { ProjectPages } from '../../types/Enums';
 import Constants from '../../utils/Constants';
 import QueryDetails from '../../backend/products/QueryProductDetails';
 import DOMHelpers from '../../utils/DOMHelpers';
-import CatalogPage from '../catalog-page/CatalogPage';
 import PromiseHelpers from '../../utils/PromiseHelpers';
+import ProductCardBuilder from '../catalog-page/ProductCardBuilder';
 
 class ProductDetailsPage extends Page {
   private readonly PRODUCT_PAGE_ID: string;
@@ -32,9 +32,9 @@ class ProductDetailsPage extends Page {
       url: Constants.IMAGE_NOT_FOUND_MOCK_IMAGE,
       label: Constants.IMAGE_NOT_FOUND_LABEL,
     };
-    const productPriceContainer: string = CatalogPage.buildPriceContainer(
-      CatalogPage.getProductPrice(product),
-      CatalogPage.getProductDiscountedPrice(product),
+    const productPriceContainer = ProductCardBuilder.appendPriceContainer(
+      ProductCardBuilder.getProductPrice(product),
+      ProductCardBuilder.getProductDiscountedPrice(product),
     );
     productElement.innerHTML = `
       <img class="${productKey} ${Constants.PRODUCT_IMAGE_CLASSNAME}" src="${imageURL}" alt="${
