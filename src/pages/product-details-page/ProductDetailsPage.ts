@@ -1,4 +1,4 @@
-import { Product } from '@commercetools/platform-sdk';
+import { Image, Product } from '@commercetools/platform-sdk';
 import Page from '../../components/templates/Page';
 import { ProjectPages } from '../../types/Enums';
 import Constants from '../../utils/Constants';
@@ -29,7 +29,7 @@ class ProductDetailsPage extends Page {
     const productKey: string = product.key as string;
     const productName: string = product.masterData.current.name[usLocaleKey];
     const productDescription: string | undefined = product.masterData.current.description?.[usLocaleKey];
-    const productImages: string[] = product.masterData.current.masterVariant.images?.map((image) => image.url) || [];
+    const productImages = product.masterData.current.masterVariant.images as Image[];
     const productPriceContainer: string = CatalogPage.buildPriceContainer(
       CatalogPage.getProductPrice(product),
       CatalogPage.getProductDiscountedPrice(product),
