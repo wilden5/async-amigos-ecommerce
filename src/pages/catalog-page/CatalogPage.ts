@@ -6,11 +6,7 @@ import Constants from '../../utils/Constants';
 import TostifyHelper from '../../utils/TostifyHelper';
 import DOMHelpers from '../../utils/DOMHelpers';
 
-// import DetailedProductDialog from '../../components/dialog-window/DialogWindow';
-
 class CatalogPage extends Page {
-  // private dialogWindow: DetailedProductDialog = new DetailedProductDialog();
-
   private CATALOG_PAGE_MARKUP = `
     <div class="catalog__container">
       <h1 class='page-title'>Search results:</h1>

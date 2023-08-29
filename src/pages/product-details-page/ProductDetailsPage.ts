@@ -6,6 +6,7 @@ import QueryDetails from '../../backend/products/QueryProductDetails';
 import ToastifyHelper from '../../utils/TostifyHelper';
 import DOMHelpers from '../../utils/DOMHelpers';
 import CatalogPage from '../catalog-page/CatalogPage';
+import Slider from '../../components/slider/Slider';
 
 class ProductDetailsPage extends Page {
   private readonly PRODUCT_PAGE_ID: string;
@@ -21,25 +22,27 @@ class ProductDetailsPage extends Page {
   }
 
   private buildProductDetails(product: Product, parentContainer: HTMLDivElement): void {
-    const productElement = DOMHelpers.createElement('div', {
+    const productElement: HTMLElement = DOMHelpers.createElement('div', {
       className: `${this.PRODUCT_PAGE_ID} ${Constants.PRODUCT_CONTENT_CLASSNAME}`,
     });
     const usLocaleKey = 'en-US';
     const productKey = product.key as string;
     const productName = product.masterData.current.name[usLocaleKey];
     const productDescription = product.masterData.current.description?.[usLocaleKey];
-    const { url: imageURL, label: imageLabel } = product.masterData.current.masterVariant.images?.[0] ?? {
-      url: Constants.IMAGE_NOT_FOUND_MOCK_IMAGE,
-      label: Constants.IMAGE_NOT_FOUND_LABEL,
-    };
+    // const { url: imageURL, label: imageLabel } = product.masterData.current.masterVariant.images?.[0] ?? {
+    //   url: Constants.IMAGE_NOT_FOUND_MOCK_IMAGE,
+    //   label: Constants.IMAGE_NOT_FOUND_LABEL,
+    // };
     const productPriceContainer: string = CatalogPage.buildPriceContainer(
       CatalogPage.getProductPrice(product),
       CatalogPage.getProductDiscountedPrice(product),
     );
+
+    const slider: Slider = new Slider(product.masterData.current.masterVariant.images?.map((image) => image.url) || []);
+    // <img class="${productKey} ${Constants.PRODUCT_IMAGE_CLASSNAME}" src="${imageURL}" alt="${
+    //   imageLabel || Constants.IMAGE_NOT_FOUND_LABEL
+    // }">
     productElement.innerHTML = `
-      <img class="${productKey} ${Constants.PRODUCT_IMAGE_CLASSNAME}" src="${imageURL}" alt="${
-        imageLabel || Constants.IMAGE_NOT_FOUND_LABEL
-      }">
       <div class="${productKey} ${Constants.PRODUCT_TEXT_CLASSNAME}">
         <h2 class="${productKey} ${Constants.PRODUCT_TITLE_CLASSNAME}">${productName}</h2>
         <p class="${productKey} ${Constants.PRODUCT_DESCRIPTION_CLASSNAME}">  ${
@@ -49,6 +52,7 @@ class ProductDetailsPage extends Page {
         <a class=${Constants.PRODUCT_BUTTON_CLASSNAME} href='#product/${productKey}'>${Constants.CART_BUTTON_TEXT}</a>
       </div>
     `;
+    productElement.appendChild(slider.render());
     parentContainer.appendChild(productElement);
   }
 
