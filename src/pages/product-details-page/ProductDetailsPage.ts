@@ -26,22 +26,16 @@ class ProductDetailsPage extends Page {
       className: `${this.PRODUCT_PAGE_ID} ${Constants.PRODUCT_CONTENT_CLASSNAME}`,
     });
     const usLocaleKey = 'en-US';
-    const productKey = product.key as string;
-    const productName = product.masterData.current.name[usLocaleKey];
-    const productDescription = product.masterData.current.description?.[usLocaleKey];
-    // const { url: imageURL, label: imageLabel } = product.masterData.current.masterVariant.images?.[0] ?? {
-    //   url: Constants.IMAGE_NOT_FOUND_MOCK_IMAGE,
-    //   label: Constants.IMAGE_NOT_FOUND_LABEL,
-    // };
+    const productKey: string = product.key as string;
+    const productName: string = product.masterData.current.name[usLocaleKey];
+    const productDescription: string | undefined = product.masterData.current.description?.[usLocaleKey];
+    const productImages: string[] = product.masterData.current.masterVariant.images?.map((image) => image.url) || [];
     const productPriceContainer: string = CatalogPage.buildPriceContainer(
       CatalogPage.getProductPrice(product),
       CatalogPage.getProductDiscountedPrice(product),
     );
 
-    const slider: Slider = new Slider(product.masterData.current.masterVariant.images?.map((image) => image.url) || []);
-    // <img class="${productKey} ${Constants.PRODUCT_IMAGE_CLASSNAME}" src="${imageURL}" alt="${
-    //   imageLabel || Constants.IMAGE_NOT_FOUND_LABEL
-    // }">
+    const slider: Slider = new Slider(productImages);
     productElement.innerHTML = `
       <div class="${productKey} ${Constants.PRODUCT_TEXT_CLASSNAME}">
         <h2 class="${productKey} ${Constants.PRODUCT_TITLE_CLASSNAME}">${productName}</h2>
@@ -52,7 +46,7 @@ class ProductDetailsPage extends Page {
         <a class=${Constants.PRODUCT_BUTTON_CLASSNAME} href='#product/${productKey}'>${Constants.CART_BUTTON_TEXT}</a>
       </div>
     `;
-    productElement.appendChild(slider.render());
+    productElement.prepend(slider.render());
     parentContainer.appendChild(productElement);
   }
 

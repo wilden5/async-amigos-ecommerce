@@ -1,4 +1,3 @@
-import { Product } from '@commercetools/platform-sdk';
 import DOMHelpers from '../../utils/DOMHelpers';
 import Page from '../templates/Page';
 import { ProjectPages } from '../../types/Enums';
@@ -13,16 +12,6 @@ class Slider extends Page {
     super(ProjectPages.ProductDetails);
     this.images = images;
     this.currentSlideIndex = 0;
-  }
-
-  // constructor(product: string[]) {
-  //   super(ProjectPages.ProductDetails);
-  //   this.images = this.getAllProductImages(product);
-  //   this.currentSlideIndex = 0;
-  // }
-
-  private getAllProductImages(product: Product): string[] {
-    return product.masterData.current.masterVariant.images?.map((image) => image.url) || [];
   }
 
   private createSlide(imageURL: string, imageLabel: string): HTMLElement {
