@@ -8,7 +8,7 @@ class QueryProducts {
     this.CTP_CLIENT = new CtpClient();
   }
 
-  public async queryProductList(limit: number): Promise<ProductPagedQueryResponse> {
+  public async queryProductList(limit = 50): Promise<ProductPagedQueryResponse> {
     try {
       const response = await this.CTP_CLIENT.withClientCredentialsFlow()
         .products()

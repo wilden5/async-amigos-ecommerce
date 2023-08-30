@@ -27,7 +27,7 @@ class CatalogPage extends Page {
         <div class="type-filter filter">
           <h2 class='filter-header'>Type</h2>
           <select class="type-select filter-select">
-            <option value="type-default" selected>Select type</option>
+            <option value="type-default" selected disabled>Select type</option>
          </select>
         </div>
         <div class="launch-date-filter filter">
@@ -38,7 +38,7 @@ class CatalogPage extends Page {
         </div>
         <div class="on-sale-filter filter">
           <h2 class='filter-header'>On sale</h2>
-          <input type='checkbox' class='input-on-sale'>
+          <input class='on-sale-checkbox' type='checkbox'>
         </div>
         </div>
       </div>
@@ -49,10 +49,10 @@ class CatalogPage extends Page {
     super(ProjectPages.Catalog);
   }
 
-  private fillProductCatalog(): void {
+  private fillProductCatalog = (): void => {
     const productContainer = this.CONTAINER.querySelector('.product-container') as HTMLDivElement;
     new QueryProducts()
-      .queryProductList(30)
+      .queryProductList()
       .then((queriedProductList: ProductPagedQueryResponse): void => {
         queriedProductList.results.forEach((product: Product): void => {
           ProductCardBuilder.buildProductCard(product, productContainer);
@@ -61,7 +61,7 @@ class CatalogPage extends Page {
       .catch((error: Error): void => {
         PromiseHelpers.catchBlockHelper(error, Constants.FETCH_CATALOG_ERROR);
       });
-  }
+  };
 
   private onProductClick(): void {
     this.CONTAINER.addEventListener('click', (event: Event): void => {
@@ -79,7 +79,7 @@ class CatalogPage extends Page {
     this.CONTAINER.innerHTML = this.CATALOG_PAGE_MARKUP;
     this.fillProductCatalog();
     this.onProductClick();
-    CatalogPageFilters.initAllFilters(this.CONTAINER);
+    CatalogPageFilters.initAllFilters(this.CONTAINER, this.fillProductCatalog);
     return this.CONTAINER;
   }
 }

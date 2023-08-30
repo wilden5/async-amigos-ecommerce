@@ -42,9 +42,40 @@ class CatalogPageFilters {
     });
   }
 
-  static initAllFilters(container: HTMLElement): void {
+  static performFilterByOnSale(container: HTMLElement, callback: () => void): void {
+    const onSaleCheckbox = container.querySelector('.on-sale-checkbox') as HTMLInputElement;
+    onSaleCheckbox.addEventListener('change', () => {
+      const productContainer = container.querySelector('.product-container') as HTMLElement;
+      productContainer.innerHTML = '';
+      if (onSaleCheckbox.checked) {
+        const discountedProducts: ProductProjection[] = [];
+        new ProductProjectionSearch()
+          .filterProductCatalog()
+          .then((queriedProductList: ProductProjectionPagedSearchResponse) => {
+            queriedProductList.results.forEach((product: ProductProjection) => {
+              if (product.masterVariant.prices && product.masterVariant.prices[0].discounted) {
+                discountedProducts.push(product);
+              }
+            });
+          })
+          .then(() =>
+            discountedProducts.forEach((product: ProductProjection) => {
+              ProductCardBuilder.buildProductCard(product, productContainer);
+            }),
+          )
+          .catch((error: Error): void => {
+            PromiseHelpers.catchBlockHelper(error, Constants.FETCH_CATALOG_ERROR);
+          });
+      } else {
+        callback();
+      }
+    });
+  }
+
+  static initAllFilters(container: HTMLElement, callback: () => void): void {
     CatalogPageFilters.populateProductTypesSelect(container);
     CatalogPageFilters.performFilterByProductType(container);
+    CatalogPageFilters.performFilterByOnSale(container, callback);
   }
 }
 

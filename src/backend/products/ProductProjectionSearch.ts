@@ -8,13 +8,13 @@ class ProductProjectionSearch {
     this.CTP_CLIENT = new CtpClient();
   }
 
-  public async filterProductCatalog(filterQuery: string): Promise<ProductProjectionPagedSearchResponse> {
+  public async filterProductCatalog(filterQuery?: string, limit = 50): Promise<ProductProjectionPagedSearchResponse> {
     try {
       const response = await this.CTP_CLIENT.withClientCredentialsFlow()
         .productProjections()
         .search()
         .get({
-          queryArgs: { 'filter.query': filterQuery },
+          queryArgs: { 'filter.query': filterQuery, 'limit': limit },
         })
         .execute();
       return response.body;
