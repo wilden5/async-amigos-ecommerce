@@ -138,6 +138,28 @@ output {
   height: 2.7rem;
 }
 
+.reset-filter-button {
+  align-self: center;
+  max-height: 4rem;
+  display: inline-block;
+  padding: 1rem 2rem;
+  background-color: #007bff;
+  color: #ffffff;
+  border: none;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+
+  &:hover {
+    background-color: #0056b3;
+    transform: scale(1.05);
+  }
+
+  &:focus {
+    outline: none;
+  }
+}
+
 @media screen and (max-width: 700px) {
  .filters-wrapper {
    flex-direction: column;

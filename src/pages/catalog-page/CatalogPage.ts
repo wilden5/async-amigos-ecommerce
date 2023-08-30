@@ -40,6 +40,7 @@ class CatalogPage extends Page {
           <h2 class='filter-header'>On sale</h2>
           <input class='on-sale-checkbox' type='checkbox'>
         </div>
+        <button class='reset-filter-button'>Reset Filter</button>
         </div>
       </div>
       <div class='product-container'></div>
@@ -75,11 +76,18 @@ class CatalogPage extends Page {
     });
   }
 
+  private onResetFiltersButtonClick(): void {
+    (this.CONTAINER.querySelector('.reset-filter-button') as HTMLButtonElement).addEventListener('click', () => {
+      this.renderPage();
+    });
+  }
+
   public renderPage(): HTMLElement {
     this.CONTAINER.innerHTML = this.CATALOG_PAGE_MARKUP;
     this.fillProductCatalog();
     this.onProductClick();
     CatalogPageFilters.initAllFilters(this.CONTAINER, this.fillProductCatalog);
+    this.onResetFiltersButtonClick();
     return this.CONTAINER;
   }
 }

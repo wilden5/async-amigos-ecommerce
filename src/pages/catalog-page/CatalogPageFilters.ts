@@ -100,20 +100,32 @@ class CatalogPageFilters {
       });
   }
 
-  static performFilterBySpecificProductAttribute(container: HTMLElement): void {
+  static performFilterBySpecificProductAttribute(
+    container: HTMLElement,
+    attributeNumber: number,
+    selectSelector: string,
+  ): void {
     let queriedProducts: ProductProjection[] = [];
-    (container.querySelector('.type-launch-date') as HTMLSelectElement).addEventListener('change', () => {
+    (container.querySelector(`.${selectSelector}`) as HTMLSelectElement).addEventListener('change', () => {
       queriedProducts = [];
       const productContainer = container.querySelector('.product-container') as HTMLElement;
       productContainer.innerHTML = '';
-      const selectedValue = (container.querySelector('.type-launch-date') as HTMLSelectElement).value;
+      const selectedValue = (container.querySelector(`.${selectSelector}`) as HTMLSelectElement).value;
       new ProductProjectionSearch()
         .filterProductCatalog()
         .then((queriedProductList: ProductProjectionPagedSearchResponse) => {
           queriedProductList.results.forEach((product: ProductProjection) => {
             if (product.masterVariant.attributes) {
-              if (product.masterVariant.attributes[3].value === Number(selectedValue)) {
-                queriedProducts.push(product);
+              if (selectSelector === 'type-launch-date') {
+                if (product.masterVariant.attributes[attributeNumber].value === Number(selectedValue))
+                  queriedProducts.push(product);
+              }
+              if (selectSelector === 'brand-select') {
+                if (
+                  (product.masterVariant.attributes[attributeNumber].value as string).toLowerCase() === selectedValue
+                ) {
+                  queriedProducts.push(product);
+                }
               }
             }
           });
@@ -135,7 +147,8 @@ class CatalogPageFilters {
     CatalogPageFilters.populateProductAttributeSelect(container, 0, 'brand-select');
     CatalogPageFilters.performFilterByProductType(container);
     CatalogPageFilters.performFilterByOnSale(container, callback);
-    CatalogPageFilters.performFilterBySpecificProductAttribute(container);
+    CatalogPageFilters.performFilterBySpecificProductAttribute(container, 3, 'type-launch-date');
+    CatalogPageFilters.performFilterBySpecificProductAttribute(container, 0, 'brand-select');
   }
 }
 
