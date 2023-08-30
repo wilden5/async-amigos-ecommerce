@@ -138,6 +138,11 @@ output {
   height: 2.7rem;
 }
 
+.price-wrapper {
+  display: flex;
+  gap: 1rem;
+}
+
 .reset-filter-button {
   align-self: center;
   max-height: 4rem;
@@ -158,6 +163,31 @@ output {
   &:focus {
     outline: none;
   }
+}
+
+.min-label,
+.max-label {
+  display: block;
+  font-weight: 800;
+}
+
+.price-min,
+.price-max {
+  padding: 0.5rem;
+  border: 0.1rem solid #ccc9c9;
+  border-radius: 0.5rem;
+  font-size: 1.4rem;
+  transition: border-color 0.3s ease;
+
+  &:focus {
+    outline: none;
+    border-color: #007bff;
+  }
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
 }
 
 @media screen and (max-width: 700px) {

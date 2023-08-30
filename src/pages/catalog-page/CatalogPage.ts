@@ -15,8 +15,10 @@ class CatalogPage extends Page {
       <div class='filters-wrapper'>
         <div class="price-filter filter">
           <h2 class='filter-header'>Price range</h2>
-          <input type="range" class="price-slider" min="0" max="2000" value="0">
-          <output for="price-slider" class="price-output">0</output>
+          <div class='price-wrapper'>
+          <input type="number" class="price-min price-inp" min='0' max='9999' placeholder='Min'>
+          <input type="number" class="price-max price-inp" min='0' max='9999' placeholder='Max'>
+            </div>
        </div>
        <div class="brand-filter filter">
           <h2 class='filter-header'>Brand</h2>

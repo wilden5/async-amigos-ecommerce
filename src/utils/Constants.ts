@@ -129,6 +129,12 @@ class Constants {
     'https://static.vecteezy.com/system/resources/previews/005/337/799/original/icon-image-not-found-free-vector.jpg';
 
   static CART_BUTTON_TEXT = 'ADD TO CART';
+
+  static PRICE_INVALID_INPUT_ERROR_MESSAGE = 'Set correct values to the price inputs!';
+
+  static LAUNCH_DATE_CLASSNAME = 'type-launch-date';
+
+  static BRAND_CLASSNAME = 'brand-select';
 }
 
 export default Constants;

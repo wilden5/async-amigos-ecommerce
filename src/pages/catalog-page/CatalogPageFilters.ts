@@ -5,6 +5,7 @@ import PromiseHelpers from '../../utils/PromiseHelpers';
 import Constants from '../../utils/Constants';
 import ProductProjectionSearch from '../../backend/products/ProductProjectionSearch';
 import ProductCardBuilder from './ProductCardBuilder';
+import TostifyHelper from '../../utils/TostifyHelper';
 
 class CatalogPageFilters {
   static populateProductTypesSelect(container: HTMLElement): void {
@@ -116,11 +117,11 @@ class CatalogPageFilters {
         .then((queriedProductList: ProductProjectionPagedSearchResponse) => {
           queriedProductList.results.forEach((product: ProductProjection) => {
             if (product.masterVariant.attributes) {
-              if (selectSelector === 'type-launch-date') {
+              if (selectSelector === Constants.LAUNCH_DATE_CLASSNAME) {
                 if (product.masterVariant.attributes[attributeNumber].value === Number(selectedValue))
                   queriedProducts.push(product);
               }
-              if (selectSelector === 'brand-select') {
+              if (selectSelector === Constants.BRAND_CLASSNAME) {
                 if (
                   (product.masterVariant.attributes[attributeNumber].value as string).toLowerCase() === selectedValue
                 ) {
@@ -141,14 +142,58 @@ class CatalogPageFilters {
     });
   }
 
+  static performProductByPriceRange(container: HTMLElement): void {
+    const priceMin = container.querySelector('.price-min') as HTMLInputElement;
+    const priceMax = container.querySelector('.price-max') as HTMLInputElement;
+    const prices = container.querySelectorAll('.price-inp');
+    let finalQuery: string;
+
+    prices.forEach((item) => {
+      item.addEventListener('input', () => {
+        const productContainer = container.querySelector('.product-container') as HTMLElement;
+        productContainer.innerHTML = '';
+        const priceMinValue = Number(priceMin.value) > 0 ? Number(priceMin.value) * 100 : 0;
+        const priceMaxValue = Number(priceMax.value) * 100;
+
+        if (priceMinValue && priceMaxValue) {
+          finalQuery = `variants.price.centAmount:range (${priceMinValue} to ${priceMaxValue})`;
+        }
+
+        if (priceMinValue && !priceMaxValue) {
+          finalQuery = `variants.price.centAmount:range (${priceMinValue} to *)`;
+        }
+
+        if (!priceMinValue && priceMaxValue) {
+          finalQuery = `variants.price.centAmount:range (* to ${priceMaxValue})`;
+        }
+
+        if (priceMaxValue < 0 || priceMinValue < 0) {
+          TostifyHelper.showToast(Constants.PRICE_INVALID_INPUT_ERROR_MESSAGE, Constants.TOAST_COLOR_RED);
+        }
+
+        new ProductProjectionSearch()
+          .filterProductCatalog(finalQuery)
+          .then((queriedProductList: ProductProjectionPagedSearchResponse) => {
+            queriedProductList.results.forEach((product: ProductProjection) => {
+              ProductCardBuilder.buildProductCard(product, productContainer);
+            });
+          })
+          .catch((error: Error): void => {
+            PromiseHelpers.catchBlockHelper(error, Constants.FETCH_CATALOG_ERROR);
+          });
+      });
+    });
+  }
+
   static initAllFilters(container: HTMLElement, callback: () => void): void {
     CatalogPageFilters.populateProductTypesSelect(container);
-    CatalogPageFilters.populateProductAttributeSelect(container, 3, 'type-launch-date');
-    CatalogPageFilters.populateProductAttributeSelect(container, 0, 'brand-select');
+    CatalogPageFilters.populateProductAttributeSelect(container, 3, Constants.LAUNCH_DATE_CLASSNAME);
+    CatalogPageFilters.populateProductAttributeSelect(container, 0, Constants.BRAND_CLASSNAME);
     CatalogPageFilters.performFilterByProductType(container);
     CatalogPageFilters.performFilterByOnSale(container, callback);
-    CatalogPageFilters.performFilterBySpecificProductAttribute(container, 3, 'type-launch-date');
-    CatalogPageFilters.performFilterBySpecificProductAttribute(container, 0, 'brand-select');
+    CatalogPageFilters.performFilterBySpecificProductAttribute(container, 3, Constants.LAUNCH_DATE_CLASSNAME);
+    CatalogPageFilters.performFilterBySpecificProductAttribute(container, 0, Constants.BRAND_CLASSNAME);
+    CatalogPageFilters.performProductByPriceRange(container);
   }
 }
 
