@@ -72,8 +72,42 @@ class CatalogPageFilters {
     });
   }
 
+  static populateProductAttributeSelect(container: HTMLElement, attributeNumber: number, selectSelector: string): void {
+    const yearAttributes = new Set();
+    new ProductProjectionSearch()
+      .filterProductCatalog()
+      .then((queriedProductList: ProductProjectionPagedSearchResponse) => {
+        queriedProductList.results.forEach((product: ProductProjection) => {
+          if (product.masterVariant.attributes) {
+            yearAttributes.add(product.masterVariant.attributes[attributeNumber].value);
+          }
+        });
+      })
+      .then(() => {
+        const yearSelect = container.querySelector(`.${selectSelector}`) as HTMLSelectElement;
+        Array.from(yearAttributes)
+          .sort()
+          .reverse()
+          .forEach((item) => {
+            const productYearOption = document.createElement('option');
+            productYearOption.value = String(item as string).toLowerCase();
+            productYearOption.textContent = String(item as string).toLowerCase();
+            yearSelect.appendChild(productYearOption);
+          });
+      })
+      .catch((error: Error): void => {
+        PromiseHelpers.catchBlockHelper(error, Constants.FETCH_CATALOG_ERROR);
+      });
+  }
+
+  static performFilterByProductLaunchYear(): void {}
+
+  static populateProductBrandSelect(): void {}
+
   static initAllFilters(container: HTMLElement, callback: () => void): void {
     CatalogPageFilters.populateProductTypesSelect(container);
+    CatalogPageFilters.populateProductAttributeSelect(container, 3, 'type-launch-date');
+    CatalogPageFilters.populateProductAttributeSelect(container, 0, 'brand-select');
     CatalogPageFilters.performFilterByProductType(container);
     CatalogPageFilters.performFilterByOnSale(container, callback);
   }

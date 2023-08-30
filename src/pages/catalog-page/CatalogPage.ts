@@ -21,7 +21,7 @@ class CatalogPage extends Page {
        <div class="brand-filter filter">
           <h2 class='filter-header'>Brand</h2>
           <select class="brand-select filter-select">
-            <option value="brand-default" selected>Select brand</option>
+            <option value="brand-default" selected disabled>Select brand</option>
           </select>
         </div>
         <div class="type-filter filter">
@@ -33,7 +33,7 @@ class CatalogPage extends Page {
         <div class="launch-date-filter filter">
           <h2 class='filter-header'>Launch date</h2>
           <select class="type-launch-date filter-select">
-            <option value="type-default" selected>Select Launch date</option>
+            <option value="type-default" selected disabled>Select Launch date</option>
          </select>
         </div>
         <div class="on-sale-filter filter">
