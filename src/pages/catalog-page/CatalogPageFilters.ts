@@ -100,9 +100,34 @@ class CatalogPageFilters {
       });
   }
 
-  static performFilterByProductLaunchYear(): void {}
-
-  static populateProductBrandSelect(): void {}
+  static performFilterBySpecificProductAttribute(container: HTMLElement): void {
+    let queriedProducts: ProductProjection[] = [];
+    (container.querySelector('.type-launch-date') as HTMLSelectElement).addEventListener('change', () => {
+      queriedProducts = [];
+      const productContainer = container.querySelector('.product-container') as HTMLElement;
+      productContainer.innerHTML = '';
+      const selectedValue = (container.querySelector('.type-launch-date') as HTMLSelectElement).value;
+      new ProductProjectionSearch()
+        .filterProductCatalog()
+        .then((queriedProductList: ProductProjectionPagedSearchResponse) => {
+          queriedProductList.results.forEach((product: ProductProjection) => {
+            if (product.masterVariant.attributes) {
+              if (product.masterVariant.attributes[3].value === Number(selectedValue)) {
+                queriedProducts.push(product);
+              }
+            }
+          });
+        })
+        .then(() => {
+          queriedProducts.forEach((product) => {
+            ProductCardBuilder.buildProductCard(product, productContainer);
+          });
+        })
+        .catch((error: Error): void => {
+          PromiseHelpers.catchBlockHelper(error, Constants.FETCH_CATALOG_ERROR);
+        });
+    });
+  }
 
   static initAllFilters(container: HTMLElement, callback: () => void): void {
     CatalogPageFilters.populateProductTypesSelect(container);
@@ -110,6 +135,7 @@ class CatalogPageFilters {
     CatalogPageFilters.populateProductAttributeSelect(container, 0, 'brand-select');
     CatalogPageFilters.performFilterByProductType(container);
     CatalogPageFilters.performFilterByOnSale(container, callback);
+    CatalogPageFilters.performFilterBySpecificProductAttribute(container);
   }
 }
 
