@@ -10,6 +10,16 @@
   padding: 5rem 0 3rem 0;
 }
 
+.customer-personal-button {
+  width: 10rem;
+  height: 3rem;
+  border-radius: 8px;
+}
+
+.customer-personal-button:active {
+  background-color: red;
+}
+
 .customer-default-shipping-address {
   margin-bottom: 3rem;
 }
@@ -54,4 +64,29 @@
   .customer-address-table {
     border-spacing: .5rem;
   }
+}
+
+.input-container {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.input-label {
+  margin-right: 10px;
+  flex: 0 0 90px;
+  font-weight: bold;
+  color: #01619e;
+}
+
+.transparent-input {
+  border: none;
+  background-color: transparent;
+  pointer-events: none;
+  width: 100%;
+  font-size: 1.6rem;
+}
+
+.customer-password {
+  margin-bottom: 2rem;
 }
