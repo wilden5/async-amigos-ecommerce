@@ -11,6 +11,8 @@ import Slider from '../../components/slider/Slider';
 class ProductDetailsPage extends Page {
   private readonly PRODUCT_PAGE_ID: string;
 
+  private readonly SLIDER = new Slider();
+
   private PRODUCT_PAGE_MARKUP = `
     <h1 class="page-title">Product page</h1>
     <div class="product-details-container"></div>
@@ -35,19 +37,22 @@ class ProductDetailsPage extends Page {
       CatalogPage.getProductDiscountedPrice(product),
     );
 
-    const slider: Slider = new Slider(productImages);
+    const swiperWrapper = this.SLIDER.buildSwiperContainer(productImages);
+
     productElement.innerHTML = `
       <div class="${productKey} ${Constants.PRODUCT_TEXT_CLASSNAME}">
         <h2 class="${productKey} ${Constants.PRODUCT_TITLE_CLASSNAME}">${productName}</h2>
-        <p class="${productKey} ${Constants.PRODUCT_DESCRIPTION_CLASSNAME}">  ${
+        <p class="${productKey} ${Constants.PRODUCT_DESCRIPTION_CLASSNAME}">${
           productDescription || Constants.PRODUCT_DESCRIPTION_NOT_FOUND
         }</p>
         <div class="${Constants.PRICE_CONTAINER_CLASSNAME}">${productPriceContainer}</div>
         <a class=${Constants.PRODUCT_BUTTON_CLASSNAME} href='#product/${productKey}'>${Constants.CART_BUTTON_TEXT}</a>
       </div>
     `;
-    productElement.prepend(slider.render());
+    productElement.prepend(swiperWrapper);
     parentContainer.appendChild(productElement);
+
+    this.SLIDER.initSwiper();
   }
 
   private fillProductDetails(): void {

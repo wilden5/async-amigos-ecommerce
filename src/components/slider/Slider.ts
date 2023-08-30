@@ -1,31 +1,24 @@
 import { Image } from '@commercetools/platform-sdk';
 import Swiper from 'swiper';
-import 'swiper/css';
-import 'swiper/css/navigation';
+import { Navigation } from 'swiper/modules';
+import 'swiper/scss';
+import 'swiper/scss/navigation';
 import DOMHelpers from '../../utils/DOMHelpers';
-import Page from '../templates/Page';
-import { ProjectPages } from '../../types/Enums';
 import Constants from '../../utils/Constants';
+import Component from '../templates/Component';
 
-class Slider extends Page {
-  private readonly images: Image[];
+class Slider extends Component {
+  public swiperSlide: string;
 
-  private swiperSlide: string;
+  public images: Image[];
 
-  constructor(images: Image[]) {
-    super(ProjectPages.ProductDetails);
-    this.images = images;
+  constructor() {
+    super('div', 'className');
     this.swiperSlide = '';
+    this.images = [];
   }
 
-  public swiper = new Swiper('.mySwiper', {
-    navigation: {
-      nextEl: '.swiper-button-next',
-      prevEl: '.swiper-button-prev',
-    },
-  });
-
-  private generateSwiperContent(images: Image[]): string {
+  public generateSwiperContent(images: Image[]): string {
     images.forEach((imageObject) => {
       this.swiperSlide += `
       <div class="swiper-slide">
@@ -37,28 +30,34 @@ class Slider extends Page {
     return this.swiperSlide;
   }
 
-  private buildSwiperContainer(): HTMLElement {
+  public buildSwiperContainer(images: Image[]): HTMLElement {
     const swiperContainer: HTMLElement = DOMHelpers.createElement('div', { className: 'swiper mySwiper' });
     swiperContainer.innerHTML = `
-      <div class="swiper-wrapper">${this.generateSwiperContent(this.images)}</div>
+      <div class="swiper-wrapper">${this.generateSwiperContent(images)}</div>
       <div class="swiper-button-next"></div>
       <div class="swiper-button-prev"></div>
     `;
-    return swiperContainer;
-  }
-
-  public render(): HTMLElement {
-    const swiperContainer = this.buildSwiperContainer();
-
-    this.swiper = new Swiper(swiperContainer, {
-      navigation: {
-        nextEl: '.swiper-button-next',
-        prevEl: '.swiper-button-prev',
-      },
-    });
 
     return swiperContainer;
   }
+
+  private swiper = new Swiper('.mySwiper', {
+    direction: 'horizontal',
+    loop: true,
+    navigation: {
+      nextEl: '.swiper-button-next',
+      prevEl: '.swiper-button-prev',
+    },
+    modules: [Navigation],
+  });
+
+  public initSwiper(): void {
+    this.swiper.init();
+  }
+
+  // public renderComponent(): HTMLElement {
+  //   return this.buildSwiperContainer(this.images);
+  // }
 }
 
 export default Slider;
