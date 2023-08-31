@@ -1,8 +1,10 @@
 import { Image } from '@commercetools/platform-sdk';
 import Swiper from 'swiper';
-import { Navigation } from 'swiper/modules';
+import { SwiperOptions } from 'swiper/types';
+import { Navigation, Pagination, Scrollbar } from 'swiper/modules';
 import 'swiper/scss';
 import 'swiper/scss/navigation';
+import 'swiper/scss/pagination';
 import DOMHelpers from '../../utils/DOMHelpers';
 import Constants from '../../utils/Constants';
 import Component from '../templates/Component';
@@ -19,12 +21,14 @@ class Slider extends Component {
   }
 
   public generateSwiperContent(images: Image[]): string {
-    images.forEach((imageObject) => {
+    images.forEach((imageObject): void => {
       this.swiperSlide += `
       <div class="swiper-slide">
-         <img class="${Constants.PRODUCT_IMAGE_CLASSNAME}" src="${imageObject.url}" alt="${
-           imageObject.label || Constants.IMAGE_NOT_FOUND_LABEL
-         }">
+        <div class="swiper-zoom-container">
+          <img class="${Constants.PRODUCT_IMAGE_CLASSNAME}" src="${imageObject.url}" alt="${
+            imageObject.label || Constants.IMAGE_NOT_FOUND_LABEL
+          }">
+        </div>
       </div>`;
     });
     return this.swiperSlide;
@@ -34,6 +38,7 @@ class Slider extends Component {
     const swiperContainer: HTMLElement = DOMHelpers.createElement('div', { className: 'swiper mySwiper' });
     swiperContainer.innerHTML = `
       <div class="swiper-wrapper">${this.generateSwiperContent(images)}</div>
+      <div class="swiper-pagination"></div>
       <div class="swiper-button-next"></div>
       <div class="swiper-button-prev"></div>
     `;
@@ -41,23 +46,32 @@ class Slider extends Component {
     return swiperContainer;
   }
 
-  private swiper = new Swiper('.mySwiper', {
+  private swiperParams: SwiperOptions = {
     direction: 'horizontal',
+    slidesPerView: 1,
+    spaceBetween: 50,
+    enabled: true,
     loop: true,
+    initialSlide: 0,
+    keyboard: {
+      enabled: true,
+      onlyInViewport: true,
+    },
     navigation: {
       nextEl: '.swiper-button-next',
       prevEl: '.swiper-button-prev',
     },
-    modules: [Navigation],
-  });
+    pagination: true,
+    zoom: true,
+    modules: [Navigation, Pagination, Scrollbar],
+  };
+
+  private swiper = new Swiper('.mySwiper', this.swiperParams);
 
   public initSwiper(): void {
     this.swiper.init();
+    this.swiper.setGrabCursor();
   }
-
-  // public renderComponent(): HTMLElement {
-  //   return this.buildSwiperContainer(this.images);
-  // }
 }
 
 export default Slider;

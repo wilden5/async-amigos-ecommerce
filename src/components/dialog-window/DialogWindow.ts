@@ -16,10 +16,8 @@ class DetailedProductDialog {
     dialog.classList.add('dialog');
     dialog.innerHTML = `
       <div class="dialog-content">
-        <h2 class="dialog-title">Dialog Title</h2>
+        
         <img class="dialog-image" src="" alt="product-image">
-        <p class="dialog-message">This is the dialog message</p>
-        <p class="dialog-price">This is the dialog price</p>
         <button class="dialog-close">Close</button>
         <button class="dialog-close-window">Back to Catalog</button>
       </div>
