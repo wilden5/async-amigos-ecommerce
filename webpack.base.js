@@ -28,7 +28,14 @@ const config = {
   module: {
     rules: [
       { test: /\.(tsx?)$/i, loader: 'ts-loader' },
-      { test: /\.scss$/i, use: [MiniCssExtractPlugin.loader, 'css-loader', 'postcss-loader', 'sass-loader'] },
+      {
+        test: /\.css$/i,
+        use: ['style-loader', 'css-loader'],
+      },
+      {
+        test: /\.scss$/i,
+        use: [MiniCssExtractPlugin.loader, 'css-loader', 'postcss-loader', 'sass-loader'],
+      },
       { test: /\.(png|jpe?g|gif|svg)$/i, type: 'asset/resource' },
     ],
   },

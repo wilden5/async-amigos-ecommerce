@@ -22,7 +22,7 @@ class HomePage extends Page {
   private homePageSpecialDeals(): void {
     const specialDeals: ProductProjection[] = [];
     new ProductProjectionSearch()
-      .filterProductCatalog()
+      .searchProductCatalog()
       .then((queriedProductList: ProductProjectionPagedSearchResponse) => {
         queriedProductList.results.forEach((product: ProductProjection) => {
           if (product.masterVariant.prices && product.masterVariant.prices[0].discounted) {

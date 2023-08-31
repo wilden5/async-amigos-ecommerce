@@ -16,6 +16,9 @@
   &-details-content {
     display: flex;
     padding: 20px 0;
+    @media (max-width: $breakPoint-2) {
+      display: block;
+    }
   }
 
   &-text {
