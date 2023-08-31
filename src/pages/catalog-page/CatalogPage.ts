@@ -45,6 +45,17 @@ class CatalogPage extends Page {
         <button class='reset-filter-button'>Reset Filter</button>
         </div>
       </div>
+       <div class="sorting-block">
+          <div class="sorting-options">
+            <select class="sort-by">
+              <option class='sort-option' value="price-def" selected disabled>Sort Catalog By</option>
+              <option class='sort-option' value="price-asc">Price (ascending)</option>
+              <option class='sort-option' value="price-desc">Price (descending)</option>
+              <option class='sort-option' value="name-alpha">Name (alphabetically)</option>
+            </select>
+           </div>
+           <button class='reset-sort'>Reset Sort</button>
+  </div>
       <div class='product-container'></div>
     </div>`;
 
