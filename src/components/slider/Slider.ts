@@ -24,11 +24,9 @@ class Slider extends Component {
     images.forEach((imageObject): void => {
       this.swiperSlide += `
       <div class="swiper-slide">
-        <div class="swiper-zoom-container">
-          <img class="${Constants.PRODUCT_IMAGE_CLASSNAME}" src="${imageObject.url}" alt="${
-            imageObject.label || Constants.IMAGE_NOT_FOUND_LABEL
-          }">
-        </div>
+        <img class="${Constants.PRODUCT_IMAGE_CLASSNAME}" src="${imageObject.url}" alt="${
+          imageObject.label || Constants.IMAGE_NOT_FOUND_LABEL
+        }">
       </div>`;
     });
     return this.swiperSlide;
@@ -46,13 +44,8 @@ class Slider extends Component {
     return swiperContainer;
   }
 
-  private disableSwiper(): boolean {
-    return true;
-  }
-
   private swiperParams: SwiperOptions = {
     direction: 'horizontal',
-    enabled: this.disableSwiper(),
     grabCursor: true,
     initialSlide: 0,
     keyboard: {
@@ -86,9 +79,6 @@ class Slider extends Component {
   public initSwiper(): void {
     if (this.swiper) {
       this.swiper.init();
-    }
-    if (this.images.length <= 1) {
-      this.disableSwiper = (): boolean => false;
     }
   }
 }
