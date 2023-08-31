@@ -6,6 +6,7 @@ import Constants from '../../utils/Constants';
 import PromiseHelpers from '../../utils/PromiseHelpers';
 import CatalogPageFilters from './CatalogPageFilters';
 import ProductCardBuilder from './ProductCardBuilder';
+import CatalogPageSort from './CatalogPageSort';
 
 class CatalogPage extends Page {
   private CATALOG_PAGE_MARKUP = `
@@ -51,7 +52,8 @@ class CatalogPage extends Page {
               <option class='sort-option' value="price-def" selected disabled>Sort Catalog By</option>
               <option class='sort-option' value="price-asc">Price (ascending)</option>
               <option class='sort-option' value="price-desc">Price (descending)</option>
-              <option class='sort-option' value="name-alpha">Name (alphabetically)</option>
+              <option class='sort-option' value="name.en-us asc">Name (alphabetically)</option>
+              <option class='sort-option' value="name.en-us desc">Name (alphabetically reversed)</option>
             </select>
            </div>
            <button class='reset-sort'>Reset Sort</button>
@@ -100,6 +102,7 @@ class CatalogPage extends Page {
     this.fillProductCatalog();
     this.onProductClick();
     CatalogPageFilters.initAllFilters(this.CONTAINER, this.fillProductCatalog);
+    CatalogPageSort.initSort(this.CONTAINER);
     this.onResetFiltersButtonClick();
     return this.CONTAINER;
   }
