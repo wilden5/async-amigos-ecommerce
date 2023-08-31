@@ -23,6 +23,8 @@ class Constants {
 
   static TOAST_COLOR_GREEN = '#00FF00';
 
+  static TOAST_COLOR_DARK_GREEN = '#214121';
+
   static BACKEND_GENERIC_VALIDATION_MESSAGE_REGISTRATION = 'field must be filled!';
 
   static BACKEND_FIRST_NAME_VALIDATION_MESSAGE = 'First name field cannot have any digits or special symbols!';
@@ -99,6 +101,10 @@ class Constants {
 
   static FETCH_CATALOG_ERROR = 'Something went wrong during receiving products catalog, please try visit us later!';
 
+  static FETCH_PRODUCT_ERROR = 'Something went wrong during receiving specific product, please try visit us later!';
+
+  static FETCH_PRODUCT_TYPES_ERROR = 'Something went wrong during receiving product types!';
+
   static PRODUCT_DESCRIPTION_NOT_FOUND = 'Product description was not found :(';
 
   static PRODUCT_DETAILS_CLASSNAME = 'product-details-container';
@@ -129,6 +135,12 @@ class Constants {
   static DIALOG_IMAGE_CLASSNAME = 'dialog-image';
 
   static CART_BUTTON_TEXT = 'ADD TO CART';
+
+  static PRICE_INVALID_INPUT_ERROR_MESSAGE = 'Set correct values to the price inputs!';
+
+  static LAUNCH_DATE_CLASSNAME = 'type-launch-date';
+
+  static BRAND_CLASSNAME = 'brand-select';
 }
 
 export default Constants;

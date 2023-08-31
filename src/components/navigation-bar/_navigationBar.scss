@@ -12,10 +12,29 @@
   &__item a {
     color: $textColor;
     transition: color 0.4s ease-in-out, box-shadow 0.4s ease-in-out;
+    position: relative;
+    display: inline-block;
 
     &:hover {
       color: $textColorOnHover;
     }
+  }
+
+  &__item a::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: -0.3rem;
+    height: 0.3rem;
+    background-color: $textColor;
+    transform: scaleX(0);
+    transform-origin: center bottom;
+    transition: transform 0.3s ease-in-out;
+  }
+
+  &__item a:hover::before {
+    transform: scaleX(1);
   }
 
   &__item {
