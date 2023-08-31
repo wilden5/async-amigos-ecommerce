@@ -43,20 +43,19 @@ class CatalogPage extends Page {
           <h2 class='filter-header'>On sale</h2>
           <input class='on-sale-checkbox' type='checkbox'>
         </div>
-        <button class='reset-filter-button'>Reset Filter</button>
+        <button class='reset-filter-button'>Reset Filter/Sort</button>
         </div>
       </div>
        <div class="sorting-block">
           <div class="sorting-options">
             <select class="sort-by">
               <option class='sort-option' value="price-def" selected disabled>Sort Catalog By</option>
-              <option class='sort-option' value="price-asc">Price (ascending)</option>
-              <option class='sort-option' value="price-desc">Price (descending)</option>
+              <option class='sort-option' value="price asc">Price (ascending)</option>
+              <option class='sort-option' value="price desc">Price (descending)</option>
               <option class='sort-option' value="name.en-us asc">Name (alphabetically)</option>
               <option class='sort-option' value="name.en-us desc">Name (alphabetically reversed)</option>
             </select>
            </div>
-           <button class='reset-sort'>Reset Sort</button>
   </div>
       <div class='product-container'></div>
     </div>`;

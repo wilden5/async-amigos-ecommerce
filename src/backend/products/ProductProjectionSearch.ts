@@ -11,13 +11,17 @@ class ProductProjectionSearch {
     this.CTP_CLIENT = new CtpClient();
   }
 
-  public async filterProductCatalog(filterQuery?: string, limit = 50): Promise<ProductProjectionPagedSearchResponse> {
+  public async searchProductCatalog(
+    filterQuery?: string,
+    sort?: string,
+    limit = 50,
+  ): Promise<ProductProjectionPagedSearchResponse> {
     try {
       const response = await this.CTP_CLIENT.withClientCredentialsFlow()
         .productProjections()
         .search()
         .get({
-          queryArgs: { 'filter.query': filterQuery, 'limit': limit },
+          queryArgs: { 'filter.query': filterQuery, 'sort': sort, 'limit': limit },
         })
         .execute();
       return response.body;
@@ -26,7 +30,7 @@ class ProductProjectionSearch {
     }
   }
 
-  public async sortProductCatalog(sort?: string, limit = 50): Promise<ProductProjectionPagedQueryResponse> {
+  public async queryProductCatalog(sort?: string, limit = 50): Promise<ProductProjectionPagedQueryResponse> {
     try {
       const response = await this.CTP_CLIENT.withClientCredentialsFlow()
         .productProjections()

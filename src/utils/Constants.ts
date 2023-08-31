@@ -23,6 +23,8 @@ class Constants {
 
   static TOAST_COLOR_GREEN = '#00FF00';
 
+  static TOAST_COLOR_DARK_GREEN = '#214121';
+
   static BACKEND_GENERIC_VALIDATION_MESSAGE_REGISTRATION = 'field must be filled!';
 
   static BACKEND_FIRST_NAME_VALIDATION_MESSAGE = 'First name field cannot have any digits or special symbols!';
