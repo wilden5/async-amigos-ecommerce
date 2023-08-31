@@ -45,7 +45,12 @@ class Router {
         currentPage = new CatalogPage();
         break;
       case ProjectPages.MyProfile:
-        currentPage = new MyProfilePage();
+        if (new LocalStorage().isLocalStorageItemExists(Constants.SUCCESSFUL_REGISTRATION_LOCAL_STORAGE_KEY)) {
+          currentPage = new MyProfilePage();
+        } else {
+          window.location.replace(`#${ProjectPages.Login}`);
+          currentPage = new LoginPage();
+        }
         break;
       case ProjectPages.Cart:
         currentPage = new CartPage();
