@@ -29,7 +29,7 @@ class CatalogPageFilters {
     (container.querySelector('.type-select') as HTMLSelectElement).addEventListener('change', () => {
       const selectedValue = (container.querySelector('.type-select') as HTMLSelectElement).value;
       new ProductProjectionSearch()
-        .filterProductCatalog(`productType.id:"${selectedValue}"`)
+        .searchProductCatalog(`productType.id:"${selectedValue}"`)
         .then((queriedProductList: ProductProjectionPagedSearchResponse): void => {
           const productContainer = container.querySelector('.product-container') as HTMLElement;
           productContainer.innerHTML = '';
@@ -51,7 +51,7 @@ class CatalogPageFilters {
       if (onSaleCheckbox.checked) {
         const discountedProducts: ProductProjection[] = [];
         new ProductProjectionSearch()
-          .filterProductCatalog()
+          .searchProductCatalog()
           .then((queriedProductList: ProductProjectionPagedSearchResponse) => {
             queriedProductList.results.forEach((product: ProductProjection) => {
               if (product.masterVariant.prices && product.masterVariant.prices[0].discounted) {
@@ -76,7 +76,7 @@ class CatalogPageFilters {
   static populateProductAttributeSelect(container: HTMLElement, attributeNumber: number, selectSelector: string): void {
     const yearAttributes = new Set();
     new ProductProjectionSearch()
-      .filterProductCatalog()
+      .searchProductCatalog()
       .then((queriedProductList: ProductProjectionPagedSearchResponse) => {
         queriedProductList.results.forEach((product: ProductProjection) => {
           if (product.masterVariant.attributes) {
@@ -113,7 +113,7 @@ class CatalogPageFilters {
       productContainer.innerHTML = '';
       const selectedValue = (container.querySelector(`.${selectSelector}`) as HTMLSelectElement).value;
       new ProductProjectionSearch()
-        .filterProductCatalog()
+        .searchProductCatalog()
         .then((queriedProductList: ProductProjectionPagedSearchResponse) => {
           queriedProductList.results.forEach((product: ProductProjection) => {
             if (product.masterVariant.attributes) {
@@ -172,7 +172,7 @@ class CatalogPageFilters {
         }
 
         new ProductProjectionSearch()
-          .filterProductCatalog(finalQuery)
+          .searchProductCatalog(finalQuery)
           .then((queriedProductList: ProductProjectionPagedSearchResponse) => {
             queriedProductList.results.forEach((product: ProductProjection) => {
               ProductCardBuilder.buildProductCard(product, productContainer);
