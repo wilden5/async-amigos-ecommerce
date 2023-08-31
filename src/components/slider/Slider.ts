@@ -1,7 +1,7 @@
 import { Image } from '@commercetools/platform-sdk';
 import Swiper from 'swiper';
 import { SwiperOptions } from 'swiper/types';
-import { Navigation, Pagination, Scrollbar } from 'swiper/modules';
+import { Navigation, Pagination } from 'swiper/modules';
 import 'swiper/scss';
 import 'swiper/scss/navigation';
 import 'swiper/scss/pagination';
@@ -38,39 +38,58 @@ class Slider extends Component {
     const swiperContainer: HTMLElement = DOMHelpers.createElement('div', { className: 'swiper mySwiper' });
     swiperContainer.innerHTML = `
       <div class="swiper-wrapper">${this.generateSwiperContent(images)}</div>
-      <div class="swiper-pagination"></div>
       <div class="swiper-button-next"></div>
       <div class="swiper-button-prev"></div>
+      <div class="swiper-pagination"></div>
     `;
 
     return swiperContainer;
   }
 
+  private disableSwiper(): boolean {
+    return true;
+  }
+
   private swiperParams: SwiperOptions = {
     direction: 'horizontal',
-    slidesPerView: 1,
-    spaceBetween: 50,
-    enabled: true,
-    loop: true,
+    enabled: this.disableSwiper(),
+    grabCursor: true,
     initialSlide: 0,
     keyboard: {
       enabled: true,
       onlyInViewport: true,
     },
+    loop: true,
+    modules: [Navigation, Pagination],
     navigation: {
       nextEl: '.swiper-button-next',
       prevEl: '.swiper-button-prev',
     },
-    pagination: true,
+    pagination: {
+      el: '.swiper-pagination',
+      clickable: true,
+    },
+    slidesPerView: 1,
+    spaceBetween: 50,
     zoom: true,
-    modules: [Navigation, Pagination, Scrollbar],
   };
 
-  private swiper = new Swiper('.mySwiper', this.swiperParams);
+  private swiper = new Swiper('.mySwiper', this.swiperParams) as Swiper | null;
+
+  public destroy(): void {
+    if (this.swiper) {
+      this.swiper.destroy();
+      this.swiper = null;
+    }
+  }
 
   public initSwiper(): void {
-    this.swiper.init();
-    this.swiper.setGrabCursor();
+    if (this.swiper) {
+      this.swiper.init();
+    }
+    if (this.images.length <= 1) {
+      this.disableSwiper = (): boolean => false;
+    }
   }
 }
 
