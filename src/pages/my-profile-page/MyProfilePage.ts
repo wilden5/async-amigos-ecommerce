@@ -2,8 +2,9 @@ import { Customer } from '@commercetools/platform-sdk';
 import Page from '../../components/templates/Page';
 import { ProjectPages } from '../../types/Enums';
 import { GetCustomerInfo } from '../../backend/customer/getCustomer';
-import { UpdateCustomerInfo } from '../../backend/customer/updateCustomer';
+// import { UpdateCustomerInfo } from '../../backend/customer/updateCustomer';
 import TostifyHelper from '../../utils/TostifyHelper';
+import Constants from '../../utils/Constants';
 
 class MyProfilePage extends Page {
   customer: Customer | null = null;
@@ -50,23 +51,23 @@ class MyProfilePage extends Page {
 
         this.inputPersonalInfo?.push((input as HTMLInputElement).value);
       });
-      const updateCustomerInfo = new UpdateCustomerInfo(this.getUserId());
-      const [firstName, lastName, dateOfBirth, email] = this.inputPersonalInfo;
-      const version = this.customer?.version || 0;
+      // const updateCustomerInfo = new UpdateCustomerInfo(this.getUserId());
+      // const [firstName, lastName, dateOfBirth, email] = this.inputPersonalInfo;
+      // const version = this.customer?.version || 0;
 
-      updateCustomerInfo
-        .updateCustomerInfo(firstName, lastName, dateOfBirth, email, version)
-        .then((response) => {
-          this.customer = response.body;
-          // eslint-disable-next-line no-console
-          console.log(this.customer);
+      // updateCustomerInfo
+      //   .updateCustomerInfo(firstName, lastName, dateOfBirth, email, version)
+      //   .then((response) => {
+      //     this.customer = response.body;
+      //     // eslint-disable-next-line no-console
+      //     console.log(this.customer);
 
-          TostifyHelper.showToast('Updating personal information successfully', '#000');
-        })
-        .catch((err) => {
-          TostifyHelper.showToast('Updating personal information failed', '#000');
-          throw err;
-        });
+      //     TostifyHelper.showToast('Updating personal information successfully', Constants.TOAST_COLOR_GREEN);
+      //   })
+      //   .catch((err) => {
+      //     TostifyHelper.showToast('Updating personal information failed', Constants.TOAST_COLOR_GREEN);
+      //     throw err;
+      //   });
 
       originalButton.textContent = 'Edit';
     }
@@ -82,22 +83,25 @@ class MyProfilePage extends Page {
 
     const passwordInputs = [inputCurrentPassword, inputNewPassword, inputConfirmNewPassword];
 
+    this.handleLockIconClickLoginPage();
+
     if (isEditing) {
       passwordInputs.forEach((input) => {
         input.removeAttribute('disabled');
       });
 
       originalButton.textContent = 'Save';
-      this.handleLockIconClickLoginPage();
-
       this.inputPasswordInfo = [];
     } else {
       passwordInputs.forEach((input) => {
         input.setAttribute('disabled', 'disabled');
         this.inputPasswordInfo.push(input.value);
+        inputCurrentPassword.value = '';
+        inputNewPassword.value = '';
+        inputConfirmNewPassword.value = '';
       });
       originalButton.textContent = 'Edit';
-      TostifyHelper.showToast('Password updated successfully', '#000');
+      TostifyHelper.showToast('Password updated successfully', Constants.TOAST_COLOR_GREEN);
       // eslint-disable-next-line no-console
       console.log(this.inputPasswordInfo);
     }
@@ -123,7 +127,7 @@ class MyProfilePage extends Page {
       });
 
       originalButton.textContent = 'Edit';
-      TostifyHelper.showToast('Default address updated successfully', '#000');
+      TostifyHelper.showToast('Default address updated successfully', Constants.TOAST_COLOR_GREEN);
       // eslint-disable-next-line no-console
       console.log(this.selectAddressesInfo);
     }
@@ -160,7 +164,7 @@ class MyProfilePage extends Page {
       });
 
       originalButton.textContent = 'Edit';
-      TostifyHelper.showToast('Address updated successfully', '#000');
+      TostifyHelper.showToast('Address updated successfully', Constants.TOAST_COLOR_GREEN);
       // eslint-disable-next-line no-console
       console.log(this.selectAddressInfo);
     }
@@ -168,11 +172,17 @@ class MyProfilePage extends Page {
 
   private deleteAddress(button: HTMLButtonElement): void {
     const id = button.id.split('-')[1];
+
     const address = this.CONTAINER.querySelector(`#address-${id}`) as HTMLElement;
+    const defaultBillingOption = this.CONTAINER.querySelector(`#option-billing-${id}`) as HTMLOptionElement;
+    const defaultShippingOption = this.CONTAINER.querySelector(`#option-shipping-${id}`) as HTMLOptionElement;
 
     if (address) {
       address.remove();
-      TostifyHelper.showToast('Address deleted successfully', '#000');
+      defaultBillingOption.remove();
+      defaultShippingOption.remove();
+
+      TostifyHelper.showToast('Address deleted successfully', Constants.TOAST_COLOR_GREEN);
     }
   }
 
@@ -188,39 +198,39 @@ class MyProfilePage extends Page {
 
     const address = this.customer?.addresses[0];
 
-    // после того как получу ответ при создании запроса, нужно будет отфильтровать ID нового адреса и добавить в разметку
+    // после того как получу ответ при создании запроса, отфильтровать ID нового адреса и добавить в разметку
     // актуальный ID нового адреса
-    // не забыть добавить новый адрес в options в выборе дефолтного адреса
+    // добавить новый адрес в options в выборе дефолтного адреса
 
-    addressContainer.innerHTML += `<div class="customer-address" id='address-${address?.id || ''}'>
+    addressContainer.innerHTML += `<div class="customer-address" id="address-${address?.id || ''}">
       <div class="input-container">
         <label class="input-label">Country:</label>
-        <select class="address-input" id='select-${address?.id || ''}' disabled>
+        <select class="address-input" id="select-${address?.id || ''}" disabled>
           <option>${selectCountry.value || ''}</option>
           <option>${selectCountry.value === 'US' ? 'CA' : 'US'}</option>
         <select>
       </div>
       <div class="input-container">
         <label class="input-label">City:</label>
-        <input class="address-input" id='city-${address?.id || ''}' type="text" value="${
+        <input class="address-input" id="city-${address?.id || ''}" type="text" value="${
           inputCity.value || ''
         }" disabled />
       </div>
       <div class="input-container">
         <label class="input-label">Street:</label>
-        <input class="address-input" id='street-${address?.id || ''}' type="text" value="${
+        <input class="address-input" id="street-${address?.id || ''}" type="text" value="${
           inputStreet.value || ''
         }" disabled />
       </div>
       <div class="input-container">
         <label class="input-label">ZIP Code:</label>
-        <input class="address-input" id='zip-${address?.id || ''}' type="text" value="${
+        <input class="address-input" id="zip-${address?.id || ''}" type="text" value="${
           inputZip.value || ''
         }" disabled />
       </div>
-      <div class='customer-button-container'>
-        <button class='customer-personal-button edit-button-address' id='edit-${address?.id || ''}'>Edit</button>
-        <button class='customer-personal-button delete-button-address' id='delete-${address?.id || ''}'>Delete</button>
+      <div class="customer-button-container">
+        <button class="customer-personal-button edit-button-address" id="edit-${address?.id || ''}">Edit</button>
+        <button class="customer-personal-button delete-button-address" id="delete-${address?.id || ''}">Delete</button>
       </div>
     </div>`;
 
@@ -247,59 +257,59 @@ class MyProfilePage extends Page {
           );
 
           customerDiv.innerHTML = `
-          <div class='customer-personal-data customer-container-item'>
-            <div class='input-container'>
-              <label class='input-label'>Name:</label>
-              <input class='transparent-input personal-input' type='text' value='${
+          <form class="customer-personal-data customer-container-item" novalidate="novalidate">
+            <div class="input-container">
+              <label class="input-label">Name:</label>
+              <input class="transparent-input personal-input" type="text" value="${
                 response.body.firstName || ''
-              }' disabled />
+              }" disabled />
             </div>
-            <div class='input-container'>
-              <label class='input-label'>Last Name:</label>
-              <input class='transparent-input personal-input' type='text' value='${
+            <div class="input-container">
+              <label class="input-label">Last Name:</label>
+              <input class="transparent-input personal-input" type="text" value="${
                 response.body.lastName || ''
-              }' disabled />
+              }" disabled />
             </div>
-            <div class='input-container'>
-              <label class='input-label'>Birth Date:</label>
-              <input class='transparent-input personal-input' type='date' value='${
+            <div class="input-container">
+              <label class="input-label">Birth Date:</label>
+              <input class="transparent-input personal-input" type="date" value="${
                 response.body.dateOfBirth || ''
-              }' disabled />
+              }" disabled />
             </div>
-            <div class='input-container'>
-              <label class='input-label'>E-MAIL:</label>
-              <input class='transparent-input personal-input' type='email' value='${
+            <div class="input-container">
+              <label class="input-label">E-MAIL:</label>
+              <input class="transparent-input personal-input" type="email" value="${
                 response.body.email || ''
-              }' disabled />
+              }" disabled />
             </div>
-            <button class='customer-personal-button' id='edit-personal-info'>Edit</button>
-          </div>
+            <button class="customer-personal-button" id="edit-personal-info">Edit</button>
+          </form>
 
-          <div class='customer-password customer-container-item'>
-            <div class='input-container'>
-              <label class='input-label'>Current Password:</label>
-              <input class='' id='input-current-password'  type='password' disabled />
-              <span class='icon icon-lock' id='button-current-password'><i class='bx bxs-lock-alt'></i></span>
+          <form class="customer-password customer-container-item" novalidate="novalidate">
+            <div class="input-container">
+              <label class="input-label">Current Password:</label>
+              <input class="" id="input-current-password"  type="password" disabled />
+              <span class="icon icon-lock" id="button-current-password"><i class="bx bxs-lock-alt"></i></span>
             </div>
-            <div class='input-container'>
-              <label class='input-label'>New Password:</label>
-              <input class='' id='input-new-password' type='password' disabled />
-              <span class='icon icon-lock' id='button-new-password'><i class='bx bxs-lock-alt'></i></span>
+            <div class="input-container">
+              <label class="input-label">New Password:</label>
+              <input class="" id="input-new-password" type="password" disabled />
+              <span class="icon icon-lock" id="button-new-password"><i class="bx bxs-lock-alt"></i></span>
             </div>
-            <div class='input-container'>
-              <label class='input-label'>Confirm New Password:</label>
-              <input class='' id='input-confirm-new-password' type='password' disabled />
-              <span class='icon icon-lock' id='button-confirm-new-password'><i class='bx bxs-lock-alt'></i></span>
+            <div class="input-container">
+              <label class="input-label">Confirm New Password:</label>
+              <input class="" id="input-confirm-new-password" type="password" disabled />
+              <span class="icon icon-lock" id="button-confirm-new-password"><i class="bx bxs-lock-alt"></i></span>
             </div>
-            <button class='customer-personal-button' id='edit-password-info'>Edit</button>
-         </div>
+            <button class="customer-personal-button" id="edit-password-info">Edit</button>
+         </form>
 
 
-      <div class='customer-default-address customer-container-item'>
-        <div class='input-container'>
-          <label class='input-label'>Default Shipping Address</label>
-          <select class='customer-address-select' id='default-shipping' disabled>
-            <option>
+      <form class="customer-default-address customer-container-item" novalidate="novalidate">
+        <div class="input-container">
+          <label class="input-label">Default Shipping Address</label>
+          <select class="customer-address-select" id="default-shipping" disabled>
+            <option id="option-shipping-${defaultShippingAddress?.id || '--'}">
               ${defaultShippingAddress?.country || '--'}, 
               ${defaultShippingAddress?.city || '--'}, 
               ${defaultShippingAddress?.streetName || '--'}, 
@@ -309,7 +319,7 @@ class MyProfilePage extends Page {
               ?.filter((address) => address.id !== defaultShippingAddress?.id)
               ?.map(
                 (address) => `
-                  <option>
+                  <option id="option-shipping-${address.id || '--'}">
                     ${address.country || '--'}, 
                     ${address.city || '--'}, 
                     ${address.streetName || '--'}, 
@@ -321,10 +331,10 @@ class MyProfilePage extends Page {
           </select>
         </div>
 
-        <div class='input-container'>
-          <label class='input-label'>Default Billing Address</label>
-          <select class='customer-address-select' id='default-billing' disabled>
-          <option>
+        <div class="input-container">
+          <label class="input-label">Default Billing Address</label>
+          <select class="customer-address-select" id="default-billing" disabled>
+          <option id="option-billing-${defaultBillingAddress?.id || '--'}">
             ${defaultBillingAddress?.country || '--'}, 
             ${defaultBillingAddress?.city || '--'}, 
             ${defaultBillingAddress?.streetName || '--'}, 
@@ -334,7 +344,7 @@ class MyProfilePage extends Page {
             ?.filter((address) => address.id !== defaultBillingAddress?.id)
             ?.map(
               (address) => `
-                <option>
+                <option id="option-billing-${address.id || '--'}">
                   ${address.country || '--'}, 
                   ${address.city || '--'}, 
                   ${address.streetName || '--'}, 
@@ -345,18 +355,43 @@ class MyProfilePage extends Page {
             ?.join('')}
           </select>
         </div>
+        <button class="customer-personal-button" id="edit-default-addresses">Edit</button>
+      </form>
 
-        <button class='customer-personal-button' id='edit-default-addresses'>Edit</button>
+      <div class="new-address">
+        <div class="customer-address">
+          <div class="input-container">
+            <label class="input-label">Country:</label>
+            <select class="address-input" id='create-country'>
+              <option>US</option>
+              <option>CA</option>
+            </select>
+</div>
+        <div class="input-container">
+          <label class="input-label">City:</label>
+          <input class="address-input" id='create-city' placeholder="City" />
+        </div>
+        <div class="input-container">
+          <label class="input-label">Street:</label>
+          <input class="address-input" id='create-street' placeholder="Street" />
+        </div>
+        <div class="input-container">
+          <label class="input-label">ZIP Code:</label>
+          <input class="address-input" id='create-zip' placeholder="ZIP Code" />
+        </div>
+        <button class="customer-personal-button save-button" id='create-address'>Add</button>
       </div>
+    </div>
+   </div>
 
-        <div class="existing-addresses" id="existing-addresses">${response.body?.addresses
-          ?.filter((address) => address.id !== defaultShippingAddress?.id && address.id !== defaultBillingAddress?.id)
-          ?.map(
-            (address) => `
-            <div class="customer-address" id='address-${address.id || ''}'>
+
+          <div class="existing-addresses" id = "existing-addresses" > ${response.body?.addresses
+            ?.map(
+              (address) => `
+            <form class="customer-address" id="address-${address.id || ''}">
               <div class="input-container">
                 <label class="input-label">Country:</label>
-                <select class="address-input" id='select-${address.id || ''}' disabled>
+                <select class="address-input" id="select-${address.id || ''}" disabled>
                   <option>${address.country || ''}</option>
                   <option>${address.country === 'US' ? 'CA' : 'US'}</option>
                 <select>
@@ -379,46 +414,22 @@ class MyProfilePage extends Page {
                   address.postalCode || ''
                 }" disabled />
               </div>
-              <div class='customer-button-container'>
-                <button class='customer-personal-button edit-button-address' id='edit-${address.id || ''}'>Edit</button>
-                <button class='customer-personal-button delete-button-address' id='delete-${
+              <div class="customer-button-container">
+                <button class="customer-personal-button edit-button-address" id="edit-${address.id || ''}">Edit</button>
+                <button class="customer-personal-button delete-button-address" id="delete-${
                   address.id || ''
-                }'>Delete</button>
+                }">Delete</button>
               </div>
-            </div>`,
-          )
-          ?.join('')}
-          </div>
+            </form>`,
+            )
+            ?.join('')}
+          </div>`;
 
-          <div class="new-address">
-            <div class="customer-address">
-            <div class="input-container">
-              <label class="input-label">Country:</label>
-              <select class="address-input" id='create-country'>
-                <option>US</option>
-                <option>CA</option>
-              <select>
-            </div>
-              <div class="input-container">
-                <label class="input-label">City:</label>
-                <input class="address-input" id='create-city' placeholder="City" />
-              </div>
-              <div class="input-container">
-                <label class="input-label">Street:</label>
-                <input class="address-input" id='create-street' placeholder="Street" />
-              </div>
-              <div class="input-container">
-                <label class="input-label">ZIP Code:</label>
-                <input class="address-input" id='create-zip' placeholder="ZIP Code" />
-              </div>
-              <button class="customer-personal-button save-button" id='create-address'>Add</button>
-            </div>
-          </div>
-         </div>`;
           // eslint-disable-next-line no-console
           console.log(response.body);
 
           customerDiv.addEventListener('click', (event) => {
+            event.preventDefault();
             const target = event.target as HTMLButtonElement;
             if (target.id === 'edit-personal-info') {
               this.toggleEditModePersonalInfo(target);

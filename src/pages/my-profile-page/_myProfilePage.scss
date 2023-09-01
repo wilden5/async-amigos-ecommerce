@@ -6,6 +6,10 @@
   font-size: 1.6rem;
 }
 
+.customer-container {
+  padding-top: 3rem;
+}
+
 .customer-personal-data {
   padding: 5rem 0 3rem 0;
 }
@@ -41,7 +45,6 @@
   line-height: 2rem;
 }
 
-
 .customer-address-table {
   border-collapse: separate;
   border-spacing: 1rem;
@@ -63,7 +66,7 @@
 
 @media (max-width: 480px) {
   .customer-address-table {
-    border-spacing: .5rem;
+    border-spacing: 0.5rem;
   }
 }
 
