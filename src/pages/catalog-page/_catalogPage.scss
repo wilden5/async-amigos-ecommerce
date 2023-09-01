@@ -197,6 +197,21 @@ input::-webkit-inner-spin-button {
   font-size: 1.5rem;
 }
 
+.search-container {
+  display: flex;
+  align-items: center;
+  max-width: 30rem;
+
+  input[type="text"] {
+    flex: 1;
+    padding: 0.9rem;
+    border: 0.1rem solid #ccc;
+    border-radius: 0.5rem;
+    font-size: 1.6rem;
+    outline: none;
+  }
+}
+
 @media screen and (max-width: 700px) {
  .filters-wrapper {
    flex-direction: column;
