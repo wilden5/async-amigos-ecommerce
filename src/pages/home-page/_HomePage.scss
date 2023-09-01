@@ -1,61 +1,58 @@
-.home {
-  .page-title {
-    display: block;
-    padding: 10px 0;
-    border-bottom: 1px solid $textColor;
-    font-size: 2.2rem;
-    color: $textColor;
+.home-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.home-page-title {
+  padding: 1rem;
+  margin-bottom: 2rem;
+  margin-top: 1rem;
+  font-size: 3.5rem;
+  color: transparent;
+  background-image: linear-gradient(45deg, #ff4500, #ffdb58, #ff4500);
+  -webkit-background-clip: text;
+  animation: burningText 2s ease-in-out infinite alternate;
+}
+
+.explore-button {
+  display: inline-block;
+  padding: 1rem 2rem;
+  font-size: 1.8rem;
+  text-decoration: none;
+  color: #fff;
+  background-color: #007bff;
+  border: 0.2rem solid #007bff;
+  border-radius: 0.5rem;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+.explore-button:hover {
+  background-color: transparent;
+  color: #007bff;
+}
+
+.special-offers {
+  display: flex;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+}
+
+@keyframes pulseAnimation {
+  0%, 100% {
+    transform: scale(1);
   }
-
-  &__container {
-    max-width: $breakPoint-1;
-    margin: 0 auto;
-    padding: 0 20px;
-
-    & .navigation-bar__list {
-      @media (min-width: $breakPoint-1) {
-        position: relative;
-        display: flex;
-        flex-direction: column;
-        align-items: flex-start;
-      }
-      @media (max-width: $breakPoint-2) {
-        z-index: 0;
-        align-items: flex-start;
-        display: block;
-        padding-bottom: 5px;
-        font-size: 1.5rem;
-      }
-    }
-
-    .aside-bar {
-      width: 160px;
-      height: 410px;
-      padding: 10px 15px;
-      border-right: 1px solid $textColor;
-      font-size: 1.8rem;
-
-      &__list {
-        display: flex;
-        flex-direction: column;
-        gap: 20px;
-      }
-
-      &__item {
-        &:hover {
-          transform: scale(1.05);
-          transition: 0.4s;
-        }
-
-        & a {
-          color: $textColor;
-          transition: color 0.4s ease-in-out, box-shadow 0.4s ease-in-out;
-
-          &:hover {
-            color: $textColorOnHover;
-          }
-        }
-      }
-    }
+  50% {
+    transform: scale(1.1);
   }
 }
+
+@keyframes burningText {
+  0% {
+    text-shadow: none;
+  }
+  100% {
+    text-shadow: 0 0 0.5rem #ff4500, 0 0 1rem #ffdb58, 0 0 1.5rem #ff4500, 0 0 2rem #ffdb58, 0 0 2.5rem #ff4500, 0 0 3rem #ffdb58, 0 0 3.5rem #ff4500;
+  }
+}
+

@@ -23,6 +23,8 @@ class Constants {
 
   static TOAST_COLOR_GREEN = '#00FF00';
 
+  static TOAST_COLOR_DARK_GREEN = '#214121';
+
   static BACKEND_GENERIC_VALIDATION_MESSAGE_REGISTRATION = 'field must be filled!';
 
   static BACKEND_FIRST_NAME_VALIDATION_MESSAGE = 'First name field cannot have any digits or special symbols!';
@@ -99,9 +101,15 @@ class Constants {
 
   static FETCH_CATALOG_ERROR = 'Something went wrong during receiving products catalog, please try visit us later!';
 
+  static FETCH_PRODUCT_ERROR = 'Something went wrong during receiving specific product, please try visit us later!';
+
+  static FETCH_PRODUCT_TYPES_ERROR = 'Something went wrong during receiving product types!';
+
   static PRODUCT_DESCRIPTION_NOT_FOUND = 'Product description was not found :(';
 
-  static IMAGE_NOT_FOUND_LABEL = 'image-not-found';
+  static PRODUCT_DETAILS_CLASSNAME = 'product-details-container';
+
+  static PRODUCT_CONTENT_CLASSNAME = 'product-details-content';
 
   static PRODUCT_ITEM_CLASSNAME = 'product-item';
 
@@ -109,16 +117,34 @@ class Constants {
 
   static PRODUCT_TITLE_CLASSNAME = 'product-title';
 
+  static PRODUCT_TEXT_CLASSNAME = 'product-text';
+
   static PRODUCT_DESCRIPTION_CLASSNAME = 'product-description';
 
   static PRODUCT_BUTTON_CLASSNAME = 'order-me';
 
   static PRICE_CONTAINER_CLASSNAME = 'price-container';
 
+  static IMAGE_NOT_FOUND_LABEL = 'image-not-found';
+
   static IMAGE_NOT_FOUND_MOCK_IMAGE =
     'https://static.vecteezy.com/system/resources/previews/005/337/799/original/icon-image-not-found-free-vector.jpg';
 
+  static MODAL_WINDOW_CLASSNAME = 'modal myModal';
+
+  static MODAL_WRAPPER_CLASSNAME = 'modal__wrapper';
+
+  static MODAL_CONTENT_CLASSNAME = 'modal__content';
+
+  static MODAL_IMAGE_CLASSNAME = 'modal__image';
+
   static CART_BUTTON_TEXT = 'ADD TO CART';
+
+  static PRICE_INVALID_INPUT_ERROR_MESSAGE = 'Set correct values to the price inputs!';
+
+  static LAUNCH_DATE_CLASSNAME = 'type-launch-date';
+
+  static BRAND_CLASSNAME = 'brand-select';
 }
 
 export default Constants;

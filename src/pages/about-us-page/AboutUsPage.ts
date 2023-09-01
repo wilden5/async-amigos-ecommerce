@@ -3,7 +3,9 @@ import { ProjectPages } from '../../types/Enums';
 
 class AboutUsPage extends Page {
   private ABOUT_US_PAGE_MARKUP = `
-     <h1 class='page-title'>About Us Page</h1>`;
+    <div class="about-us__container">
+      <h1 class='page-title'>About Us Page</h1>
+    </div>`;
 
   constructor() {
     super(ProjectPages.AboutUs);
