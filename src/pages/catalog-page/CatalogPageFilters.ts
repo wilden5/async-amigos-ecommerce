@@ -185,6 +185,25 @@ class CatalogPageFilters {
     });
   }
 
+  static performFullTextSearch(container: HTMLElement): void {
+    const searchInput = container.querySelector('.search-field') as HTMLInputElement;
+
+    searchInput.addEventListener('input', () => {
+      const productContainer = container.querySelector('.product-container') as HTMLElement;
+      productContainer.innerHTML = '';
+      new ProductProjectionSearch()
+        .searchProductCatalog(undefined, undefined, searchInput.value.replace(/\s+/g, ''))
+        .then((queriedProductList: ProductProjectionPagedSearchResponse) => {
+          queriedProductList.results.forEach((product: ProductProjection) => {
+            ProductCardBuilder.buildProductCard(product, productContainer);
+          });
+        })
+        .catch((error: Error): void => {
+          PromiseHelpers.catchBlockHelper(error, Constants.FETCH_CATALOG_ERROR);
+        });
+    });
+  }
+
   static initAllFilters(container: HTMLElement, callback: () => void): void {
     CatalogPageFilters.populateProductTypesSelect(container);
     CatalogPageFilters.populateProductAttributeSelect(container, 3, Constants.LAUNCH_DATE_CLASSNAME);
@@ -194,6 +213,7 @@ class CatalogPageFilters {
     CatalogPageFilters.performFilterBySpecificProductAttribute(container, 3, Constants.LAUNCH_DATE_CLASSNAME);
     CatalogPageFilters.performFilterBySpecificProductAttribute(container, 0, Constants.BRAND_CLASSNAME);
     CatalogPageFilters.performProductByPriceRange(container);
+    CatalogPageFilters.performFullTextSearch(container);
   }
 }
 

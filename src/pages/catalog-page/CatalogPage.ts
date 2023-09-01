@@ -57,7 +57,7 @@ class CatalogPage extends Page {
             </select>
            </div>
            <div class="search-container">
-              <input type="text" placeholder="Search...">
+              <input class='search-field' type="text" placeholder="Search...">
            </div>
          </div>
       <div class='product-container'></div>

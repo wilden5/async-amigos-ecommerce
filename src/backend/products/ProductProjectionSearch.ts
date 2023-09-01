@@ -14,6 +14,7 @@ class ProductProjectionSearch {
   public async searchProductCatalog(
     filterQuery?: string,
     sort?: string,
+    searchText?: string,
     limit = 50,
   ): Promise<ProductProjectionPagedSearchResponse> {
     try {
@@ -21,7 +22,7 @@ class ProductProjectionSearch {
         .productProjections()
         .search()
         .get({
-          queryArgs: { 'filter.query': filterQuery, 'sort': sort, 'limit': limit },
+          queryArgs: { 'filter.query': filterQuery, 'sort': sort, 'text.en-us': searchText, 'limit': limit },
         })
         .execute();
       return response.body;
