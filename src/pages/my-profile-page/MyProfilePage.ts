@@ -208,7 +208,7 @@ class MyProfilePage extends Page {
         <select class="address-input" id="select-${address?.id || ''}" disabled>
           <option>${selectCountry.value || ''}</option>
           <option>${selectCountry.value === 'US' ? 'CA' : 'US'}</option>
-        <select>
+        </select>
       </div>
       <div class="input-container">
         <label class="input-label">City:</label>
@@ -358,15 +358,14 @@ class MyProfilePage extends Page {
         <button class="customer-personal-button" id="edit-default-addresses">Edit</button>
       </form>
 
-      <div class="new-address">
-        <div class="customer-address">
+      <form class="new-address customer-address">
           <div class="input-container">
             <label class="input-label">Country:</label>
             <select class="address-input" id='create-country'>
               <option>US</option>
               <option>CA</option>
             </select>
-</div>
+          </div>
         <div class="input-container">
           <label class="input-label">City:</label>
           <input class="address-input" id='create-city' placeholder="City" />
@@ -380,10 +379,9 @@ class MyProfilePage extends Page {
           <input class="address-input" id='create-zip' placeholder="ZIP Code" />
         </div>
         <button class="customer-personal-button save-button" id='create-address'>Add</button>
-      </div>
+      </form>
     </div>
    </div>
-
 
           <div class="existing-addresses" id = "existing-addresses" > ${response.body?.addresses
             ?.map(
@@ -394,7 +392,7 @@ class MyProfilePage extends Page {
                 <select class="address-input" id="select-${address.id || ''}" disabled>
                   <option>${address.country || ''}</option>
                   <option>${address.country === 'US' ? 'CA' : 'US'}</option>
-                <select>
+                </select>
               </div>
               <div class="input-container">
                 <label class="input-label">City:</label>
