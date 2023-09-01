@@ -7,11 +7,13 @@ import PromiseHelpers from '../../utils/PromiseHelpers';
 import CatalogPageFilters from './CatalogPageFilters';
 import ProductCardBuilder from './ProductCardBuilder';
 import CatalogPageSort from './CatalogPageSort';
+import Breadcrumbs from '../../components/breadcrumbs/Breadcrumbs';
 
 class CatalogPage extends Page {
   private CATALOG_PAGE_MARKUP = `
     <div class="catalog__container">
       <h1 class='page-title'>Search results:</h1>
+      <div class='breadcrumb'></div>
       <div class='catalog-filters'>
       <div class='filters-wrapper'>
         <div class="price-filter filter">
@@ -106,6 +108,7 @@ class CatalogPage extends Page {
     CatalogPageFilters.initAllFilters(this.CONTAINER, this.fillProductCatalog);
     CatalogPageSort.initSort(this.CONTAINER);
     this.onResetFiltersButtonClick();
+    Breadcrumbs.buildBreadcrumbs(this.CONTAINER);
     return this.CONTAINER;
   }
 }
