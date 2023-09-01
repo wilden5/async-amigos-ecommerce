@@ -56,7 +56,10 @@ class CatalogPage extends Page {
               <option class='sort-option' value="name.en-us desc">Name (alphabetically reversed)</option>
             </select>
            </div>
-  </div>
+           <div class="search-container">
+              <input class='search-field' type="text" placeholder="Search...">
+           </div>
+         </div>
       <div class='product-container'></div>
     </div>`;
 
