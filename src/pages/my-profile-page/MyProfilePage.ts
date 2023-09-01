@@ -12,6 +12,10 @@ class MyProfilePage extends Page {
 
   inputPasswordInfo: string[] = [];
 
+  selectAddressesInfo: string[] = [];
+
+  selectAddressInfo: string[] = [];
+
   private MY_PROFILE_PAGE_MARKUP = `
   <h1 class='page-title'>My Profile Page</h1>
   <div class='customer-container'></div>
@@ -99,6 +103,133 @@ class MyProfilePage extends Page {
     }
   }
 
+  private toggleEditModeDefaultAddresses(button: HTMLButtonElement): void {
+    const selectShippingAddress = this.CONTAINER.querySelector('#default-shipping') as HTMLSelectElement;
+    const selectBillingAddress = this.CONTAINER.querySelector('#default-billing') as HTMLSelectElement;
+
+    const isEditing = button.textContent === 'Edit';
+    const originalButton = button;
+
+    const selectAddresses = [selectShippingAddress, selectBillingAddress];
+
+    if (isEditing) {
+      selectAddresses.forEach((address) => address.removeAttribute('disabled'));
+      originalButton.textContent = 'Save';
+      this.selectAddressesInfo = [];
+    } else {
+      selectAddresses.forEach((address) => {
+        address.setAttribute('disabled', 'disabled');
+        this.selectAddressesInfo.push(address.value);
+      });
+
+      originalButton.textContent = 'Edit';
+      TostifyHelper.showToast('Default address updated successfully', '#000');
+      // eslint-disable-next-line no-console
+      console.log(this.selectAddressesInfo);
+    }
+  }
+
+  private toggleEditModeAddress(button: HTMLButtonElement): void {
+    // eslint-disable-next-line no-console
+    console.log(button.id);
+
+    const id = button.id.split('-')[1];
+
+    const isEditing = button.textContent === 'Edit';
+    const originalButton = button;
+
+    const selectCountry = this.CONTAINER.querySelector(`#select-${id}`) as HTMLSelectElement;
+    const inputCity = this.CONTAINER.querySelector(`#city-${id}`) as HTMLInputElement;
+    const inputStreet = this.CONTAINER.querySelector(`#street-${id}`) as HTMLInputElement;
+    const inputZip = this.CONTAINER.querySelector(`#zip-${id}`) as HTMLInputElement;
+
+    const fullAddress = [selectCountry, inputCity, inputStreet, inputZip];
+
+    // eslint-disable-next-line no-console
+    console.log(selectCountry.value, inputCity.value, inputStreet.value, inputZip.value);
+
+    if (isEditing) {
+      fullAddress.forEach((address) => address.removeAttribute('disabled'));
+
+      originalButton.textContent = 'Save';
+      this.selectAddressInfo = [];
+    } else {
+      fullAddress.forEach((address) => {
+        address.setAttribute('disabled', 'disabled');
+        this.selectAddressInfo.push(address.value);
+      });
+
+      originalButton.textContent = 'Edit';
+      TostifyHelper.showToast('Address updated successfully', '#000');
+      // eslint-disable-next-line no-console
+      console.log(this.selectAddressInfo);
+    }
+  }
+
+  private deleteAddress(button: HTMLButtonElement): void {
+    const id = button.id.split('-')[1];
+    const address = this.CONTAINER.querySelector(`#address-${id}`) as HTMLElement;
+
+    if (address) {
+      address.remove();
+      TostifyHelper.showToast('Address deleted successfully', '#000');
+    }
+  }
+
+  private createAddress(): void {
+    const selectCountry = this.CONTAINER.querySelector('#create-country') as HTMLSelectElement;
+    const inputCity = this.CONTAINER.querySelector('#create-city') as HTMLInputElement;
+    const inputStreet = this.CONTAINER.querySelector('#create-street') as HTMLInputElement;
+    const inputZip = this.CONTAINER.querySelector('#create-zip') as HTMLInputElement;
+
+    // const addressInputs = [inputCity, inputStreet, inputZip];
+
+    const addressContainer = this.CONTAINER.querySelector('#existing-addresses') as HTMLDivElement;
+
+    const address = this.customer?.addresses[0];
+
+    // после того как получу ответ при создании запроса, нужно будет отфильтровать ID нового адреса и добавить в разметку
+    // актуальный ID нового адреса
+    // не забыть добавить новый адрес в options в выборе дефолтного адреса
+
+    addressContainer.innerHTML += `<div class="customer-address" id='address-${address?.id || ''}'>
+      <div class="input-container">
+        <label class="input-label">Country:</label>
+        <select class="address-input" id='select-${address?.id || ''}' disabled>
+          <option>${selectCountry.value || ''}</option>
+          <option>${selectCountry.value === 'US' ? 'CA' : 'US'}</option>
+        <select>
+      </div>
+      <div class="input-container">
+        <label class="input-label">City:</label>
+        <input class="address-input" id='city-${address?.id || ''}' type="text" value="${
+          inputCity.value || ''
+        }" disabled />
+      </div>
+      <div class="input-container">
+        <label class="input-label">Street:</label>
+        <input class="address-input" id='street-${address?.id || ''}' type="text" value="${
+          inputStreet.value || ''
+        }" disabled />
+      </div>
+      <div class="input-container">
+        <label class="input-label">ZIP Code:</label>
+        <input class="address-input" id='zip-${address?.id || ''}' type="text" value="${
+          inputZip.value || ''
+        }" disabled />
+      </div>
+      <div class='customer-button-container'>
+        <button class='customer-personal-button edit-button-address' id='edit-${address?.id || ''}'>Edit</button>
+        <button class='customer-personal-button delete-button-address' id='delete-${address?.id || ''}'>Delete</button>
+      </div>
+    </div>`;
+
+    inputCity.value = '';
+    inputStreet.value = '';
+    inputZip.value = '';
+    selectCountry.selectedIndex = 0;
+  }
+
   private updateCustomerInfo(customerId: string): void {
     const customerInfoGetter = new GetCustomerInfo(customerId);
     customerInfoGetter
@@ -116,7 +247,7 @@ class MyProfilePage extends Page {
           );
 
           customerDiv.innerHTML = `
-          <div class='customer-personal-data'>
+          <div class='customer-personal-data customer-container-item'>
             <div class='input-container'>
               <label class='input-label'>Name:</label>
               <input class='transparent-input personal-input' type='text' value='${
@@ -144,7 +275,7 @@ class MyProfilePage extends Page {
             <button class='customer-personal-button' id='edit-personal-info'>Edit</button>
           </div>
 
-          <div class='customer-password'>
+          <div class='customer-password customer-container-item'>
             <div class='input-container'>
               <label class='input-label'>Current Password:</label>
               <input class='' id='input-current-password'  type='password' disabled />
@@ -163,9 +294,11 @@ class MyProfilePage extends Page {
             <button class='customer-personal-button' id='edit-password-info'>Edit</button>
          </div>
 
-          <div class='input-container'>
+
+      <div class='customer-default-address customer-container-item'>
+        <div class='input-container'>
           <label class='input-label'>Default Shipping Address</label>
-          <select class='customer-address-select' disabled>
+          <select class='customer-address-select' id='default-shipping' disabled>
             <option>
               ${defaultShippingAddress?.country || '--'}, 
               ${defaultShippingAddress?.city || '--'}, 
@@ -190,7 +323,7 @@ class MyProfilePage extends Page {
 
         <div class='input-container'>
           <label class='input-label'>Default Billing Address</label>
-          <select class='customer-address-select' disabled>
+          <select class='customer-address-select' id='default-billing' disabled>
           <option>
             ${defaultBillingAddress?.country || '--'}, 
             ${defaultBillingAddress?.city || '--'}, 
@@ -213,28 +346,75 @@ class MyProfilePage extends Page {
           </select>
         </div>
 
-          <table class='customer-address-table'>
-          <tr class='customer-description-row'>
-            <td>Country</td>
-            <td>City</td>
-            <td>Street</td>
-            <td>ZIP Code</td>
-          </tr>
-          ${response.body?.addresses
-            ?.filter((address) => address.id !== defaultShippingAddress?.id && address.id !== defaultBillingAddress?.id)
-            ?.map(
-              (address) => `
-              <tr class='customer-address-row'>
-                <td class='customer-address-item'>${address.country || ''}</td>
-                <td class='customer-address-item'>${address.city || ''}</td>
-                <td class='customer-address-item'>${address.streetName || ''}</td>
-                <td class='customer-address-item'>${address.postalCode || ''}</td>
-              </tr>
-            `,
-            )
-            ?.join('')}
-        </table>
-          `;
+        <button class='customer-personal-button' id='edit-default-addresses'>Edit</button>
+      </div>
+
+        <div class="existing-addresses" id="existing-addresses">${response.body?.addresses
+          ?.filter((address) => address.id !== defaultShippingAddress?.id && address.id !== defaultBillingAddress?.id)
+          ?.map(
+            (address) => `
+            <div class="customer-address" id='address-${address.id || ''}'>
+              <div class="input-container">
+                <label class="input-label">Country:</label>
+                <select class="address-input" id='select-${address.id || ''}' disabled>
+                  <option>${address.country || ''}</option>
+                  <option>${address.country === 'US' ? 'CA' : 'US'}</option>
+                <select>
+              </div>
+              <div class="input-container">
+                <label class="input-label">City:</label>
+                <input class="address-input" id='city-${address.id || ''}' type="text" value="${
+                  address.city || ''
+                }" disabled />
+              </div>
+              <div class="input-container">
+                <label class="input-label">Street:</label>
+                <input class="address-input" id='street-${address.id || ''}' type="text" value="${
+                  address.streetName || ''
+                }" disabled />
+              </div>
+              <div class="input-container">
+                <label class="input-label">ZIP Code:</label>
+                <input class="address-input" id='zip-${address.id || ''}' type="text" value="${
+                  address.postalCode || ''
+                }" disabled />
+              </div>
+              <div class='customer-button-container'>
+                <button class='customer-personal-button edit-button-address' id='edit-${address.id || ''}'>Edit</button>
+                <button class='customer-personal-button delete-button-address' id='delete-${
+                  address.id || ''
+                }'>Delete</button>
+              </div>
+            </div>`,
+          )
+          ?.join('')}
+          </div>
+
+          <div class="new-address">
+            <div class="customer-address">
+            <div class="input-container">
+              <label class="input-label">Country:</label>
+              <select class="address-input" id='create-country'>
+                <option>US</option>
+                <option>CA</option>
+              <select>
+            </div>
+              <div class="input-container">
+                <label class="input-label">City:</label>
+                <input class="address-input" id='create-city' placeholder="City" />
+              </div>
+              <div class="input-container">
+                <label class="input-label">Street:</label>
+                <input class="address-input" id='create-street' placeholder="Street" />
+              </div>
+              <div class="input-container">
+                <label class="input-label">ZIP Code:</label>
+                <input class="address-input" id='create-zip' placeholder="ZIP Code" />
+              </div>
+              <button class="customer-personal-button save-button" id='create-address'>Add</button>
+            </div>
+          </div>
+         </div>`;
           // eslint-disable-next-line no-console
           console.log(response.body);
 
@@ -245,6 +425,18 @@ class MyProfilePage extends Page {
             }
             if (target.id === 'edit-password-info') {
               this.toggleEditModePassword(target);
+            }
+            if (target.id === 'edit-default-addresses') {
+              this.toggleEditModeDefaultAddresses(target);
+            }
+            if (target.classList.contains('edit-button-address')) {
+              this.toggleEditModeAddress(target);
+            }
+            if (target.classList.contains('delete-button-address')) {
+              this.deleteAddress(target);
+            }
+            if (target.id === 'create-address') {
+              this.createAddress();
             }
           });
         }
