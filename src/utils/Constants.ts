@@ -130,9 +130,13 @@ class Constants {
   static IMAGE_NOT_FOUND_MOCK_IMAGE =
     'https://static.vecteezy.com/system/resources/previews/005/337/799/original/icon-image-not-found-free-vector.jpg';
 
-  static DIALOG_WRAPPER_CLASSNAME = 'dialog-wrapper';
+  static MODAL_WINDOW_CLASSNAME = 'modal myModal';
 
-  static DIALOG_IMAGE_CLASSNAME = 'dialog-image';
+  static MODAL_WRAPPER_CLASSNAME = 'modal__wrapper';
+
+  static MODAL_CONTENT_CLASSNAME = 'modal__content';
+
+  static MODAL_IMAGE_CLASSNAME = 'modal__image';
 
   static CART_BUTTON_TEXT = 'ADD TO CART';
 
