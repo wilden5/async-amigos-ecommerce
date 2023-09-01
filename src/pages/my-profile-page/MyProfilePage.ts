@@ -305,31 +305,30 @@ class MyProfilePage extends Page {
          </form>
 
 
-      <form class="customer-default-address customer-container-item" novalidate="novalidate">
-        <div class="input-container">
-          <label class="input-label">Default Shipping Address</label>
-          <select class="customer-address-select" id="default-shipping" disabled>
-            <option id="option-shipping-${defaultShippingAddress?.id || '--'}">
-              ${defaultShippingAddress?.country || '--'}, 
-              ${defaultShippingAddress?.city || '--'}, 
-              ${defaultShippingAddress?.streetName || '--'}, 
-              ${defaultShippingAddress?.postalCode || '--'}
-            </option>
-            ${response.body?.addresses
-              ?.filter((address) => address.id !== defaultShippingAddress?.id)
-              ?.map(
-                (address) => `
+         <form class="customer-default-address customer-container-item" novalidate="novalidate">
+           <div class="input-container">
+             <label class="input-label">Default Shipping Address</label>
+             <select class="customer-address-select" id="default-shipping" disabled>
+              <option id="option-shipping-${defaultShippingAddress?.id || '--'}">
+                ${defaultShippingAddress?.country || '--'}, 
+                ${defaultShippingAddress?.city || '--'}, 
+                ${defaultShippingAddress?.streetName || '--'}, 
+                ${defaultShippingAddress?.postalCode || '--'}
+              </option>
+              ${response.body?.addresses
+                ?.filter((address) => address.id !== defaultShippingAddress?.id)
+                ?.map(
+                  (address) => `
                   <option id="option-shipping-${address.id || '--'}">
                     ${address.country || '--'}, 
                     ${address.city || '--'}, 
                     ${address.streetName || '--'}, 
                     ${address.postalCode || '--'}
-                  </option>
-                `,
-              )
-              ?.join('')}
-          </select>
-        </div>
+                  </option>`,
+                )
+                ?.join('')}
+              </select>
+            </div>
 
         <div class="input-container">
           <label class="input-label">Default Billing Address</label>
@@ -359,13 +358,13 @@ class MyProfilePage extends Page {
       </form>
 
       <form class="new-address customer-address">
-          <div class="input-container">
-            <label class="input-label">Country:</label>
-            <select class="address-input" id='create-country'>
-              <option>US</option>
-              <option>CA</option>
-            </select>
-          </div>
+        <div class="input-container">
+          <label class="input-label">Country:</label>
+          <select class="address-input" id='create-country'>
+            <option>US</option>
+            <option>CA</option>
+          </select>
+        </div>
         <div class="input-container">
           <label class="input-label">City:</label>
           <input class="address-input" id='create-city' placeholder="City" />
@@ -380,13 +379,10 @@ class MyProfilePage extends Page {
         </div>
         <button class="customer-personal-button save-button" id='create-address'>Add</button>
       </form>
-    </div>
-   </div>
 
-          <div class="existing-addresses" id = "existing-addresses" > ${response.body?.addresses
-            ?.map(
-              (address) => `
-            <form class="customer-address" id="address-${address.id || ''}">
+      <div class="existing-addresses" id = "existing-addresses" > ${response.body?.addresses
+        ?.map(
+          (address) => `<form class="customer-address" id="address-${address.id || ''}">
               <div class="input-container">
                 <label class="input-label">Country:</label>
                 <select class="address-input" id="select-${address.id || ''}" disabled>
@@ -419,9 +415,9 @@ class MyProfilePage extends Page {
                 }">Delete</button>
               </div>
             </form>`,
-            )
-            ?.join('')}
-          </div>`;
+        )
+        ?.join('')}
+      </div>`;
 
           // eslint-disable-next-line no-console
           console.log(response.body);
