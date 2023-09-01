@@ -1,4 +1,9 @@
-import { Product, ProductPagedQueryResponse } from '@commercetools/platform-sdk';
+import {
+  Product,
+  ProductPagedQueryResponse,
+  ProductType,
+  ProductTypePagedQueryResponse,
+} from '@commercetools/platform-sdk';
 import Page from '../../components/templates/Page';
 import { ProjectPages } from '../../types/Enums';
 import QueryProducts from '../../backend/products/QueryProducts';
@@ -8,12 +13,17 @@ import CatalogPageFilters from './CatalogPageFilters';
 import ProductCardBuilder from './ProductCardBuilder';
 import CatalogPageSort from './CatalogPageSort';
 import Breadcrumbs from '../../components/breadcrumbs/Breadcrumbs';
+import DOMHelpers from '../../utils/DOMHelpers';
 
 class CatalogPage extends Page {
   private CATALOG_PAGE_MARKUP = `
     <div class="catalog__container">
       <h1 class='page-title'>Search results:</h1>
       <div class='breadcrumb'></div>
+      <div class='categories-container'>
+        <h2 class='categories-header'>Our Categories:</h2>
+        <div class='categories-links'></div>
+      </div>
       <div class='catalog-filters'>
       <div class='filters-wrapper'>
         <div class="price-filter filter">
@@ -101,6 +111,25 @@ class CatalogPage extends Page {
     });
   }
 
+  private createCategoriesLinks(): void {
+    const categoriesContainer = this.CONTAINER.querySelector('.categories-links') as HTMLSelectElement;
+    new QueryProducts()
+      .queryProductTypes()
+      .then((queriedProductTypes: ProductTypePagedQueryResponse) => {
+        queriedProductTypes.results.forEach((type: ProductType) => {
+          const categoryLink = DOMHelpers.createElement(
+            'a',
+            { className: 'category-link', textContent: type.name },
+            categoriesContainer,
+          ) as HTMLAnchorElement;
+          categoryLink.href = `#${type.id}`;
+        });
+      })
+      .catch((error: Error): void => {
+        PromiseHelpers.catchBlockHelper(error, Constants.FETCH_PRODUCT_TYPES_ERROR);
+      });
+  }
+
   public renderPage(): HTMLElement {
     this.CONTAINER.innerHTML = this.CATALOG_PAGE_MARKUP;
     this.fillProductCatalog();
@@ -109,6 +138,7 @@ class CatalogPage extends Page {
     CatalogPageSort.initSort(this.CONTAINER);
     this.onResetFiltersButtonClick();
     Breadcrumbs.buildBreadcrumbs(this.CONTAINER);
+    this.createCategoriesLinks();
     return this.CONTAINER;
   }
 }
