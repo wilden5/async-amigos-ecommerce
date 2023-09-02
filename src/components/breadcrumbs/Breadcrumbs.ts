@@ -51,14 +51,16 @@ class Breadcrumbs {
 
   static setCatalogBreadcrumb(container: HTMLElement): void {
     Breadcrumbs.clearBreadcrumbs();
-    Breadcrumbs.addBreadcrumb('Catalog', '#catalog', 0);
+    Breadcrumbs.addBreadcrumb('Home', '#', 0);
+    Breadcrumbs.addBreadcrumb('Catalog', '#catalog', 1);
     Breadcrumbs.buildBreadcrumbs(container);
   }
 
   static setCategoryBreadcrumb(container: HTMLElement, categoryLabel: string, categoryUrl: string): void {
-    Breadcrumbs.removeBreadcrumbsAfterLevel(0);
-    Breadcrumbs.addBreadcrumb('Catalog', '#catalog', 0);
-    Breadcrumbs.addBreadcrumb(categoryLabel, categoryUrl, 1);
+    Breadcrumbs.removeBreadcrumbsAfterLevel(1);
+    Breadcrumbs.addBreadcrumb('Home', '#', 0);
+    Breadcrumbs.addBreadcrumb('Catalog', '#catalog', 1);
+    Breadcrumbs.addBreadcrumb(categoryLabel, categoryUrl, 2);
     Breadcrumbs.buildBreadcrumbs(container);
   }
 
@@ -69,10 +71,11 @@ class Breadcrumbs {
     productLabel: string,
     productUrl: string,
   ): void {
-    Breadcrumbs.removeBreadcrumbsAfterLevel(1);
-    Breadcrumbs.addBreadcrumb('Catalog', '#catalog', 0);
-    Breadcrumbs.addBreadcrumb(categoryLabel, categoryUrl, 1);
-    Breadcrumbs.addBreadcrumb(productLabel, productUrl, 2);
+    Breadcrumbs.removeBreadcrumbsAfterLevel(2);
+    Breadcrumbs.addBreadcrumb('Home', '#', 0);
+    Breadcrumbs.addBreadcrumb('Catalog', '#catalog', 1);
+    Breadcrumbs.addBreadcrumb(categoryLabel, categoryUrl, 2);
+    Breadcrumbs.addBreadcrumb(productLabel, productUrl, 3);
     Breadcrumbs.buildBreadcrumbs(container);
   }
 }
