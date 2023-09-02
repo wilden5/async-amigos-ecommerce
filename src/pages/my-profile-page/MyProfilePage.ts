@@ -2,7 +2,7 @@ import { Customer } from '@commercetools/platform-sdk';
 import Page from '../../components/templates/Page';
 import { ProjectPages } from '../../types/Enums';
 import { GetCustomerInfo } from '../../backend/customer/getCustomer';
-// import { UpdateCustomerInfo } from '../../backend/customer/updateCustomer';
+import { UpdateCustomerInfo } from '../../backend/customer/updateCustomer';
 import TostifyHelper from '../../utils/TostifyHelper';
 import Constants from '../../utils/Constants';
 
@@ -51,23 +51,22 @@ class MyProfilePage extends Page {
 
         this.inputPersonalInfo?.push((input as HTMLInputElement).value);
       });
-      // const updateCustomerInfo = new UpdateCustomerInfo(this.getUserId());
-      // const [firstName, lastName, dateOfBirth, email] = this.inputPersonalInfo;
-      // const version = this.customer?.version || 0;
+      const updateCustomerInfo = new UpdateCustomerInfo(this.getUserId());
+      const [firstName, lastName, dateOfBirth, email] = this.inputPersonalInfo;
+      const version = this.customer?.version || 0;
 
-      // updateCustomerInfo
-      //   .updateCustomerInfo(firstName, lastName, dateOfBirth, email, version)
-      //   .then((response) => {
-      //     this.customer = response.body;
-      //     // eslint-disable-next-line no-console
-      //     console.log(this.customer);
-
-      //     TostifyHelper.showToast('Updating personal information successfully', Constants.TOAST_COLOR_GREEN);
-      //   })
-      //   .catch((err) => {
-      //     TostifyHelper.showToast('Updating personal information failed', Constants.TOAST_COLOR_GREEN);
-      //     throw err;
-      //   });
+      updateCustomerInfo
+        .updateCustomerInfo(firstName, lastName, dateOfBirth, email, version)
+        .then((response) => {
+          this.customer = response.body;
+          // eslint-disable-next-line no-console
+          console.log(this.customer);
+          TostifyHelper.showToast('Updating personal information successfully', Constants.TOAST_COLOR_GREEN);
+        })
+        .catch((err) => {
+          TostifyHelper.showToast('Updating personal information failed', Constants.TOAST_COLOR_GREEN);
+          throw err;
+        });
 
       originalButton.textContent = 'Edit';
     }
