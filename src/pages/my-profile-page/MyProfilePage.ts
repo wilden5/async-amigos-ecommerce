@@ -95,14 +95,24 @@ class MyProfilePage extends Page {
       passwordInputs.forEach((input) => {
         input.setAttribute('disabled', 'disabled');
         this.inputPasswordInfo.push(input.value);
-        inputCurrentPassword.value = '';
-        inputNewPassword.value = '';
-        inputConfirmNewPassword.value = '';
       });
+
+      const updateCustomerInfo = new UpdateCustomerInfo(this.getUserId());
+      updateCustomerInfo
+        .changeCustomerPassword(inputCurrentPassword.value, inputNewPassword.value, this.customer?.version || 0)
+        .then((response) => {
+          this.customer = response.body;
+          TostifyHelper.showToast('Updating password successfully', Constants.TOAST_COLOR_GREEN);
+        })
+        .catch((err) => {
+          TostifyHelper.showToast('Updating password failed', Constants.TOAST_COLOR_RED);
+          throw err;
+        });
+
       originalButton.textContent = 'Edit';
-      TostifyHelper.showToast('Password updated successfully', Constants.TOAST_COLOR_GREEN);
-      // eslint-disable-next-line no-console
-      console.log(this.inputPasswordInfo);
+      inputCurrentPassword.value = '';
+      inputNewPassword.value = '';
+      inputConfirmNewPassword.value = '';
     }
   }
 
