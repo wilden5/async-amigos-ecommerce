@@ -1,7 +1,13 @@
+import { ProductProjection } from '@commercetools/platform-sdk';
+import { ProductProjectionPagedSearchResponse } from '@commercetools/platform-sdk/dist/declarations/src/generated/models/product';
 import page from '../../components/templates/Page';
 import { ProjectPages } from '../../types/Enums';
 import Breadcrumbs from '../../components/breadcrumbs/Breadcrumbs';
 import { CategoryNames } from '../../types/Interfaces';
+import ProductProjectionSearch from '../../backend/products/ProductProjectionSearch';
+import ProductCardBuilder from '../catalog-page/ProductCardBuilder';
+import PromiseHelpers from '../../utils/PromiseHelpers';
+import Constants from '../../utils/Constants';
 
 class CategoryPage extends page {
   private readonly CATEGORY_PAGE_ID: string;
@@ -22,11 +28,39 @@ class CategoryPage extends page {
     <div class="category-container">
       <h1 class='page-title'>Category Page</h1>
       <div class='breadcrumb'></div>
+      <div class='product-container'></div>
     </div>`;
 
   constructor(pageId: string) {
     super(ProjectPages.Category);
     this.CATEGORY_PAGE_ID = pageId;
+  }
+
+  private populateCategory(): void {
+    new ProductProjectionSearch()
+      .searchProductCatalog(`productType.id:"${this.CATEGORY_PAGE_ID}"`)
+      .then((queriedProductList: ProductProjectionPagedSearchResponse): void => {
+        const productContainer = this.CONTAINER.querySelector('.product-container') as HTMLElement;
+
+        queriedProductList.results.forEach((product: ProductProjection): void => {
+          ProductCardBuilder.buildProductCard(product, productContainer);
+        });
+      })
+      .catch((error: Error): void => {
+        PromiseHelpers.catchBlockHelper(error, Constants.FETCH_CATALOG_ERROR);
+      });
+  }
+
+  private onProductClick(): void {
+    this.CONTAINER.addEventListener('click', (event: Event): void => {
+      const productClicked = event.target as Element | null;
+      const productItem = productClicked?.closest('.product-item') as Element | null;
+
+      if (productItem) {
+        const productId = productItem.classList[0];
+        window.location.hash = `#product/${productId}`;
+      }
+    });
   }
 
   public renderPage(): HTMLElement {
@@ -37,6 +71,8 @@ class CategoryPage extends page {
       `#category/${this.CATEGORY_PAGE_ID}`,
       2,
     );
+    this.populateCategory();
+    this.onProductClick();
     return this.CONTAINER;
   }
 }

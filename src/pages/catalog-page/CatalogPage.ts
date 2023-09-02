@@ -138,7 +138,7 @@ class CatalogPage extends Page {
     CatalogPageSort.initSort(this.CONTAINER);
     this.onResetFiltersButtonClick();
     Breadcrumbs.breadcrumbs = Breadcrumbs.breadcrumbs.filter((item) => item.level === undefined || item.level <= 1);
-    Breadcrumbs.addBreadcrumb(this.CONTAINER, 'Catalog', '#catalog', 0);
+    Breadcrumbs.buildBreadcrumbs(this.CONTAINER);
     this.createCategoriesLinks();
     return this.CONTAINER;
   }

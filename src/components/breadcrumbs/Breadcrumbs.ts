@@ -2,7 +2,7 @@ import { BreadcrumbItem } from '../../types/Interfaces';
 import DOMHelpers from '../../utils/DOMHelpers';
 
 class Breadcrumbs {
-  static breadcrumbs: BreadcrumbItem[] = [];
+  static breadcrumbs: BreadcrumbItem[] = [{ label: 'Catalog', url: '#catalog', level: 0 }];
 
   static buildBreadcrumbs(container: HTMLElement): void {
     console.log(this.breadcrumbs);
