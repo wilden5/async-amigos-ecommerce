@@ -12,7 +12,7 @@ import Constants from '../../utils/Constants';
 class CategoryPage extends page {
   private readonly CATEGORY_PAGE_ID: string;
 
-  private categoryNames: CategoryNames = {
+  static categoryNames: CategoryNames = {
     '960b60fa-218f-489c-a020-9b31b8455432': 'CPU',
     '81db6b93-b245-4af8-aa43-b729c6693ecf': 'GPU',
     'f27f2203-b464-4f69-9645-8ed2bf2b1bf1': 'RAM',
@@ -65,14 +65,13 @@ class CategoryPage extends page {
 
   public renderPage(): HTMLElement {
     this.CONTAINER.innerHTML = this.CATEGORY_PAGE_MARKUP;
-    Breadcrumbs.addBreadcrumb(
-      this.CONTAINER,
-      this.categoryNames[this.CATEGORY_PAGE_ID],
-      `#category/${this.CATEGORY_PAGE_ID}`,
-      2,
-    );
     this.populateCategory();
     this.onProductClick();
+    Breadcrumbs.setCategoryBreadcrumb(
+      this.CONTAINER,
+      CategoryPage.categoryNames[this.CATEGORY_PAGE_ID],
+      `#category/${this.CATEGORY_PAGE_ID}`,
+    );
     return this.CONTAINER;
   }
 }

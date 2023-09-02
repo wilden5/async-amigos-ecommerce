@@ -7,14 +7,19 @@ import DOMHelpers from '../../utils/DOMHelpers';
 import PromiseHelpers from '../../utils/PromiseHelpers';
 import ProductCardBuilder from '../catalog-page/ProductCardBuilder';
 import Slider from '../../components/slider/Slider';
+import Breadcrumbs from '../../components/breadcrumbs/Breadcrumbs';
+import CategoryPage from '../category/CategoryPage';
 
 class ProductDetailsPage extends Page {
   private readonly PRODUCT_PAGE_ID: string;
 
   private readonly SLIDER = new Slider();
 
+  private PRODUCT_TYPE_ID = '';
+
   private PRODUCT_PAGE_MARKUP = `
     <h1 class="page-title">Product page</h1>
+    <div class='breadcrumb'></div>
     <div class="product-details-container"></div>
   `;
 
@@ -61,10 +66,26 @@ class ProductDetailsPage extends Page {
       .queryProductDetails(this.PRODUCT_PAGE_ID)
       .then((queriedProductDetails: Product): void => {
         this.buildProductDetails(queriedProductDetails, productContainer);
+        this.PRODUCT_TYPE_ID = queriedProductDetails.productType.id;
+      })
+      .then(() => {
+        this.setBreadcrumb();
       })
       .catch((error: Error): void => {
         PromiseHelpers.catchBlockHelper(error, Constants.FETCH_PRODUCT_ERROR);
       });
+  }
+
+  private setBreadcrumb(): void {
+    const productTitleElementText = (this.CONTAINER.querySelector('.product-title') as HTMLElement)
+      .textContent as string;
+    Breadcrumbs.setProductBreadcrumb(
+      this.CONTAINER,
+      `${CategoryPage.categoryNames[this.PRODUCT_TYPE_ID]}`,
+      `#category/${this.PRODUCT_TYPE_ID}`,
+      productTitleElementText,
+      `#product/${this.PRODUCT_PAGE_ID}`,
+    );
   }
 
   public renderPage(): HTMLElement {
