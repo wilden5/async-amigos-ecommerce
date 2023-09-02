@@ -4,3 +4,7 @@ export interface BreadcrumbItem {
 
   level?: number;
 }
+
+export interface CategoryNames {
+  [categoryId: string]: string;
+}
