@@ -2,8 +2,6 @@ import Component from '../templates/Component';
 import headerLogo from '../../assets/header-logo2.png';
 import Constants from '../../utils/Constants';
 
-// import DOMHelpers from '../../utils/DOMHelpers';
-
 class Header extends Component {
   private HEADER_MARKUP = `
     <div class="${Constants.HEADER_CONTAINER_SELECTOR}">
