@@ -122,7 +122,7 @@ class CatalogPage extends Page {
             { className: 'category-link', textContent: type.name },
             categoriesContainer,
           ) as HTMLAnchorElement;
-          categoryLink.href = `#${type.id}`;
+          categoryLink.href = `#category/${type.id}`;
         });
       })
       .catch((error: Error): void => {
