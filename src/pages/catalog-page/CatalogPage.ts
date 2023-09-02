@@ -92,10 +92,15 @@ class CatalogPage extends Page {
       });
   };
 
-  private onProductClick(): void {
-    this.CONTAINER.addEventListener('click', (event: Event): void => {
-      const productClicked = event.target as Element | null;
-      const productItem = productClicked?.closest('.product-item') as Element | null;
+  static onProductClick(container: HTMLElement): void {
+    container.addEventListener('click', (event: Event): void => {
+      const clickedElement = event.target as Element;
+      const productItem = clickedElement.closest('.product-item');
+
+      if (clickedElement instanceof HTMLAnchorElement && clickedElement.className === 'order-me') {
+        event.preventDefault();
+        return;
+      }
 
       if (productItem) {
         const productId = productItem.classList[0];
@@ -132,7 +137,7 @@ class CatalogPage extends Page {
   public renderPage(): HTMLElement {
     this.CONTAINER.innerHTML = this.CATALOG_PAGE_MARKUP;
     this.fillProductCatalog();
-    this.onProductClick();
+    CatalogPage.onProductClick(this.CONTAINER);
     CatalogPageFilters.initAllFilters(this.CONTAINER, this.fillProductCatalog);
     CatalogPageSort.initSort(this.CONTAINER);
     this.onResetFiltersButtonClick();

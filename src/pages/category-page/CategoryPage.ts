@@ -8,6 +8,7 @@ import ProductProjectionSearch from '../../backend/products/ProductProjectionSea
 import ProductCardBuilder from '../catalog-page/ProductCardBuilder';
 import PromiseHelpers from '../../utils/PromiseHelpers';
 import Constants from '../../utils/Constants';
+import CatalogPage from '../catalog-page/CatalogPage';
 
 class CategoryPage extends page {
   private readonly CATEGORY_PAGE_ID: string;
@@ -50,22 +51,10 @@ class CategoryPage extends page {
       });
   }
 
-  private onProductClick(): void {
-    this.CONTAINER.addEventListener('click', (event: Event): void => {
-      const productClicked = event.target as Element | null;
-      const productItem = productClicked?.closest('.product-item') as Element | null;
-
-      if (productItem) {
-        const productId = productItem.classList[0];
-        window.location.hash = `#product/${productId}`;
-      }
-    });
-  }
-
   public renderPage(): HTMLElement {
     this.CONTAINER.innerHTML = this.CATEGORY_PAGE_MARKUP;
     this.populateCategory();
-    this.onProductClick();
+    CatalogPage.onProductClick(this.CONTAINER);
     Breadcrumbs.setCategoryBreadcrumb(
       this.CONTAINER,
       CategoryPage.categoryNames[this.CATEGORY_PAGE_ID],

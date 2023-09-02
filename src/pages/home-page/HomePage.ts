@@ -5,6 +5,7 @@ import Constants from '../../utils/Constants';
 import ProductProjectionSearch from '../../backend/products/ProductProjectionSearch';
 import ProductCardBuilder from '../catalog-page/ProductCardBuilder';
 import PromiseHelpers from '../../utils/PromiseHelpers';
+import CatalogPage from '../catalog-page/CatalogPage';
 
 class HomePage extends Page {
   private HOME_PAGE_MARKUP = `
@@ -40,22 +41,10 @@ class HomePage extends Page {
       });
   }
 
-  private onProductClick(): void {
-    this.CONTAINER.addEventListener('click', (event: Event): void => {
-      const productClicked = event.target as Element | null;
-      const productItem = productClicked?.closest('.product-item') as Element | null;
-
-      if (productItem) {
-        const productId = productItem.classList[0];
-        window.location.hash = `#product/${productId}`;
-      }
-    });
-  }
-
   public renderPage(): HTMLElement {
     this.CONTAINER.innerHTML = this.HOME_PAGE_MARKUP;
     this.homePageSpecialDeals();
-    this.onProductClick();
+    CatalogPage.onProductClick(this.CONTAINER);
     return this.CONTAINER;
   }
 }
