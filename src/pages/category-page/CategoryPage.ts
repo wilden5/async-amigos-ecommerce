@@ -26,7 +26,6 @@ class CategoryPage extends page {
 
   private CATEGORY_PAGE_MARKUP = `
     <div class="category-container">
-      <h1 class='page-title'>Category Page</h1>
       <div class='breadcrumb'></div>
       <div class='product-container'></div>
     </div>`;

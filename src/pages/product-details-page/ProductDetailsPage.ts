@@ -8,7 +8,7 @@ import PromiseHelpers from '../../utils/PromiseHelpers';
 import ProductCardBuilder from '../catalog-page/ProductCardBuilder';
 import Slider from '../../components/slider/Slider';
 import Breadcrumbs from '../../components/breadcrumbs/Breadcrumbs';
-import CategoryPage from '../category/CategoryPage';
+import CategoryPage from '../category-page/CategoryPage';
 
 class ProductDetailsPage extends Page {
   private readonly PRODUCT_PAGE_ID: string;
@@ -18,7 +18,6 @@ class ProductDetailsPage extends Page {
   private PRODUCT_TYPE_ID = '';
 
   private PRODUCT_PAGE_MARKUP = `
-    <h1 class="page-title">Product page</h1>
     <div class='breadcrumb'></div>
     <div class="product-details-container"></div>
   `;

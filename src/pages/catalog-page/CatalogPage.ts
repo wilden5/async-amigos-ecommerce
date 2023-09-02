@@ -18,7 +18,6 @@ import DOMHelpers from '../../utils/DOMHelpers';
 class CatalogPage extends Page {
   private CATALOG_PAGE_MARKUP = `
     <div class="catalog__container">
-      <h1 class='page-title'>Search results:</h1>
       <div class='breadcrumb'></div>
       <div class='categories-container'>
         <h2 class='categories-header'>Our Categories:</h2>

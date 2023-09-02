@@ -12,7 +12,7 @@ import CartPage from '../pages/cart-page/CartPage';
 import AboutUsPage from '../pages/about-us-page/AboutUsPage';
 import LocalStorage from './LocalStorage';
 import ProductDetailsPage from '../pages/product-details-page/ProductDetailsPage';
-import CategoryPage from '../pages/category/CategoryPage';
+import CategoryPage from '../pages/category-page/CategoryPage';
 
 class Router {
   public renderSpecificPage(pageID: string): void {
