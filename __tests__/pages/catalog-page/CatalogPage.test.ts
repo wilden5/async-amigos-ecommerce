@@ -3,7 +3,7 @@ import CatalogPage from '../../../src/pages/catalog-page/CatalogPage';
 describe('CatalogPage', () => {
   let catalogPage: CatalogPage;
   const containerId = 'test-container';
-  const expectedPageMarkup = `<h1 class="page-title">Search results:</h1>`;
+  const expectedPageMarkup = `<h2 class="categories-header">Our Categories:</h2>`;
 
   beforeEach(() => {
     const container = document.createElement('div');

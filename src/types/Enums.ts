@@ -9,6 +9,8 @@ export enum ProjectPages {
   NotFound = 'not-found',
 
   ProductDetails = 'product',
+
+  Category = 'category',
 }
 
 export enum PasswordHints {

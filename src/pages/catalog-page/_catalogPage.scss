@@ -213,6 +213,33 @@ input::-webkit-inner-spin-button {
   }
 }
 
+.categories-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.categories-header {
+  font-size: 2rem;
+  margin-bottom: 1rem;
+}
+
+.categories-links {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.category-link {
+  @include operationButton;
+
+  &:hover {
+    background-color: #0056b3;
+    transform: scale(1.1);
+  }
+}
+
 @media screen and (max-width: 700px) {
  .filters-wrapper {
    flex-direction: column;
