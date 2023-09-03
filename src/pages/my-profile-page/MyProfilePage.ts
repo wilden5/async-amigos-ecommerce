@@ -75,12 +75,11 @@ class MyProfilePage extends Page {
   private toggleEditModePassword(button: HTMLButtonElement): void {
     const inputCurrentPassword = this.CONTAINER.querySelector('#input-current-password') as HTMLInputElement;
     const inputNewPassword = this.CONTAINER.querySelector('#input-new-password') as HTMLInputElement;
-    const inputConfirmNewPassword = this.CONTAINER.querySelector('#input-confirm-new-password') as HTMLInputElement;
 
     const isEditing = button.textContent === 'Edit';
     const originalButton = button;
 
-    const passwordInputs = [inputCurrentPassword, inputNewPassword, inputConfirmNewPassword];
+    const passwordInputs = [inputCurrentPassword, inputNewPassword];
 
     this.handleLockIconClickLoginPage();
 
@@ -112,7 +111,6 @@ class MyProfilePage extends Page {
       originalButton.textContent = 'Edit';
       inputCurrentPassword.value = '';
       inputNewPassword.value = '';
-      inputConfirmNewPassword.value = '';
     }
   }
 
@@ -148,10 +146,14 @@ class MyProfilePage extends Page {
 
   private async updateBillingAddress(): Promise<void> {
     const selectBilling = document.querySelector('#default-billing') as HTMLSelectElement;
-    const selectedOptionId = selectBilling.selectedOptions[0].id.split(':')[1];
+    const selectedOptionId = selectBilling.selectedOptions[0].id.split('Z999S')[1] || '--';
     const updateCustomerInfoBilling = new UpdateCustomerInfo(this.getUserId());
 
-    return updateCustomerInfoBilling
+    if (selectedOptionId === '--') {
+      return;
+    }
+
+    await updateCustomerInfoBilling
       .setDefaultBillingAddress(selectedOptionId, this.customer?.version || 0)
       .then((response) => {
         this.customer = response.body;
@@ -160,10 +162,14 @@ class MyProfilePage extends Page {
 
   private async updateShippingAddress(): Promise<void> {
     const selectShipping = document.querySelector('#default-shipping') as HTMLSelectElement;
-    const selectedOptionId = selectShipping.selectedOptions[0].id.split(':')[1];
+    const selectedOptionId = selectShipping.selectedOptions[0].id.split('Z999S')[1] || '--';
     const updateCustomerInfoShipping = new UpdateCustomerInfo(this.getUserId());
 
-    return updateCustomerInfoShipping
+    if (selectedOptionId === '--') {
+      return;
+    }
+
+    await updateCustomerInfoShipping
       .setDefaultShippingAddress(selectedOptionId, this.customer?.version || 0)
       .then((response) => {
         this.customer = response.body;
@@ -171,7 +177,7 @@ class MyProfilePage extends Page {
   }
 
   private toggleEditModeAddress(button: HTMLButtonElement): void {
-    const id = button.id.split(':')[1];
+    const id = button.id.split('Z999S')[1];
 
     const isEditing = button.textContent === 'Edit';
     const originalButton = button;
@@ -200,8 +206,8 @@ class MyProfilePage extends Page {
         .editCustomerAddress(country, city, street, zip, id, this.customer?.version || 0)
         .then((response) => {
           this.customer = response.body;
-          const defaultBillingOption = this.CONTAINER.querySelector(`#option-billing-${id}`) as HTMLOptionElement;
-          const defaultShippingOption = this.CONTAINER.querySelector(`#option-shipping-${id}`) as HTMLOptionElement;
+          const defaultBillingOption = this.CONTAINER.querySelector(`#option-billingZ999S${id}`) as HTMLOptionElement;
+          const defaultShippingOption = this.CONTAINER.querySelector(`#option-shippingZ999S${id}`) as HTMLOptionElement;
 
           const optionAddress = `${country}, ${city}, ${street}, ${zip}`;
           defaultBillingOption.textContent = optionAddress;
@@ -218,11 +224,11 @@ class MyProfilePage extends Page {
   }
 
   private deleteAddress(button: HTMLButtonElement): void {
-    const id = button.id.split(':')[1];
+    const id = button.id.split('Z999S')[1];
 
     const address = this.CONTAINER.querySelector(`#address-${id}`) as HTMLElement;
-    const defaultBillingOption = this.CONTAINER.querySelector(`#option-billing-${id}`) as HTMLOptionElement;
-    const defaultShippingOption = this.CONTAINER.querySelector(`#option-shipping-${id}`) as HTMLOptionElement;
+    const defaultBillingOption = this.CONTAINER.querySelector(`#option-billingZ999S${id}`) as HTMLOptionElement;
+    const defaultShippingOption = this.CONTAINER.querySelector(`#option-shippingZ999S${id}`) as HTMLOptionElement;
 
     const deleteAddress = new UpdateCustomerInfo(this.getUserId());
     deleteAddress
@@ -288,18 +294,18 @@ class MyProfilePage extends Page {
           <input class="address-input" id="zip-${addressId}" type="text" value="${inputZip.value || ''}" disabled />
         </div>
         <div class="customer-button-container">
-          <button class="customer-personal-button edit-button-address" id="edit:${addressId}">Edit</button>
-          <button class="customer-personal-button delete-button-address" id="delete:${addressId}">Delete</button>
+          <button class="customer-personal-button edit-button-address" id="editZ999S${addressId}">Edit</button>
+          <button class="customer-personal-button delete-button-address" id="deleteZ999S${addressId}">Delete</button>
         </div>
       </div>`;
 
-        selectBillingAddress.innerHTML += `<option id="option-billing-${addressId || '--'}">
+        selectBillingAddress.innerHTML += `<option id="option-billingZ999S${addressId || '--'}">
       ${selectCountry.value || '--'}, 
       ${inputCity.value || '--'}, 
       ${inputStreet.value || '--'}, 
       ${inputZip.value || '--'}</option>`;
 
-        selectShippingAddress.innerHTML += `<option id="option-shipping-${addressId || '--'}">
+        selectShippingAddress.innerHTML += `<option id="option-shippingZ999S${addressId || '--'}">
       ${selectCountry.value || '--'}, 
       ${inputCity.value || '--'}, 
       ${inputStreet.value || '--'}, 
@@ -385,11 +391,6 @@ class MyProfilePage extends Page {
               <input class="" id="input-new-password" type="password" disabled />
               <span class="icon icon-lock" id="button-new-password"><i class="bx bxs-lock-alt"></i></span>
             </div>
-            <div class="input-container">
-              <label class="input-label">Confirm New Password:</label>
-              <input class="" id="input-confirm-new-password" type="password" disabled />
-              <span class="icon icon-lock" id="button-confirm-new-password"><i class="bx bxs-lock-alt"></i></span>
-            </div>
             <button class="customer-personal-button" id="edit-password-info">Edit</button>
          </form>
 
@@ -398,7 +399,7 @@ class MyProfilePage extends Page {
            <div class="input-container">
              <label class="input-label">Default Shipping Address</label>
              <select class="customer-address-select" id="default-shipping" disabled>
-              <option id="option-shipping-${defaultShippingAddress?.id || '--'}">
+              <option id="option-shippingZ999S${defaultShippingAddress?.id || '--'}">
                 ${defaultShippingAddress?.country || 'not selected'}, 
                 ${defaultShippingAddress?.city || ''}, 
                 ${defaultShippingAddress?.streetName || ''}, 
@@ -408,7 +409,7 @@ class MyProfilePage extends Page {
                 ?.filter((address) => address.id !== defaultShippingAddress?.id)
                 ?.map(
                   (address) => `
-                  <option id="option-shipping-${address.id || '--'}">
+                  <option id="option-shippingZ999S${address.id || '--'}">
                     ${address.country || '--'}, 
                     ${address.city || '--'}, 
                     ${address.streetName || '--'}, 
@@ -422,7 +423,7 @@ class MyProfilePage extends Page {
         <div class="input-container">
           <label class="input-label">Default Billing Address</label>
           <select class="customer-address-select" id="default-billing" disabled>
-          <option id="option-billing-${defaultBillingAddress?.id || '--'}">
+          <option id="option-billingZ999S${defaultBillingAddress?.id || '--'}">
             ${defaultBillingAddress?.country || 'not selected'}, 
             ${defaultBillingAddress?.city || ''}, 
             ${defaultBillingAddress?.streetName || ''}, 
@@ -432,7 +433,7 @@ class MyProfilePage extends Page {
             ?.filter((address) => address.id !== defaultBillingAddress?.id)
             ?.map(
               (address) => `
-                <option id="option-billing-${address.id || '--'}">
+                <option id="option-billingZ999S${address.id || '--'}">
                   ${address.country || '--'}, 
                   ${address.city || '--'}, 
                   ${address.streetName || '--'}, 
@@ -498,8 +499,10 @@ class MyProfilePage extends Page {
                 }" disabled />
               </div>
               <div class="customer-button-container">
-                <button class="customer-personal-button edit-button-address" id="edit:${address.id || ''}">Edit</button>
-                <button class="customer-personal-button delete-button-address" id="delete:${
+                <button class="customer-personal-button edit-button-address" id="editZ999S${
+                  address.id || ''
+                }">Edit</button>
+                <button class="customer-personal-button delete-button-address" id="deleteZ999S${
                   address.id || ''
                 }">Delete</button>
               </div>
