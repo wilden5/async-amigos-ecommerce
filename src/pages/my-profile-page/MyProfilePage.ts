@@ -246,53 +246,87 @@ class MyProfilePage extends Page {
     const inputCity = this.CONTAINER.querySelector('#create-city') as HTMLInputElement;
     const inputStreet = this.CONTAINER.querySelector('#create-street') as HTMLInputElement;
     const inputZip = this.CONTAINER.querySelector('#create-zip') as HTMLInputElement;
-
-    // const addressInputs = [inputCity, inputStreet, inputZip];
-
     const addressContainer = this.CONTAINER.querySelector('#existing-addresses') as HTMLDivElement;
 
-    const address = this.customer?.addresses[0];
+    const selectBillingAddress = this.CONTAINER.querySelector('#default-billing') as HTMLSelectElement;
+    const selectShippingAddress = this.CONTAINER.querySelector('#default-shipping') as HTMLSelectElement;
 
-    // после того как получу ответ при создании запроса, отфильтровать ID нового адреса и добавить в разметку
-    // актуальный ID нового адреса
-    // добавить новый адрес в options в выборе дефолтного адреса
+    let addressId: string;
 
-    addressContainer.innerHTML += `<div class="customer-address" id="address-${address?.id || ''}">
-      <div class="input-container">
-        <label class="input-label">Country:</label>
-        <select class="address-input" id="select-${address?.id || ''}" disabled>
-          <option>${selectCountry.value || ''}</option>
-          <option>${selectCountry.value === 'US' ? 'CA' : 'US'}</option>
-        </select>
-      </div>
-      <div class="input-container">
-        <label class="input-label">City:</label>
-        <input class="address-input" id="city-${address?.id || ''}" type="text" value="${
-          inputCity.value || ''
-        }" disabled />
-      </div>
-      <div class="input-container">
-        <label class="input-label">Street:</label>
-        <input class="address-input" id="street-${address?.id || ''}" type="text" value="${
-          inputStreet.value || ''
-        }" disabled />
-      </div>
-      <div class="input-container">
-        <label class="input-label">ZIP Code:</label>
-        <input class="address-input" id="zip-${address?.id || ''}" type="text" value="${
-          inputZip.value || ''
-        }" disabled />
-      </div>
-      <div class="customer-button-container">
-        <button class="customer-personal-button edit-button-address" id="edit-${address?.id || ''}">Edit</button>
-        <button class="customer-personal-button delete-button-address" id="delete-${address?.id || ''}">Delete</button>
-      </div>
-    </div>`;
+    const addAddress = new UpdateCustomerInfo(this.getUserId());
+    addAddress
+      .addCustomerAddress(
+        selectCountry.value,
+        inputCity.value,
+        inputStreet.value,
+        inputZip.value,
+        this.customer?.version || 0,
+      )
+      .then((response) => {
+        addressId = this.findAddedAddress(this.customer, response.body);
 
-    inputCity.value = '';
-    inputStreet.value = '';
-    inputZip.value = '';
-    selectCountry.selectedIndex = 0;
+        addressContainer.innerHTML += `<div class="customer-address" id="address-${addressId}">
+        <div class="input-container">
+          <label class="input-label">Country:</label>
+          <select class="address-input" id="select-${addressId}" disabled>
+            <option>${selectCountry.value || ''}</option>
+            <option>${selectCountry.value === 'US' ? 'CA' : 'US'}</option>
+          </select>
+        </div>
+        <div class="input-container">
+          <label class="input-label">City:</label>
+          <input class="address-input" id="city-${addressId}" type="text" value="${inputCity.value || ''}" disabled />
+        </div>
+        <div class="input-container">
+          <label class="input-label">Street:</label>
+          <input class="address-input" id="street-${addressId}" type="text" value="${
+            inputStreet.value || ''
+          }" disabled />
+        </div>
+        <div class="input-container">
+          <label class="input-label">ZIP Code:</label>
+          <input class="address-input" id="zip-${addressId}" type="text" value="${inputZip.value || ''}" disabled />
+        </div>
+        <div class="customer-button-container">
+          <button class="customer-personal-button edit-button-address" id="edit-${addressId}">Edit</button>
+          <button class="customer-personal-button delete-button-address" id="delete-${addressId}">Delete</button>
+        </div>
+      </div>`;
+
+        selectBillingAddress.innerHTML += `<option id="option-billing-${addressId || '--'}">
+      ${selectCountry.value || '--'}, 
+      ${inputCity.value || '--'}, 
+      ${inputStreet.value || '--'}, 
+      ${inputZip.value || '--'}</option>`;
+
+        selectShippingAddress.innerHTML += `<option id="option-shipping-${addressId || '--'}">
+      ${selectCountry.value || '--'}, 
+      ${inputCity.value || '--'}, 
+      ${inputStreet.value || '--'}, 
+      ${inputZip.value || '--'}</option>`;
+
+        this.customer = response.body;
+        TostifyHelper.showToast('Adding the address was successful', Constants.TOAST_COLOR_GREEN);
+
+        inputCity.value = '';
+        inputStreet.value = '';
+        inputZip.value = '';
+        selectCountry.selectedIndex = 0;
+      })
+      .catch((err) => {
+        TostifyHelper.showToast('Adding an address failed', Constants.TOAST_COLOR_RED);
+        throw err;
+      });
+  }
+
+  private findAddedAddress(oldData: Customer | null, newData: Customer): string {
+    if (oldData) {
+      const addedAddress = newData.addresses.find(
+        (newAddress) => !oldData.addresses.some((oldAddress) => oldAddress.id === newAddress.id),
+      );
+      return addedAddress?.id || '0';
+    }
+    return '0';
   }
 
   private updateCustomerInfo(customerId: string): void {
