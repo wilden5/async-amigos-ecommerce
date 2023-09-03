@@ -5,6 +5,7 @@ import Constants from '../../utils/Constants';
 import ProductProjectionSearch from '../../backend/products/ProductProjectionSearch';
 import ProductCardBuilder from '../catalog-page/ProductCardBuilder';
 import PromiseHelpers from '../../utils/PromiseHelpers';
+import CatalogPage from '../catalog-page/CatalogPage';
 
 class HomePage extends Page {
   private HOME_PAGE_MARKUP = `
@@ -43,6 +44,7 @@ class HomePage extends Page {
   public renderPage(): HTMLElement {
     this.CONTAINER.innerHTML = this.HOME_PAGE_MARKUP;
     this.homePageSpecialDeals();
+    CatalogPage.onProductClick(this.CONTAINER);
     return this.CONTAINER;
   }
 }
