@@ -123,6 +123,7 @@ export class UpdateCustomerInfo {
     city: string,
     streetName: string,
     postalCode: string,
+    addressId: string,
     version: number,
   ): Promise<ClientResponse<Customer>> {
     const actions: CustomerUpdate = {
@@ -130,6 +131,7 @@ export class UpdateCustomerInfo {
       actions: [
         {
           action: 'changeAddress',
+          addressId,
           address: {
             country,
             city,
