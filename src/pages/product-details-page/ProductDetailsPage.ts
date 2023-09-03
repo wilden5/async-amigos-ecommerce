@@ -22,6 +22,14 @@ class ProductDetailsPage extends Page {
     <div class="product-details-container"></div>
   `;
 
+  private DIALOG_MARKUP = `
+      <div class="dialog-content">HERE IS MODAL CONTENT</div>
+      <button class="dialog-close">
+        <span></span>
+        <span></span>
+      </button>
+  `;
+
   constructor(pageId: string) {
     super(ProjectPages.ProductDetails);
     this.PRODUCT_PAGE_ID = pageId;
@@ -55,7 +63,7 @@ class ProductDetailsPage extends Page {
     `;
     productElement.prepend(swiperWrapper);
     parentContainer.appendChild(productElement);
-
+    (this.CONTAINER.querySelector('.swiper-wrapper') as HTMLElement).addEventListener('click', this.initModal);
     this.SLIDER.initSwiper();
   }
 
@@ -74,6 +82,16 @@ class ProductDetailsPage extends Page {
         PromiseHelpers.catchBlockHelper(error, Constants.FETCH_PRODUCT_ERROR);
       });
   }
+
+  private initModal = (): void => {
+    const productDetailsContainer = this.CONTAINER.querySelector('.product-details-container') as HTMLElement;
+    const dialogContainer = DOMHelpers.createElement('div', { className: 'dialog-container' }, productDetailsContainer);
+    dialogContainer.innerHTML = this.DIALOG_MARKUP;
+
+    (this.CONTAINER.querySelector('.dialog-close') as HTMLButtonElement).addEventListener('click', () => {
+      dialogContainer.remove();
+    });
+  };
 
   private setBreadcrumb(): void {
     const productTitleElementText = (this.CONTAINER.querySelector('.product-title') as HTMLElement)
