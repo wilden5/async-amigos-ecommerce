@@ -117,8 +117,8 @@ class MyProfilePage extends Page {
   }
 
   private toggleEditModeDefaultAddresses(button: HTMLButtonElement): void {
-    const selectShippingAddress = this.CONTAINER.querySelector('#default-shipping') as HTMLSelectElement;
     const selectBillingAddress = this.CONTAINER.querySelector('#default-billing') as HTMLSelectElement;
+    const selectShippingAddress = this.CONTAINER.querySelector('#default-shipping') as HTMLSelectElement;
 
     const isEditing = button.textContent === 'Edit';
     const originalButton = button;
@@ -128,18 +128,46 @@ class MyProfilePage extends Page {
     if (isEditing) {
       selectAddresses.forEach((address) => address.removeAttribute('disabled'));
       originalButton.textContent = 'Save';
-      this.selectAddressesInfo = [];
     } else {
       selectAddresses.forEach((address) => {
         address.setAttribute('disabled', 'disabled');
-        this.selectAddressesInfo.push(address.value);
       });
 
-      originalButton.textContent = 'Edit';
-      TostifyHelper.showToast('Default address updated successfully', Constants.TOAST_COLOR_GREEN);
-      // eslint-disable-next-line no-console
-      console.log(this.selectAddressesInfo);
+      this.updateBillingAddress()
+        .then(() => this.updateShippingAddress())
+        .then(() => {
+          TostifyHelper.showToast('Default address updated successfully', Constants.TOAST_COLOR_GREEN);
+          originalButton.textContent = 'Edit';
+        })
+        .catch((err) => {
+          TostifyHelper.showToast('Default address update failed', Constants.TOAST_COLOR_RED);
+          throw err;
+        });
     }
+  }
+
+  private async updateBillingAddress(): Promise<void> {
+    const selectBilling = document.querySelector('#default-billing') as HTMLSelectElement;
+    const selectedOptionId = selectBilling.selectedOptions[0].id.split('-')[2];
+    const updateCustomerInfoBilling = new UpdateCustomerInfo(this.getUserId());
+
+    return updateCustomerInfoBilling
+      .setDefaultBillingAddress(selectedOptionId, this.customer?.version || 0)
+      .then((response) => {
+        this.customer = response.body;
+      });
+  }
+
+  private async updateShippingAddress(): Promise<void> {
+    const selectShipping = document.querySelector('#default-shipping') as HTMLSelectElement;
+    const selectedOptionId = selectShipping.selectedOptions[0].id.split('-')[2];
+    const updateCustomerInfoShipping = new UpdateCustomerInfo(this.getUserId());
+
+    return updateCustomerInfoShipping
+      .setDefaultShippingAddress(selectedOptionId, this.customer?.version || 0)
+      .then((response) => {
+        this.customer = response.body;
+      });
   }
 
   private toggleEditModeAddress(button: HTMLButtonElement): void {
@@ -319,10 +347,10 @@ class MyProfilePage extends Page {
              <label class="input-label">Default Shipping Address</label>
              <select class="customer-address-select" id="default-shipping" disabled>
               <option id="option-shipping-${defaultShippingAddress?.id || '--'}">
-                ${defaultShippingAddress?.country || '--'}, 
-                ${defaultShippingAddress?.city || '--'}, 
-                ${defaultShippingAddress?.streetName || '--'}, 
-                ${defaultShippingAddress?.postalCode || '--'}
+                ${defaultShippingAddress?.country || 'not selected'}, 
+                ${defaultShippingAddress?.city || ''}, 
+                ${defaultShippingAddress?.streetName || ''}, 
+                ${defaultShippingAddress?.postalCode || ''}
               </option>
               ${response.body?.addresses
                 ?.filter((address) => address.id !== defaultShippingAddress?.id)
@@ -343,10 +371,10 @@ class MyProfilePage extends Page {
           <label class="input-label">Default Billing Address</label>
           <select class="customer-address-select" id="default-billing" disabled>
           <option id="option-billing-${defaultBillingAddress?.id || '--'}">
-            ${defaultBillingAddress?.country || '--'}, 
-            ${defaultBillingAddress?.city || '--'}, 
-            ${defaultBillingAddress?.streetName || '--'}, 
-            ${defaultBillingAddress?.postalCode || '--'}
+            ${defaultBillingAddress?.country || 'not selected'}, 
+            ${defaultBillingAddress?.city || ''}, 
+            ${defaultBillingAddress?.streetName || ''}, 
+            ${defaultBillingAddress?.postalCode || ''}
           </option>
           ${response.body?.addresses
             ?.filter((address) => address.id !== defaultBillingAddress?.id)
