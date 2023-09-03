@@ -224,13 +224,21 @@ class MyProfilePage extends Page {
     const defaultBillingOption = this.CONTAINER.querySelector(`#option-billing-${id}`) as HTMLOptionElement;
     const defaultShippingOption = this.CONTAINER.querySelector(`#option-shipping-${id}`) as HTMLOptionElement;
 
-    if (address) {
-      address.remove();
-      defaultBillingOption.remove();
-      defaultShippingOption.remove();
+    const deleteAddress = new UpdateCustomerInfo(this.getUserId());
+    deleteAddress
+      .removeCustomerAddress(id, this.customer?.version || 0)
+      .then((response) => {
+        this.customer = response.body;
+        address.remove();
+        defaultBillingOption.remove();
+        defaultShippingOption.remove();
 
-      TostifyHelper.showToast('Address deleted successfully', Constants.TOAST_COLOR_GREEN);
-    }
+        TostifyHelper.showToast('Address deleted successfully', Constants.TOAST_COLOR_GREEN);
+      })
+      .catch((err) => {
+        TostifyHelper.showToast('Address delete failed', Constants.TOAST_COLOR_RED);
+        throw err;
+      });
   }
 
   private createAddress(): void {
