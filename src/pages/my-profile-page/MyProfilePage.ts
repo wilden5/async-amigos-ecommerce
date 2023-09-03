@@ -171,9 +171,6 @@ class MyProfilePage extends Page {
   }
 
   private toggleEditModeAddress(button: HTMLButtonElement): void {
-    // eslint-disable-next-line no-console
-    console.log(button.id);
-
     const id = button.id.split('-')[1];
 
     const isEditing = button.textContent === 'Edit';
@@ -184,26 +181,39 @@ class MyProfilePage extends Page {
     const inputStreet = this.CONTAINER.querySelector(`#street-${id}`) as HTMLInputElement;
     const inputZip = this.CONTAINER.querySelector(`#zip-${id}`) as HTMLInputElement;
 
-    const fullAddress = [selectCountry, inputCity, inputStreet, inputZip];
-
-    // eslint-disable-next-line no-console
-    console.log(selectCountry.value, inputCity.value, inputStreet.value, inputZip.value);
+    const inputs = [selectCountry, inputCity, inputStreet, inputZip];
 
     if (isEditing) {
-      fullAddress.forEach((address) => address.removeAttribute('disabled'));
+      inputs.forEach((address) => address.removeAttribute('disabled'));
 
       originalButton.textContent = 'Save';
       this.selectAddressInfo = [];
     } else {
-      fullAddress.forEach((address) => {
+      inputs.forEach((address) => {
         address.setAttribute('disabled', 'disabled');
         this.selectAddressInfo.push(address.value);
       });
 
+      const [country, city, street, zip] = this.selectAddressInfo;
+      const updateCustomerAddress = new UpdateCustomerInfo(this.getUserId());
+      updateCustomerAddress
+        .editCustomerAddress(country, city, street, zip, id, this.customer?.version || 0)
+        .then((response) => {
+          this.customer = response.body;
+          const defaultBillingOption = this.CONTAINER.querySelector(`#option-billing-${id}`) as HTMLOptionElement;
+          const defaultShippingOption = this.CONTAINER.querySelector(`#option-shipping-${id}`) as HTMLOptionElement;
+
+          const optionAddress = `${country}, ${city}, ${street}, ${zip}`;
+          defaultBillingOption.textContent = optionAddress;
+          defaultShippingOption.textContent = optionAddress;
+
+          TostifyHelper.showToast('Address updated successfully', Constants.TOAST_COLOR_GREEN);
+        })
+        .catch((err) => {
+          TostifyHelper.showToast('Address update failed', Constants.TOAST_COLOR_RED);
+          throw err;
+        });
       originalButton.textContent = 'Edit';
-      TostifyHelper.showToast('Address updated successfully', Constants.TOAST_COLOR_GREEN);
-      // eslint-disable-next-line no-console
-      console.log(this.selectAddressInfo);
     }
   }
 
