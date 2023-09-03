@@ -39,7 +39,6 @@ class MyProfilePage extends Page {
     if (isEditing) {
       inputFields.forEach((input) => {
         input.removeAttribute('disabled');
-        input.classList.remove('transparent-input');
       });
       originalButton.textContent = 'Save';
 
@@ -47,7 +46,6 @@ class MyProfilePage extends Page {
     } else {
       inputFields.forEach((input) => {
         input.setAttribute('disabled', 'disabled');
-        input.classList.add('transparent-input');
 
         this.inputPersonalInfo?.push((input as HTMLInputElement).value);
       });
@@ -59,8 +57,6 @@ class MyProfilePage extends Page {
         .updateCustomerInfo(firstName, lastName, dateOfBirth, email, version)
         .then((response) => {
           this.customer = response.body;
-          // eslint-disable-next-line no-console
-          console.log(this.customer);
           TostifyHelper.showToast('Updating personal information successfully', Constants.TOAST_COLOR_GREEN);
         })
         .catch((err) => {
@@ -274,7 +270,7 @@ class MyProfilePage extends Page {
         addressContainer.innerHTML += `<div class="customer-address" id="address-${addressId}">
         <div class="input-container">
           <label class="input-label">Country:</label>
-          <select class="address-input" id="select-${addressId}" disabled>
+          <select class="customer-address-select" id="select-${addressId}" disabled>
             <option>${selectCountry.value || ''}</option>
             <option>${selectCountry.value === 'US' ? 'CA' : 'US'}</option>
           </select>
@@ -319,9 +315,9 @@ class MyProfilePage extends Page {
         inputZip.value = '';
         selectCountry.selectedIndex = 0;
       })
-      .catch((err) => {
+      .catch((error) => {
         TostifyHelper.showToast('Adding an address failed', Constants.TOAST_COLOR_RED);
-        throw err;
+        return Promise.reject(error);
       });
   }
 
@@ -355,27 +351,25 @@ class MyProfilePage extends Page {
           <form class="customer-personal-data customer-container-item" novalidate="novalidate">
             <div class="input-container">
               <label class="input-label">Name:</label>
-              <input class="transparent-input personal-input" type="text" value="${
+              <input class="personal-input address-input" type="text" value="${
                 response.body.firstName || ''
               }" disabled />
             </div>
             <div class="input-container">
               <label class="input-label">Last Name:</label>
-              <input class="transparent-input personal-input" type="text" value="${
+              <input class="personal-input address-input" type="text" value="${
                 response.body.lastName || ''
               }" disabled />
             </div>
             <div class="input-container">
               <label class="input-label">Birth Date:</label>
-              <input class="transparent-input personal-input" type="date" value="${
+              <input class="personal-input address-input" type="date" value="${
                 response.body.dateOfBirth || ''
               }" disabled />
             </div>
             <div class="input-container">
               <label class="input-label">E-MAIL:</label>
-              <input class="transparent-input personal-input" type="email" value="${
-                response.body.email || ''
-              }" disabled />
+              <input class="personal-input address-input" type="email" value="${response.body.email || ''}" disabled />
             </div>
             <button class="customer-personal-button" id="edit-personal-info">Edit</button>
           </form>
@@ -383,12 +377,12 @@ class MyProfilePage extends Page {
           <form class="customer-password customer-container-item" novalidate="novalidate">
             <div class="input-container">
               <label class="input-label">Current Password:</label>
-              <input class="" id="input-current-password"  type="password" disabled />
+              <input class="customer-password-input address-input" id="input-current-password"  type="password" disabled />
               <span class="icon icon-lock" id="button-current-password"><i class="bx bxs-lock-alt"></i></span>
             </div>
             <div class="input-container">
               <label class="input-label">New Password:</label>
-              <input class="" id="input-new-password" type="password" disabled />
+              <input class="customer-password-input address-input" id="input-new-password" type="password" disabled />
               <span class="icon icon-lock" id="button-new-password"><i class="bx bxs-lock-alt"></i></span>
             </div>
             <button class="customer-personal-button" id="edit-password-info">Edit</button>
@@ -450,22 +444,22 @@ class MyProfilePage extends Page {
       <form class="new-address customer-address">
         <div class="input-container">
           <label class="input-label">Country:</label>
-          <select class="address-input" id='create-country'>
+          <select class="customer-address-select" id='create-country'>
             <option>US</option>
             <option>CA</option>
           </select>
         </div>
         <div class="input-container">
           <label class="input-label">City:</label>
-          <input class="address-input" id='create-city' placeholder="City" />
+          <input class="address-input new-address-input" id='create-city' placeholder="City" />
         </div>
         <div class="input-container">
           <label class="input-label">Street:</label>
-          <input class="address-input" id='create-street' placeholder="Street" />
+          <input class="address-input new-address-input" id='create-street' placeholder="Street" />
         </div>
         <div class="input-container">
           <label class="input-label">ZIP Code:</label>
-          <input class="address-input" id='create-zip' placeholder="ZIP Code" />
+          <input class="address-input new-address-input" id='create-zip' placeholder="ZIP Code" />
         </div>
         <button class="customer-personal-button save-button" id='create-address'>Add</button>
       </form>
@@ -475,7 +469,7 @@ class MyProfilePage extends Page {
           (address) => `<form class="customer-address" id="address-${address.id || ''}">
               <div class="input-container">
                 <label class="input-label">Country:</label>
-                <select class="address-input" id="select-${address.id || ''}" disabled>
+                <select class="customer-address-select" id="select-${address.id || ''}" disabled>
                   <option>${address.country || ''}</option>
                   <option>${address.country === 'US' ? 'CA' : 'US'}</option>
                 </select>
@@ -508,11 +502,7 @@ class MyProfilePage extends Page {
               </div>
             </form>`,
         )
-        ?.join('')}
-      </div>`;
-
-          // eslint-disable-next-line no-console
-          console.log(response.body);
+        ?.join('')}</div>`;
 
           customerDiv.addEventListener('click', (event) => {
             event.preventDefault();
