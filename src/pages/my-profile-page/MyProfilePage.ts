@@ -148,7 +148,7 @@ class MyProfilePage extends Page {
 
   private async updateBillingAddress(): Promise<void> {
     const selectBilling = document.querySelector('#default-billing') as HTMLSelectElement;
-    const selectedOptionId = selectBilling.selectedOptions[0].id.split('-')[2];
+    const selectedOptionId = selectBilling.selectedOptions[0].id.split(':')[1];
     const updateCustomerInfoBilling = new UpdateCustomerInfo(this.getUserId());
 
     return updateCustomerInfoBilling
@@ -160,7 +160,7 @@ class MyProfilePage extends Page {
 
   private async updateShippingAddress(): Promise<void> {
     const selectShipping = document.querySelector('#default-shipping') as HTMLSelectElement;
-    const selectedOptionId = selectShipping.selectedOptions[0].id.split('-')[2];
+    const selectedOptionId = selectShipping.selectedOptions[0].id.split(':')[1];
     const updateCustomerInfoShipping = new UpdateCustomerInfo(this.getUserId());
 
     return updateCustomerInfoShipping
@@ -171,7 +171,7 @@ class MyProfilePage extends Page {
   }
 
   private toggleEditModeAddress(button: HTMLButtonElement): void {
-    const id = button.id.split('-')[1];
+    const id = button.id.split(':')[1];
 
     const isEditing = button.textContent === 'Edit';
     const originalButton = button;
@@ -218,7 +218,7 @@ class MyProfilePage extends Page {
   }
 
   private deleteAddress(button: HTMLButtonElement): void {
-    const id = button.id.split('-')[1];
+    const id = button.id.split(':')[1];
 
     const address = this.CONTAINER.querySelector(`#address-${id}`) as HTMLElement;
     const defaultBillingOption = this.CONTAINER.querySelector(`#option-billing-${id}`) as HTMLOptionElement;
@@ -288,8 +288,8 @@ class MyProfilePage extends Page {
           <input class="address-input" id="zip-${addressId}" type="text" value="${inputZip.value || ''}" disabled />
         </div>
         <div class="customer-button-container">
-          <button class="customer-personal-button edit-button-address" id="edit-${addressId}">Edit</button>
-          <button class="customer-personal-button delete-button-address" id="delete-${addressId}">Delete</button>
+          <button class="customer-personal-button edit-button-address" id="edit:${addressId}">Edit</button>
+          <button class="customer-personal-button delete-button-address" id="delete:${addressId}">Delete</button>
         </div>
       </div>`;
 
@@ -498,8 +498,8 @@ class MyProfilePage extends Page {
                 }" disabled />
               </div>
               <div class="customer-button-container">
-                <button class="customer-personal-button edit-button-address" id="edit-${address.id || ''}">Edit</button>
-                <button class="customer-personal-button delete-button-address" id="delete-${
+                <button class="customer-personal-button edit-button-address" id="edit:${address.id || ''}">Edit</button>
+                <button class="customer-personal-button delete-button-address" id="delete:${
                   address.id || ''
                 }">Delete</button>
               </div>
