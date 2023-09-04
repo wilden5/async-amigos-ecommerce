@@ -363,7 +363,7 @@ class MyProfilePage extends Page {
             </div>
             <div class="input-container">
               <label class="input-label">Birth Date:</label>
-              <input class="personal-input address-input" type="date" value="${
+              <input class="personal-input address-input" type="date" min="1900-01-01" max="2010-12-31" value="${
                 response.body.dateOfBirth || ''
               }" disabled />
             </div>
@@ -505,7 +505,6 @@ class MyProfilePage extends Page {
         ?.join('')}</div>`;
 
           customerDiv.addEventListener('click', (event) => {
-            event.preventDefault();
             const target = event.target as HTMLButtonElement;
             if (target.id === 'edit-personal-info') {
               this.toggleEditModePersonalInfo(target);
