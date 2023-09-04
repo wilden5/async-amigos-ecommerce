@@ -5,6 +5,7 @@ import { GetCustomerInfo } from '../../backend/customer/getCustomer';
 import { UpdateCustomerInfo } from '../../backend/customer/updateCustomer';
 import TostifyHelper from '../../utils/TostifyHelper';
 import Constants from '../../utils/Constants';
+import Validator from './ProfileFormValidation';
 
 class MyProfilePage extends Page {
   customer: Customer | null = null;
@@ -52,7 +53,7 @@ class MyProfilePage extends Page {
       const [firstName, lastName, dateOfBirth, email] = this.inputPersonalInfo;
       const version = this.customer?.version || 0;
 
-      const isPersonalInfoValid = this.validatePersonalInfo(firstName, lastName, dateOfBirth, email);
+      const isPersonalInfoValid = Validator.validatePersonalInfo(firstName, lastName, dateOfBirth, email);
 
       if (isPersonalInfoValid) {
         return;
@@ -74,48 +75,6 @@ class MyProfilePage extends Page {
 
       originalButton.textContent = 'Edit';
     }
-  }
-
-  private validatePersonalInfo(firstName: string, lastName: string, dateOfBirth: string, email: string): boolean {
-    const namePattern = /^[A-Za-z]+$/;
-    const dateOfBirthPattern = /^\d{4}-\d{2}-\d{2}$/;
-    const emailPattern = /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,4}$/;
-
-    const isFirstNameValid = namePattern.test(firstName);
-    const isLastNameValid = namePattern.test(lastName);
-    const isDateOfBirthValid = dateOfBirthPattern.test(dateOfBirth);
-    const isEmailValid = emailPattern.test(email);
-
-    const errorMessages: string[] = [];
-
-    if (!isFirstNameValid) {
-      errorMessages.push('The name contains invalid characters');
-    }
-
-    if (!isLastNameValid) {
-      errorMessages.push('Last name contains invalid characters');
-    }
-
-    if (!isDateOfBirthValid) {
-      errorMessages.push('The date of birth is in the wrong format');
-    } else {
-      const dateParts = dateOfBirth.split('-');
-      const yearOfBirth = parseInt(dateParts[0], 10);
-      if (yearOfBirth < 1900 || yearOfBirth > 2022) {
-        errorMessages.push('Year of birth must be between 1900 and 2022');
-      }
-    }
-
-    if (!isEmailValid) {
-      errorMessages.push('Email is not in the correct format');
-    }
-
-    if (errorMessages.length > 0) {
-      const errorMessage = errorMessages.join('\n');
-      TostifyHelper.showToast(errorMessage, Constants.TOAST_COLOR_RED);
-    }
-
-    return errorMessages.length > 0;
   }
 
   private toggleEditModePassword(button: HTMLButtonElement): void {
@@ -145,7 +104,7 @@ class MyProfilePage extends Page {
       const currentPassword = inputCurrentPassword.value;
       const newPassword = inputNewPassword.value;
 
-      const isPasswordValid = this.validatePassword(currentPassword, newPassword);
+      const isPasswordValid = Validator.validatePassword(currentPassword, newPassword);
 
       if (!isPasswordValid) {
         return;
@@ -169,54 +128,6 @@ class MyProfilePage extends Page {
       inputCurrentPassword.value = '';
       inputNewPassword.value = '';
     }
-  }
-
-  private validatePassword(currentPassword: string, newPassword: string): boolean {
-    if (currentPassword.trim() === '') {
-      TostifyHelper.showToast('Please enter your current password', Constants.TOAST_COLOR_RED);
-      return false;
-    }
-
-    if (newPassword.trim() === '') {
-      TostifyHelper.showToast('Please enter a new password', Constants.TOAST_COLOR_RED);
-      return false;
-    }
-
-    if (newPassword.length < 8) {
-      TostifyHelper.showToast('Password must be at least 8 characters long', Constants.TOAST_COLOR_RED);
-      return false;
-    }
-
-    if (currentPassword === newPassword) {
-      TostifyHelper.showToast('Your new password must not be the same as your old password', Constants.TOAST_COLOR_RED);
-      return false;
-    }
-
-    const errors: string[] = [];
-
-    if (!/[A-Z]/.test(newPassword)) {
-      errors.push('Password must contain at least one uppercase letter');
-    }
-
-    if (!/[a-z]/.test(newPassword)) {
-      errors.push('Password must contain at least one lowercase letter');
-    }
-
-    if (!/\d/.test(newPassword)) {
-      errors.push('Password must contain at least one digit');
-    }
-
-    if (!/[!@$%&*?]/.test(newPassword)) {
-      errors.push('Password must contain at least one special character: !@$%&*?');
-    }
-
-    if (errors.length > 0) {
-      const errorMessage = errors.join('\n');
-      TostifyHelper.showToast(errorMessage, Constants.TOAST_COLOR_RED);
-      return false;
-    }
-
-    return true;
   }
 
   private toggleEditModeDefaultAddresses(button: HTMLButtonElement): void {
@@ -280,55 +191,6 @@ class MyProfilePage extends Page {
       });
   }
 
-  // private toggleEditModeAddress(button: HTMLButtonElement): void {
-  //   const id = button.id.split('Z999S')[1];
-
-  //   const isEditing = button.textContent === 'Edit';
-  //   const originalButton = button;
-
-  //   const selectCountry = this.CONTAINER.querySelector(`#select-${id}`) as HTMLSelectElement;
-  //   const inputCity = this.CONTAINER.querySelector(`#city-${id}`) as HTMLInputElement;
-  //   const inputStreet = this.CONTAINER.querySelector(`#street-${id}`) as HTMLInputElement;
-  //   const inputZip = this.CONTAINER.querySelector(`#zip-${id}`) as HTMLInputElement;
-
-  //   const inputs = [selectCountry, inputCity, inputStreet, inputZip];
-
-  //   if (isEditing) {
-  //     inputs.forEach((address) => address.removeAttribute('disabled'));
-
-  //     originalButton.textContent = 'Save';
-  //     this.selectAddressInfo = [];
-  //   } else {
-  //     this.selectAddressInfo = [];
-  //     inputs.forEach((address) => {
-  //       this.selectAddressInfo.push(address.value);
-  //     });
-
-  //     const [country, city, street, zip] = this.selectAddressInfo;
-  //     const updateCustomerAddress = new UpdateCustomerInfo(this.getUserId());
-  //     updateCustomerAddress
-  //       .editCustomerAddress(country, city, street, zip, id, this.customer?.version || 0)
-  //       .then((response) => {
-  //         inputs.forEach((address) => {
-  //           address.setAttribute('disabled', 'disabled');
-  //         });
-  //         this.customer = response.body;
-  //         const defaultBillingOption = this.CONTAINER.querySelector(`#option-billingZ999S${id}`) as HTMLOptionElement;
-  //         const defaultShippingOption = this.CONTAINER.querySelector(`#option-shippingZ999S${id}`) as HTMLOptionElement;
-
-  //         const optionAddress = `${country}, ${city}, ${street}, ${zip}`;
-  //         defaultBillingOption.textContent = optionAddress;
-  //         defaultShippingOption.textContent = optionAddress;
-
-  //         TostifyHelper.showToast('Address updated successfully', Constants.TOAST_COLOR_GREEN);
-  //       })
-  //       .catch(() => {
-  //         TostifyHelper.showToast('Address update failed', Constants.TOAST_COLOR_RED);
-  //       });
-  //     originalButton.textContent = 'Edit';
-  //   }
-  // }
-
   private toggleEditModeAddress(button: HTMLButtonElement): void {
     const id = button.id.split('Z999S')[1];
 
@@ -354,11 +216,9 @@ class MyProfilePage extends Page {
       });
 
       const [country, city, street, zip] = this.selectAddressInfo;
-
-      const isAddressValid = this.validateAddress(country, city, street, zip);
+      const isAddressValid = Validator.validateAddress(country, city, street, zip);
 
       if (!isAddressValid) {
-        // Если адрес не прошел валидацию, не выполняйте обновление адреса
         return;
       }
 
@@ -384,49 +244,6 @@ class MyProfilePage extends Page {
         });
       originalButton.textContent = 'Edit';
     }
-  }
-
-  private validateAddress(country: string, city: string, street: string, zip: string): boolean {
-    if (
-      country.trim() === '' ||
-      city.trim() === '' ||
-      street.trim() === '' ||
-      zip.trim() === '' ||
-      city.length > 50 ||
-      street.length > 50
-    ) {
-      TostifyHelper.showToast(
-        'Please fill in all address fields and limit each field to 50 characters',
-        Constants.TOAST_COLOR_RED,
-      );
-      return false;
-    }
-
-    const errors: string[] = [];
-
-    if (!/^[a-zA-Z\s'-]+$/.test(city)) {
-      errors.push('City name contains invalid characters');
-    }
-
-    if (country === 'US' && !/^\d{5}$/.test(zip)) {
-      errors.push('ZIP code must be 5 digits for the United States');
-    }
-
-    if (country === 'CA' && !/^[A-Z]\d[A-Z] \d[A-Z]\d$/.test(zip)) {
-      errors.push('Canadian ZIP code must have the format A1A 1A1');
-    }
-
-    if (!/^[0-9A-Za-z\s.,;:?!'-~]+(-[0-9A-Za-z\s.,;:?!'-~]+)?$/.test(street)) {
-      errors.push('Street name contains invalid characters or format');
-    }
-
-    if (errors.length > 0) {
-      const errorMessage = errors.join('\n');
-      TostifyHelper.showToast(errorMessage, Constants.TOAST_COLOR_RED);
-      return false;
-    }
-
-    return true;
   }
 
   private deleteAddress(button: HTMLButtonElement): void {
@@ -464,7 +281,14 @@ class MyProfilePage extends Page {
 
     let addressId: string;
 
-    if (!this.validateAddress(selectCountry.value, inputCity.value, inputStreet.value, inputZip.value)) {
+    const isAddressValid = Validator.validateAddress(
+      selectCountry.value,
+      inputCity.value,
+      inputStreet.value,
+      inputZip.value,
+    );
+
+    if (!isAddressValid) {
       return;
     }
 
