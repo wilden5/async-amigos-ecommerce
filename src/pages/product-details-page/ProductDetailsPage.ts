@@ -13,7 +13,7 @@ import 'swiper/scss/navigation';
 import 'swiper/scss/pagination';
 import Breadcrumbs from '../../components/breadcrumbs/Breadcrumbs';
 import CategoryPage from '../category-page/CategoryPage';
-import { SwiperParams } from '../../utils/SwiperParams';
+import { SwiperModalParams } from '../../utils/SwiperParams';
 
 class ProductDetailsPage extends Page {
   private readonly PRODUCT_PAGE_ID: string;
@@ -92,26 +92,22 @@ class ProductDetailsPage extends Page {
   }
 
   private initModal = (): void => {
-    const productDetailsContainer = this.CONTAINER.querySelector('.product-details-container') as HTMLElement;
-    const dialogContainer = DOMHelpers.createElement('div', { className: 'dialog-container' }, productDetailsContainer);
+    const dialogContainer = DOMHelpers.createElement('div', { className: 'dialog-container' }, this.CONTAINER);
     dialogContainer.innerHTML = this.DIALOG_MARKUP;
+    const dialogContent = this.CONTAINER.querySelector('.dialog-content');
 
-    const modalSwiperContainer = DOMHelpers.createElement(
-      'div',
-      { className: 'swiper-container swiper-modal' },
-      dialogContainer,
-    );
+    const modalSwiperContainer = DOMHelpers.createElement('div', { className: 'swiper swiper-modal' }, dialogContent);
 
     modalSwiperContainer.innerHTML = '';
 
     modalSwiperContainer.innerHTML = `
     <div class="swiper-wrapper">${this.SLIDER.generateSwiperContent(this.IMAGES_ARRAY)}</div>
-    <div class="swiper-button-next"></div>
-    <div class="swiper-button-prev"></div>
-    <div class="swiper-pagination"></div>
+    <div class="swiper-button-next swiper-modal-button-next"></div>
+    <div class="swiper-button-prev swiper-modal-button-prev"></div>
+    <div class="swiper-pagination swiper-modal-pagination"></div>
   `;
 
-    const swiperModal = new Swiper('.swiper-modal', SwiperParams) as Swiper | null;
+    const swiperModal = new Swiper('.swiper-modal', SwiperModalParams) as Swiper | null;
 
     if (swiperModal) {
       swiperModal.init();

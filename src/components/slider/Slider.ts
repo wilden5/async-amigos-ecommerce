@@ -37,9 +37,9 @@ class Slider extends Component {
     const swiperContainer: HTMLElement = DOMHelpers.createElement('div', { className: 'swiper mySwiper' });
     swiperContainer.innerHTML = `
       <div class="swiper-wrapper">${this.generateSwiperContent(images)}</div>
-      <div class="swiper-button-next"></div>
-      <div class="swiper-button-prev"></div>
-      <div class="swiper-pagination"></div>
+      <div class="swiper-button-next swiper-main-button-next"></div>
+      <div class="swiper-button-prev swiper-main-button-prev"></div>
+      <div class="swiper-pagination swiper-main-pagination"></div>
     `;
 
     return swiperContainer;
