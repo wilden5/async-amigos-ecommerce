@@ -15,4 +15,5 @@ module.exports = {
     },
   },
   testPathIgnorePatterns: ['/node_modules/', '/__mocks__/'],
+  transformIgnorePatterns: ['node_modules/(?!swiper|ssr-window|dom7)/'],
 };
