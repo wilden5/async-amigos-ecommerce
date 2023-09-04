@@ -416,6 +416,10 @@ class MyProfilePage extends Page {
       errors.push('Canadian ZIP code must have the format A1A 1A1');
     }
 
+    if (!/^[0-9A-Za-z\s.,;:?!'-~]+(-[0-9A-Za-z\s.,;:?!'-~]+)?$/.test(street)) {
+      errors.push('Street name contains invalid characters or format');
+    }
+
     if (errors.length > 0) {
       const errorMessage = errors.join('\n');
       TostifyHelper.showToast(errorMessage, Constants.TOAST_COLOR_RED);
@@ -460,6 +464,10 @@ class MyProfilePage extends Page {
 
     let addressId: string;
 
+    if (!this.validateAddress(selectCountry.value, inputCity.value, inputStreet.value, inputZip.value)) {
+      return;
+    }
+
     const addAddress = new UpdateCustomerInfo(this.getUserId());
     addAddress
       .addCustomerAddress(
@@ -473,44 +481,44 @@ class MyProfilePage extends Page {
         addressId = this.findAddedAddress(this.customer, response.body);
 
         addressContainer.innerHTML += `<div class="customer-address" id="address-${addressId}">
-        <div class="input-container">
-          <label class="input-label">Country:</label>
-          <select class="customer-address-select" id="select-${addressId}" disabled>
-            <option>${selectCountry.value || ''}</option>
-            <option>${selectCountry.value === 'US' ? 'CA' : 'US'}</option>
-          </select>
-        </div>
-        <div class="input-container">
-          <label class="input-label">City:</label>
-          <input class="address-input" id="city-${addressId}" type="text" value="${inputCity.value || ''}" disabled />
-        </div>
-        <div class="input-container">
-          <label class="input-label">Street:</label>
-          <input class="address-input" id="street-${addressId}" type="text" value="${
-            inputStreet.value || ''
-          }" disabled />
-        </div>
-        <div class="input-container">
-          <label class="input-label">ZIP Code:</label>
-          <input class="address-input" id="zip-${addressId}" type="text" value="${inputZip.value || ''}" disabled />
-        </div>
-        <div class="customer-button-container">
-          <button class="customer-personal-button edit-button-address" id="editZ999S${addressId}">Edit</button>
-          <button class="customer-personal-button delete-button-address" id="deleteZ999S${addressId}">Delete</button>
-        </div>
-      </div>`;
+          <div class="input-container">
+            <label class="input-label">Country:</label>
+            <select class="customer-address-select" id="select-${addressId}" disabled>
+              <option>${selectCountry.value || ''}</option>
+              <option>${selectCountry.value === 'US' ? 'CA' : 'US'}</option>
+            </select>
+          </div>
+          <div class="input-container">
+            <label class="input-label">City:</label>
+            <input class="address-input" id="city-${addressId}" type="text" value="${inputCity.value || ''}" disabled />
+          </div>
+          <div class="input-container">
+            <label class="input-label">Street:</label>
+            <input class="address-input" id="street-${addressId}" type="text" value="${
+              inputStreet.value || ''
+            }" disabled />
+          </div>
+          <div class="input-container">
+            <label class="input-label">ZIP Code:</label>
+            <input class="address-input" id="zip-${addressId}" type="text" value="${inputZip.value || ''}" disabled />
+          </div>
+          <div class="customer-button-container">
+            <button class="customer-personal-button edit-button-address" id="editZ999S${addressId}">Edit</button>
+            <button class="customer-personal-button delete-button-address" id="deleteZ999S${addressId}">Delete</button>
+          </div>
+        </div>`;
 
         selectBillingAddress.innerHTML += `<option id="option-billingZ999S${addressId || '--'}">
-      ${selectCountry.value || '--'}, 
-      ${inputCity.value || '--'}, 
-      ${inputStreet.value || '--'}, 
-      ${inputZip.value || '--'}</option>`;
+          ${selectCountry.value || '--'}, 
+          ${inputCity.value || '--'}, 
+          ${inputStreet.value || '--'}, 
+          ${inputZip.value || '--'}</option>`;
 
         selectShippingAddress.innerHTML += `<option id="option-shippingZ999S${addressId || '--'}">
-      ${selectCountry.value || '--'}, 
-      ${inputCity.value || '--'}, 
-      ${inputStreet.value || '--'}, 
-      ${inputZip.value || '--'}</option>`;
+          ${selectCountry.value || '--'}, 
+          ${inputCity.value || '--'}, 
+          ${inputStreet.value || '--'}, 
+          ${inputZip.value || '--'}</option>`;
 
         this.customer = response.body;
         TostifyHelper.showToast('Adding the address was successful', Constants.TOAST_COLOR_GREEN);
@@ -520,9 +528,8 @@ class MyProfilePage extends Page {
         inputZip.value = '';
         selectCountry.selectedIndex = 0;
       })
-      .catch((error) => {
+      .catch(() => {
         TostifyHelper.showToast('Adding an address failed', Constants.TOAST_COLOR_RED);
-        return Promise.reject(error);
       });
   }
 
