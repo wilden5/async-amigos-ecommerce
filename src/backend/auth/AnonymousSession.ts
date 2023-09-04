@@ -19,7 +19,7 @@ class AnonymousSession {
   }
 
   public async requestAnonymousTokenInfo(): Promise<TokenInfo> {
-    const authUrl = `${hostAuth}/oauth/${projectKey}/anonymous/token?grant_type=client_credentials`;
+    const authUrl = `${hostAuth}/oauth/${projectKey}/anonymous/token?grant_type=client_credentials&anonymous_id=denis-1234`;
     const base64Credentials = btoa(`${clientIdWithAnnonymousScope}:${clientSecretWithAnnonymousScope}`);
 
     try {

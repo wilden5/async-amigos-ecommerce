@@ -14,8 +14,9 @@ import ProductCardBuilder from './ProductCardBuilder';
 import CatalogPageSort from './CatalogPageSort';
 import Breadcrumbs from '../../components/breadcrumbs/Breadcrumbs';
 import DOMHelpers from '../../utils/DOMHelpers';
-import AnonymousSession from '../../backend/Auth/AnonymousSession';
+import AnonymousSession from '../../backend/auth/AnonymousSession';
 import TostifyHelper from '../../utils/TostifyHelper';
+import AnonymousCart from '../../backend/cart/AnonymousCart';
 
 class CatalogPage extends Page {
   private CATALOG_PAGE_MARKUP = `
@@ -98,7 +99,9 @@ class CatalogPage extends Page {
     new AnonymousSession()
       .buildAuthString()
       .then(() => {
-        console.log(localStorage.getItem('auth'));
+        new AnonymousCart().createCart(localStorage.getItem('auth') as string).catch((error: Error) => {
+          TostifyHelper.showToast(error.message, Constants.TOAST_COLOR_RED);
+        });
       })
       .catch((error: Error) => {
         TostifyHelper.showToast(error.message, Constants.TOAST_COLOR_RED);
