@@ -9,6 +9,7 @@ import PromiseHelpers from '../../utils/PromiseHelpers';
 import ProductCardBuilder from '../catalog-page/ProductCardBuilder';
 import Slider from '../../components/slider/Slider';
 import 'swiper/scss';
+import 'swiper/css';
 import 'swiper/scss/navigation';
 import 'swiper/scss/pagination';
 import Breadcrumbs from '../../components/breadcrumbs/Breadcrumbs';
