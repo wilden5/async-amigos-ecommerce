@@ -44,27 +44,78 @@ class MyProfilePage extends Page {
 
       this.inputPersonalInfo = [];
     } else {
+      this.inputPersonalInfo = [];
       inputFields.forEach((input) => {
-        input.setAttribute('disabled', 'disabled');
-
         this.inputPersonalInfo?.push((input as HTMLInputElement).value);
       });
-      const updateCustomerInfo = new UpdateCustomerInfo(this.getUserId());
+
       const [firstName, lastName, dateOfBirth, email] = this.inputPersonalInfo;
       const version = this.customer?.version || 0;
 
+      const isPersonalInfoValid = this.validatePersonalInfo(firstName, lastName, dateOfBirth, email);
+
+      if (isPersonalInfoValid) {
+        return;
+      }
+
+      const updateCustomerInfo = new UpdateCustomerInfo(this.getUserId());
       updateCustomerInfo
         .updateCustomerInfo(firstName, lastName, dateOfBirth, email, version)
         .then((response) => {
           this.customer = response.body;
           TostifyHelper.showToast('Updating personal information successfully', Constants.TOAST_COLOR_GREEN);
+          inputFields.forEach((input) => {
+            input.setAttribute('disabled', 'disabled');
+          });
         })
         .catch(() => {
-          TostifyHelper.showToast('Updating personal information failed', Constants.TOAST_COLOR_GREEN);
+          TostifyHelper.showToast('Updating personal information failed', Constants.TOAST_COLOR_RED);
         });
 
       originalButton.textContent = 'Edit';
     }
+  }
+
+  private validatePersonalInfo(firstName: string, lastName: string, dateOfBirth: string, email: string): boolean {
+    const namePattern = /^[A-Za-z]+$/;
+    const dateOfBirthPattern = /^\d{4}-\d{2}-\d{2}$/;
+    const emailPattern = /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,4}$/;
+
+    const isFirstNameValid = namePattern.test(firstName);
+    const isLastNameValid = namePattern.test(lastName);
+    const isDateOfBirthValid = dateOfBirthPattern.test(dateOfBirth);
+    const isEmailValid = emailPattern.test(email);
+
+    const errorMessages: string[] = [];
+
+    if (!isFirstNameValid) {
+      errorMessages.push('The name contains invalid characters');
+    }
+
+    if (!isLastNameValid) {
+      errorMessages.push('Last name contains invalid characters');
+    }
+
+    if (!isDateOfBirthValid) {
+      errorMessages.push('The date of birth is in the wrong format');
+    } else {
+      const dateParts = dateOfBirth.split('-');
+      const yearOfBirth = parseInt(dateParts[0], 10);
+      if (yearOfBirth < 1900 || yearOfBirth > 2022) {
+        errorMessages.push('Year of birth must be between 1900 and 2022');
+      }
+    }
+
+    if (!isEmailValid) {
+      errorMessages.push('Email is not in the correct format');
+    }
+
+    if (errorMessages.length > 0) {
+      const errorMessage = errorMessages.join('\n');
+      TostifyHelper.showToast(errorMessage, Constants.TOAST_COLOR_RED);
+    }
+
+    return errorMessages.length > 0;
   }
 
   private toggleEditModePassword(button: HTMLButtonElement): void {
@@ -87,7 +138,6 @@ class MyProfilePage extends Page {
       this.inputPasswordInfo = [];
     } else {
       passwordInputs.forEach((input) => {
-        input.setAttribute('disabled', 'disabled');
         this.inputPasswordInfo.push(input.value);
       });
 
@@ -95,6 +145,9 @@ class MyProfilePage extends Page {
       updateCustomerInfo
         .changeCustomerPassword(inputCurrentPassword.value, inputNewPassword.value, this.customer?.version || 0)
         .then((response) => {
+          passwordInputs.forEach((input) => {
+            input.setAttribute('disabled', 'disabled');
+          });
           this.customer = response.body;
           TostifyHelper.showToast('Updating password successfully', Constants.TOAST_COLOR_GREEN);
         })
