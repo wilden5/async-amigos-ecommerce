@@ -14,6 +14,7 @@ import ProductCardBuilder from './ProductCardBuilder';
 import CatalogPageSort from './CatalogPageSort';
 import Breadcrumbs from '../../components/breadcrumbs/Breadcrumbs';
 import DOMHelpers from '../../utils/DOMHelpers';
+import AnonymousSession from '../../backend/Auth/AnonymousSession';
 
 class CatalogPage extends Page {
   private CATALOG_PAGE_MARKUP = `
@@ -92,6 +93,17 @@ class CatalogPage extends Page {
       });
   };
 
+  static orderMe = (): void => {
+    new AnonymousSession()
+      .requestAnonymousToken()
+      .then((accessToken) => {
+        console.log('Получен анонимный токен:', accessToken);
+      })
+      .catch((error) => {
+        console.error('Ошибка при получении анонимного токена:', error);
+      });
+  };
+
   static onProductClick(container: HTMLElement): void {
     container.addEventListener('click', (event: Event): void => {
       const clickedElement = event.target as Element;
@@ -99,6 +111,7 @@ class CatalogPage extends Page {
 
       if (clickedElement instanceof HTMLAnchorElement && clickedElement.className === 'order-me') {
         event.preventDefault();
+        this.orderMe();
         return;
       }
 
