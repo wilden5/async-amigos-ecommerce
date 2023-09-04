@@ -280,6 +280,55 @@ class MyProfilePage extends Page {
       });
   }
 
+  // private toggleEditModeAddress(button: HTMLButtonElement): void {
+  //   const id = button.id.split('Z999S')[1];
+
+  //   const isEditing = button.textContent === 'Edit';
+  //   const originalButton = button;
+
+  //   const selectCountry = this.CONTAINER.querySelector(`#select-${id}`) as HTMLSelectElement;
+  //   const inputCity = this.CONTAINER.querySelector(`#city-${id}`) as HTMLInputElement;
+  //   const inputStreet = this.CONTAINER.querySelector(`#street-${id}`) as HTMLInputElement;
+  //   const inputZip = this.CONTAINER.querySelector(`#zip-${id}`) as HTMLInputElement;
+
+  //   const inputs = [selectCountry, inputCity, inputStreet, inputZip];
+
+  //   if (isEditing) {
+  //     inputs.forEach((address) => address.removeAttribute('disabled'));
+
+  //     originalButton.textContent = 'Save';
+  //     this.selectAddressInfo = [];
+  //   } else {
+  //     this.selectAddressInfo = [];
+  //     inputs.forEach((address) => {
+  //       this.selectAddressInfo.push(address.value);
+  //     });
+
+  //     const [country, city, street, zip] = this.selectAddressInfo;
+  //     const updateCustomerAddress = new UpdateCustomerInfo(this.getUserId());
+  //     updateCustomerAddress
+  //       .editCustomerAddress(country, city, street, zip, id, this.customer?.version || 0)
+  //       .then((response) => {
+  //         inputs.forEach((address) => {
+  //           address.setAttribute('disabled', 'disabled');
+  //         });
+  //         this.customer = response.body;
+  //         const defaultBillingOption = this.CONTAINER.querySelector(`#option-billingZ999S${id}`) as HTMLOptionElement;
+  //         const defaultShippingOption = this.CONTAINER.querySelector(`#option-shippingZ999S${id}`) as HTMLOptionElement;
+
+  //         const optionAddress = `${country}, ${city}, ${street}, ${zip}`;
+  //         defaultBillingOption.textContent = optionAddress;
+  //         defaultShippingOption.textContent = optionAddress;
+
+  //         TostifyHelper.showToast('Address updated successfully', Constants.TOAST_COLOR_GREEN);
+  //       })
+  //       .catch(() => {
+  //         TostifyHelper.showToast('Address update failed', Constants.TOAST_COLOR_RED);
+  //       });
+  //     originalButton.textContent = 'Edit';
+  //   }
+  // }
+
   private toggleEditModeAddress(button: HTMLButtonElement): void {
     const id = button.id.split('Z999S')[1];
 
@@ -299,16 +348,27 @@ class MyProfilePage extends Page {
       originalButton.textContent = 'Save';
       this.selectAddressInfo = [];
     } else {
+      this.selectAddressInfo = [];
       inputs.forEach((address) => {
-        address.setAttribute('disabled', 'disabled');
         this.selectAddressInfo.push(address.value);
       });
 
       const [country, city, street, zip] = this.selectAddressInfo;
+
+      const isAddressValid = this.validateAddress(country, city, street, zip);
+
+      if (!isAddressValid) {
+        // Если адрес не прошел валидацию, не выполняйте обновление адреса
+        return;
+      }
+
       const updateCustomerAddress = new UpdateCustomerInfo(this.getUserId());
       updateCustomerAddress
         .editCustomerAddress(country, city, street, zip, id, this.customer?.version || 0)
         .then((response) => {
+          inputs.forEach((address) => {
+            address.setAttribute('disabled', 'disabled');
+          });
           this.customer = response.body;
           const defaultBillingOption = this.CONTAINER.querySelector(`#option-billingZ999S${id}`) as HTMLOptionElement;
           const defaultShippingOption = this.CONTAINER.querySelector(`#option-shippingZ999S${id}`) as HTMLOptionElement;
@@ -324,6 +384,45 @@ class MyProfilePage extends Page {
         });
       originalButton.textContent = 'Edit';
     }
+  }
+
+  private validateAddress(country: string, city: string, street: string, zip: string): boolean {
+    if (
+      country.trim() === '' ||
+      city.trim() === '' ||
+      street.trim() === '' ||
+      zip.trim() === '' ||
+      city.length > 50 ||
+      street.length > 50
+    ) {
+      TostifyHelper.showToast(
+        'Please fill in all address fields and limit each field to 50 characters',
+        Constants.TOAST_COLOR_RED,
+      );
+      return false;
+    }
+
+    const errors: string[] = [];
+
+    if (!/^[a-zA-Z\s'-]+$/.test(city)) {
+      errors.push('City name contains invalid characters');
+    }
+
+    if (country === 'US' && !/^\d{5}$/.test(zip)) {
+      errors.push('ZIP code must be 5 digits for the United States');
+    }
+
+    if (country === 'CA' && !/^[A-Z]\d[A-Z] \d[A-Z]\d$/.test(zip)) {
+      errors.push('Canadian ZIP code must have the format A1A 1A1');
+    }
+
+    if (errors.length > 0) {
+      const errorMessage = errors.join('\n');
+      TostifyHelper.showToast(errorMessage, Constants.TOAST_COLOR_RED);
+      return false;
+    }
+
+    return true;
   }
 
   private deleteAddress(button: HTMLButtonElement): void {
