@@ -59,9 +59,8 @@ class MyProfilePage extends Page {
           this.customer = response.body;
           TostifyHelper.showToast('Updating personal information successfully', Constants.TOAST_COLOR_GREEN);
         })
-        .catch((err) => {
+        .catch(() => {
           TostifyHelper.showToast('Updating personal information failed', Constants.TOAST_COLOR_GREEN);
-          throw err;
         });
 
       originalButton.textContent = 'Edit';
@@ -99,9 +98,8 @@ class MyProfilePage extends Page {
           this.customer = response.body;
           TostifyHelper.showToast('Updating password successfully', Constants.TOAST_COLOR_GREEN);
         })
-        .catch((err) => {
+        .catch(() => {
           TostifyHelper.showToast('Updating password failed', Constants.TOAST_COLOR_RED);
-          throw err;
         });
 
       originalButton.textContent = 'Edit';
@@ -133,9 +131,8 @@ class MyProfilePage extends Page {
           TostifyHelper.showToast('Default address updated successfully', Constants.TOAST_COLOR_GREEN);
           originalButton.textContent = 'Edit';
         })
-        .catch((err) => {
+        .catch(() => {
           TostifyHelper.showToast('Default address update failed', Constants.TOAST_COLOR_RED);
-          throw err;
         });
     }
   }
@@ -211,9 +208,8 @@ class MyProfilePage extends Page {
 
           TostifyHelper.showToast('Address updated successfully', Constants.TOAST_COLOR_GREEN);
         })
-        .catch((err) => {
+        .catch(() => {
           TostifyHelper.showToast('Address update failed', Constants.TOAST_COLOR_RED);
-          throw err;
         });
       originalButton.textContent = 'Edit';
     }
@@ -237,9 +233,8 @@ class MyProfilePage extends Page {
 
         TostifyHelper.showToast('Address deleted successfully', Constants.TOAST_COLOR_GREEN);
       })
-      .catch((err) => {
+      .catch(() => {
         TostifyHelper.showToast('Address delete failed', Constants.TOAST_COLOR_RED);
-        throw err;
       });
   }
 
@@ -348,7 +343,7 @@ class MyProfilePage extends Page {
           );
 
           customerDiv.innerHTML = `
-          <form class="customer-personal-data customer-container-item" novalidate="novalidate">
+          <form class="customer-personal-data customer-container-item" id="customer-personal-data-form" novalidate="novalidate">
             <div class="input-container">
               <label class="input-label">Name:</label>
               <input class="personal-input address-input" type="text" value="${
@@ -363,7 +358,7 @@ class MyProfilePage extends Page {
             </div>
             <div class="input-container">
               <label class="input-label">Birth Date:</label>
-              <input class="personal-input address-input" type="date" min="1900-01-01" max="2010-12-31" value="${
+              <input class="personal-input address-input" type="date" min="1900-01-01" max="2010-12-31" novalidate="novalidate" value="${
                 response.body.dateOfBirth || ''
               }" disabled />
             </div>
@@ -527,8 +522,8 @@ class MyProfilePage extends Page {
           });
         }
       })
-      .catch((error) => {
-        throw error;
+      .catch(() => {
+        TostifyHelper.showToast('A server error occurred, reload the page', Constants.TOAST_COLOR_RED);
       });
   }
 
