@@ -1,3 +1,4 @@
+import { TokenInfo } from '@commercetools/sdk-client-v2';
 import { CtpClient } from '../ctpClient/ctpClient';
 import {
   clientIdWithAnnonymousScope,
@@ -5,17 +6,22 @@ import {
   hostAuth,
   projectKey,
 } from '../configure/configure';
+import LocalStorage from '../../utils/LocalStorage';
 
 class AnonymousSession {
   private ctpClient: CtpClient;
 
+  private LOCAL_STORAGE: LocalStorage;
+
   constructor() {
     this.ctpClient = new CtpClient();
+    this.LOCAL_STORAGE = new LocalStorage();
   }
 
-  public async requestAnonymousToken(): Promise<string> {
+  public async requestAnonymousTokenInfo(): Promise<TokenInfo> {
     const authUrl = `${hostAuth}/oauth/${projectKey}/anonymous/token?grant_type=client_credentials`;
     const base64Credentials = btoa(`${clientIdWithAnnonymousScope}:${clientSecretWithAnnonymousScope}`);
+
     try {
       const response = await fetch(authUrl, {
         method: 'POST',
@@ -24,12 +30,17 @@ class AnonymousSession {
           'Content-Type': 'application/x-www-form-urlencoded',
         },
       });
-      return (await response.json()) as string;
+      return (await response.json()) as TokenInfo;
     } catch (error) {
-      console.error(error);
-      return `Ошибка при запросе анонимного токена`;
+      return Promise.reject(error);
+    }
+  }
+
+  public async buildAuthString(): Promise<void> {
+    if (!this.LOCAL_STORAGE.isLocalStorageItemExists('auth')) {
+      const tokenInfo = await this.requestAnonymousTokenInfo();
+      this.LOCAL_STORAGE.setLocalStorageItem('auth', `${tokenInfo.token_type as string} ${tokenInfo.access_token}`);
     }
   }
 }
-
 export default AnonymousSession;

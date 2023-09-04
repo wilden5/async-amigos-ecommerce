@@ -15,6 +15,7 @@ import CatalogPageSort from './CatalogPageSort';
 import Breadcrumbs from '../../components/breadcrumbs/Breadcrumbs';
 import DOMHelpers from '../../utils/DOMHelpers';
 import AnonymousSession from '../../backend/Auth/AnonymousSession';
+import TostifyHelper from '../../utils/TostifyHelper';
 
 class CatalogPage extends Page {
   private CATALOG_PAGE_MARKUP = `
@@ -95,12 +96,12 @@ class CatalogPage extends Page {
 
   static orderMe = (): void => {
     new AnonymousSession()
-      .requestAnonymousToken()
-      .then((accessToken) => {
-        console.log('Получен анонимный токен:', accessToken);
+      .buildAuthString()
+      .then(() => {
+        console.log(localStorage.getItem('auth'));
       })
-      .catch((error) => {
-        console.error('Ошибка при получении анонимного токена:', error);
+      .catch((error: Error) => {
+        TostifyHelper.showToast(error.message, Constants.TOAST_COLOR_RED);
       });
   };
 
