@@ -29,4 +29,9 @@
     transform: scale(1.3);
     color: #007aff !important;
   }
+
+  &-modal {
+    z-index: 1010;
+  }
 }
+

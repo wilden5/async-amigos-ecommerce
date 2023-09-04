@@ -1,4 +1,5 @@
 import { Image, Product } from '@commercetools/platform-sdk';
+import Swiper from 'swiper';
 import Page from '../../components/templates/Page';
 import { ProjectPages } from '../../types/Enums';
 import Constants from '../../utils/Constants';
@@ -7,8 +8,12 @@ import DOMHelpers from '../../utils/DOMHelpers';
 import PromiseHelpers from '../../utils/PromiseHelpers';
 import ProductCardBuilder from '../catalog-page/ProductCardBuilder';
 import Slider from '../../components/slider/Slider';
+import 'swiper/scss';
+import 'swiper/scss/navigation';
+import 'swiper/scss/pagination';
 import Breadcrumbs from '../../components/breadcrumbs/Breadcrumbs';
 import CategoryPage from '../category-page/CategoryPage';
+import { SwiperParams } from '../../utils/SwiperParams';
 
 class ProductDetailsPage extends Page {
   private readonly PRODUCT_PAGE_ID: string;
@@ -66,6 +71,7 @@ class ProductDetailsPage extends Page {
     productElement.prepend(swiperWrapper);
     parentContainer.appendChild(productElement);
     this.SLIDER.initSwiper();
+
     (this.CONTAINER.querySelector('.swiper-wrapper') as HTMLElement).addEventListener('click', this.initModal);
   }
 
@@ -89,15 +95,59 @@ class ProductDetailsPage extends Page {
     const productDetailsContainer = this.CONTAINER.querySelector('.product-details-container') as HTMLElement;
     const dialogContainer = DOMHelpers.createElement('div', { className: 'dialog-container' }, productDetailsContainer);
     dialogContainer.innerHTML = this.DIALOG_MARKUP;
-    const swiperModal = new Slider();
-    const swiperMarkup = swiperModal.buildSwiperContainer(this.IMAGES_ARRAY);
 
-    (this.CONTAINER.querySelector('.dialog-content') as HTMLElement).appendChild(swiperMarkup);
-    (this.CONTAINER.querySelector('.dialog-close') as HTMLButtonElement).addEventListener('click', () => {
+    const modalSwiperContainer = DOMHelpers.createElement(
+      'div',
+      { className: 'swiper-container swiper-modal' },
+      dialogContainer,
+    );
+
+    modalSwiperContainer.innerHTML = '';
+
+    modalSwiperContainer.innerHTML = `
+    <div class="swiper-wrapper">${this.SLIDER.generateSwiperContent(this.IMAGES_ARRAY)}</div>
+    <div class="swiper-button-next"></div>
+    <div class="swiper-button-prev"></div>
+    <div class="swiper-pagination"></div>
+  `;
+
+    const swiperModal = new Swiper('.swiper-modal', SwiperParams) as Swiper | null;
+
+    if (swiperModal) {
+      swiperModal.init();
+    }
+
+    (this.CONTAINER.querySelector('.dialog-close') as HTMLButtonElement).addEventListener('click', (): void => {
       dialogContainer.remove();
+
+      if (swiperModal) {
+        swiperModal.destroy();
+      }
     });
-    swiperModal.initSwiper();
   };
+
+  // private initModal = (): void => {
+  //   const productDetailsContainer = this.CONTAINER.querySelector('.product-details-container') as HTMLElement;
+  //   const dialogContainer = DOMHelpers.createElement('div', { className: 'dialog-container' }, productDetailsContainer);
+  //   dialogContainer.innerHTML = this.DIALOG_MARKUP;
+  //
+  //   // const swiperModal = new Slider();
+  //   const swiperModal = new Swiper('.swiper-modal', SwiperParams) as Swiper | null;
+  //   const swiperMarkup = this.SLIDER.buildSwiperContainer(this.IMAGES_ARRAY);
+  //
+  //   (this.CONTAINER.querySelector('.dialog-content') as HTMLElement).appendChild(swiperMarkup);
+  //   (this.CONTAINER.querySelector('.dialog-close') as HTMLButtonElement).addEventListener('click', (): void => {
+  //     dialogContainer.remove();
+  //
+  //     if (swiperModal) {
+  //       swiperModal.destroy();
+  //     }
+  //   });
+  //   if (swiperModal) {
+  //     swiperModal.init();
+  //   }
+  //   // swiperModal.initSwiper();
+  // };
 
   private setBreadcrumb(): void {
     const productTitleElementText = (this.CONTAINER.querySelector('.product-title') as HTMLElement)

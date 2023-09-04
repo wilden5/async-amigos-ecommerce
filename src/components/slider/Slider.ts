@@ -1,7 +1,6 @@
 import { Image } from '@commercetools/platform-sdk';
 import Swiper from 'swiper';
-import { SwiperOptions } from 'swiper/types';
-import { Navigation, Pagination } from 'swiper/modules';
+import { SwiperParams } from '../../utils/SwiperParams';
 import 'swiper/scss';
 import 'swiper/scss/navigation';
 import 'swiper/scss/pagination';
@@ -21,6 +20,8 @@ class Slider extends Component {
   }
 
   public generateSwiperContent(images: Image[]): string {
+    this.swiperSlide = '';
+
     images.forEach((imageObject): void => {
       this.swiperSlide += `
       <div class="swiper-slide">
@@ -44,30 +45,7 @@ class Slider extends Component {
     return swiperContainer;
   }
 
-  private swiperParams: SwiperOptions = {
-    direction: 'horizontal',
-    grabCursor: true,
-    initialSlide: 0,
-    keyboard: {
-      enabled: true,
-      onlyInViewport: true,
-    },
-    loop: true,
-    modules: [Navigation, Pagination],
-    navigation: {
-      nextEl: '.swiper-button-next',
-      prevEl: '.swiper-button-prev',
-    },
-    pagination: {
-      el: '.swiper-pagination',
-      clickable: true,
-    },
-    slidesPerView: 1,
-    spaceBetween: 50,
-    zoom: true,
-  };
-
-  private swiper = new Swiper('.mySwiper', this.swiperParams) as Swiper | null;
+  private swiper = new Swiper('.mySwiper', SwiperParams) as Swiper | null;
 
   public destroy(): void {
     if (this.swiper) {
