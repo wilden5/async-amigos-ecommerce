@@ -160,6 +160,14 @@ class CatalogPage extends Page {
     this.onResetFiltersButtonClick();
     Breadcrumbs.setCatalogBreadcrumb(this.CONTAINER);
     this.createCategoriesLinks();
+    new AnonymousCart()
+      .getMyActiveCart(localStorage.getItem('auth') as string)
+      .then((cart) => {
+        console.log(cart);
+      })
+      .catch((error: Error): void => {
+        PromiseHelpers.catchBlockHelper(error, Constants.FETCH_PRODUCT_TYPES_ERROR);
+      });
     return this.CONTAINER;
   }
 }
