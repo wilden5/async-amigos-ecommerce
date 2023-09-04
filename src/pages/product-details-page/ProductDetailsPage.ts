@@ -68,6 +68,7 @@ class ProductDetailsPage extends Page {
         <a class=${Constants.PRODUCT_BUTTON_CLASSNAME}>${Constants.CART_BUTTON_TEXT}</a>
       </div>
     `;
+
     productElement.prepend(swiperWrapper);
     parentContainer.appendChild(productElement);
     this.SLIDER.initSwiper();
@@ -83,7 +84,7 @@ class ProductDetailsPage extends Page {
         this.buildProductDetails(queriedProductDetails, productContainer);
         this.PRODUCT_TYPE_ID = queriedProductDetails.productType.id;
       })
-      .then(() => {
+      .then((): void => {
         this.setBreadcrumb();
       })
       .catch((error: Error): void => {
@@ -94,26 +95,29 @@ class ProductDetailsPage extends Page {
   private initModal = (): void => {
     const dialogContainer = DOMHelpers.createElement('div', { className: 'dialog-container' }, this.CONTAINER);
     dialogContainer.innerHTML = this.DIALOG_MARKUP;
-    const dialogContent = this.CONTAINER.querySelector('.dialog-content');
+    const dialogContent: HTMLElement | null = this.CONTAINER.querySelector('.dialog-content');
+    const dialogCloseBtn = this.CONTAINER.querySelector('.dialog-close') as HTMLButtonElement;
 
-    const modalSwiperContainer = DOMHelpers.createElement('div', { className: 'swiper swiper-modal' }, dialogContent);
+    if (dialogContent) {
+      const modalSwiperContainer = DOMHelpers.createElement('div', { className: 'swiper swiper-modal' }, dialogContent);
+      modalSwiperContainer.innerHTML = '';
 
-    modalSwiperContainer.innerHTML = '';
-
-    modalSwiperContainer.innerHTML = `
+      modalSwiperContainer.innerHTML = `
     <div class="swiper-wrapper">${this.SLIDER.generateSwiperContent(this.IMAGES_ARRAY)}</div>
     <div class="swiper-button-next swiper-modal-button-next"></div>
     <div class="swiper-button-prev swiper-modal-button-prev"></div>
     <div class="swiper-pagination swiper-modal-pagination"></div>
   `;
+    }
 
+    // Swiper init:
     const swiperModal = new Swiper('.swiper-modal', SwiperModalParams) as Swiper | null;
 
     if (swiperModal) {
       swiperModal.init();
     }
 
-    (this.CONTAINER.querySelector('.dialog-close') as HTMLButtonElement).addEventListener('click', (): void => {
+    dialogCloseBtn.addEventListener('click', (): void => {
       dialogContainer.remove();
 
       if (swiperModal) {
@@ -121,29 +125,6 @@ class ProductDetailsPage extends Page {
       }
     });
   };
-
-  // private initModal = (): void => {
-  //   const productDetailsContainer = this.CONTAINER.querySelector('.product-details-container') as HTMLElement;
-  //   const dialogContainer = DOMHelpers.createElement('div', { className: 'dialog-container' }, productDetailsContainer);
-  //   dialogContainer.innerHTML = this.DIALOG_MARKUP;
-  //
-  //   // const swiperModal = new Slider();
-  //   const swiperModal = new Swiper('.swiper-modal', SwiperParams) as Swiper | null;
-  //   const swiperMarkup = this.SLIDER.buildSwiperContainer(this.IMAGES_ARRAY);
-  //
-  //   (this.CONTAINER.querySelector('.dialog-content') as HTMLElement).appendChild(swiperMarkup);
-  //   (this.CONTAINER.querySelector('.dialog-close') as HTMLButtonElement).addEventListener('click', (): void => {
-  //     dialogContainer.remove();
-  //
-  //     if (swiperModal) {
-  //       swiperModal.destroy();
-  //     }
-  //   });
-  //   if (swiperModal) {
-  //     swiperModal.init();
-  //   }
-  //   // swiperModal.initSwiper();
-  // };
 
   private setBreadcrumb(): void {
     const productTitleElementText = (this.CONTAINER.querySelector('.product-title') as HTMLElement)

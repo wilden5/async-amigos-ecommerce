@@ -82,6 +82,30 @@
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
     transform: translate(-50%, -50%);
     z-index: 2;
+    transition: transform 0.3s ease;
+    @media screen and (max-width: $breakPoint-3) {
+      height: 70%;
+    }
+    @media screen and (max-width: 685px) {
+      height: 60%;
+    }
+    @media screen and (max-width: $breakPoint-4) {
+      height: 50%;
+    }
+
+    .product-modal-image {
+      transform: scale(2.2);
+      transition: transform 0.3s ease;
+      @media screen and (max-width: $breakPoint-3) {
+        transform: scale(2);
+      }
+      @media screen and (max-width: 685px) {
+        transform: scale(1.7);
+      }
+      @media screen and (max-width: $breakPoint-4) {
+        transform: scale(0.9);
+      }
+    }
   }
 
   &-close {
