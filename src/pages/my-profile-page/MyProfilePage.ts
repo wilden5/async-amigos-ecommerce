@@ -137,9 +137,19 @@ class MyProfilePage extends Page {
       originalButton.textContent = 'Save';
       this.inputPasswordInfo = [];
     } else {
+      this.inputPasswordInfo = [];
       passwordInputs.forEach((input) => {
         this.inputPasswordInfo.push(input.value);
       });
+
+      const currentPassword = inputCurrentPassword.value;
+      const newPassword = inputNewPassword.value;
+
+      const isPasswordValid = this.validatePassword(currentPassword, newPassword);
+
+      if (!isPasswordValid) {
+        return;
+      }
 
       const updateCustomerInfo = new UpdateCustomerInfo(this.getUserId());
       updateCustomerInfo
@@ -159,6 +169,54 @@ class MyProfilePage extends Page {
       inputCurrentPassword.value = '';
       inputNewPassword.value = '';
     }
+  }
+
+  private validatePassword(currentPassword: string, newPassword: string): boolean {
+    if (currentPassword.trim() === '') {
+      TostifyHelper.showToast('Please enter your current password', Constants.TOAST_COLOR_RED);
+      return false;
+    }
+
+    if (newPassword.trim() === '') {
+      TostifyHelper.showToast('Please enter a new password', Constants.TOAST_COLOR_RED);
+      return false;
+    }
+
+    if (newPassword.length < 8) {
+      TostifyHelper.showToast('Password must be at least 8 characters long', Constants.TOAST_COLOR_RED);
+      return false;
+    }
+
+    if (currentPassword === newPassword) {
+      TostifyHelper.showToast('Your new password must not be the same as your old password', Constants.TOAST_COLOR_RED);
+      return false;
+    }
+
+    const errors: string[] = [];
+
+    if (!/[A-Z]/.test(newPassword)) {
+      errors.push('Password must contain at least one uppercase letter');
+    }
+
+    if (!/[a-z]/.test(newPassword)) {
+      errors.push('Password must contain at least one lowercase letter');
+    }
+
+    if (!/\d/.test(newPassword)) {
+      errors.push('Password must contain at least one digit');
+    }
+
+    if (!/[!@$%&*?]/.test(newPassword)) {
+      errors.push('Password must contain at least one special character: !@$%&*?');
+    }
+
+    if (errors.length > 0) {
+      const errorMessage = errors.join('\n');
+      TostifyHelper.showToast(errorMessage, Constants.TOAST_COLOR_RED);
+      return false;
+    }
+
+    return true;
   }
 
   private toggleEditModeDefaultAddresses(button: HTMLButtonElement): void {
