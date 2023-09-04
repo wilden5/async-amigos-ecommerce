@@ -97,9 +97,10 @@ class CatalogPage extends Page {
 
   static orderMe = (): void => {
     new AnonymousSession()
-      .buildAuthString()
+      .saveTokenInLocalStorage()
       .then(() => {
-        new AnonymousCart().createCart(localStorage.getItem('auth') as string).catch((error: Error) => {
+        new AnonymousCart().createCart(localStorage.getItem('access-token') as string).catch((error: Error) => {
+          console.log(localStorage.getItem('access-token'));
           TostifyHelper.showToast(error.message, Constants.TOAST_COLOR_RED);
         });
       })
@@ -161,7 +162,7 @@ class CatalogPage extends Page {
     Breadcrumbs.setCatalogBreadcrumb(this.CONTAINER);
     this.createCategoriesLinks();
     new AnonymousCart()
-      .getMyActiveCart(localStorage.getItem('auth') as string)
+      .getMyActiveCart(localStorage.getItem('access-token') as string)
       .then((cart) => {
         console.log(cart);
       })
