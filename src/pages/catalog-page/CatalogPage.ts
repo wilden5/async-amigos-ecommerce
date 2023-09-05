@@ -14,9 +14,6 @@ import ProductCardBuilder from './ProductCardBuilder';
 import CatalogPageSort from './CatalogPageSort';
 import Breadcrumbs from '../../components/breadcrumbs/Breadcrumbs';
 import DOMHelpers from '../../utils/DOMHelpers';
-import AnonymousSession from '../../backend/auth/AnonymousSession';
-import TostifyHelper from '../../utils/TostifyHelper';
-import AnonymousCart from '../../backend/cart/AnonymousCart';
 
 class CatalogPage extends Page {
   private CATALOG_PAGE_MARKUP = `
@@ -95,19 +92,7 @@ class CatalogPage extends Page {
       });
   };
 
-  static orderMe = (): void => {
-    new AnonymousSession()
-      .saveTokenInLocalStorage()
-      .then(() => {
-        new AnonymousCart().createCart(localStorage.getItem('access-token') as string).catch((error: Error) => {
-          console.log(localStorage.getItem('access-token'));
-          TostifyHelper.showToast(error.message, Constants.TOAST_COLOR_RED);
-        });
-      })
-      .catch((error: Error) => {
-        TostifyHelper.showToast(error.message, Constants.TOAST_COLOR_RED);
-      });
-  };
+  static onAddToCartButtonClick = (): void => {};
 
   static onProductClick(container: HTMLElement): void {
     container.addEventListener('click', (event: Event): void => {
@@ -116,7 +101,7 @@ class CatalogPage extends Page {
 
       if (clickedElement instanceof HTMLAnchorElement && clickedElement.className === 'order-me') {
         event.preventDefault();
-        this.orderMe();
+        this.onAddToCartButtonClick();
         return;
       }
 
@@ -161,14 +146,6 @@ class CatalogPage extends Page {
     this.onResetFiltersButtonClick();
     Breadcrumbs.setCatalogBreadcrumb(this.CONTAINER);
     this.createCategoriesLinks();
-    new AnonymousCart()
-      .getMyActiveCart(localStorage.getItem('access-token') as string)
-      .then((cart) => {
-        console.log(cart);
-      })
-      .catch((error: Error): void => {
-        PromiseHelpers.catchBlockHelper(error, Constants.FETCH_PRODUCT_TYPES_ERROR);
-      });
     return this.CONTAINER;
   }
 }

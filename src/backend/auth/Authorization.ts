@@ -7,6 +7,7 @@ import {
   projectKey,
 } from '../configure/configure';
 import LocalStorage from '../../utils/LocalStorage';
+import Constants from '../../utils/Constants';
 
 class Authorization {
   private ctpClient: CtpClient;
@@ -37,14 +38,17 @@ class Authorization {
   }
 
   public async saveTokenInLocalStorage(): Promise<void> {
-    if (!this.LOCAL_STORAGE.isLocalStorageItemExists('access-token')) {
+    if (!this.LOCAL_STORAGE.isLocalStorageItemExists(Constants.ACCESS_TOKEN_KEY)) {
       const tokenInfo = await this.requestNewAnonymousTokenInfo();
       this.LOCAL_STORAGE.setLocalStorageItem(
-        'access-token',
+        Constants.ACCESS_TOKEN_KEY,
         `${tokenInfo.token_type as string} ${tokenInfo.access_token}`,
       );
-      this.LOCAL_STORAGE.setLocalStorageItem('refresh-token', `${tokenInfo.refresh_token}`);
-      this.LOCAL_STORAGE.setLocalStorageItem('expires-in', `${new Date().getTime() + 10800 * 1000}`);
+      this.LOCAL_STORAGE.setLocalStorageItem(Constants.REFRESH_TOKEN_KEY, `${tokenInfo.refresh_token}`);
+      this.LOCAL_STORAGE.setLocalStorageItem(
+        Constants.EXPIRES_IN_TOKEN_KEY,
+        `${new Date().getTime() + Number(tokenInfo.expires_in) * 1000}`,
+      );
     }
   }
 
@@ -68,18 +72,23 @@ class Authorization {
   }
 
   public async checkTokenExpirationDate(): Promise<void> {
-    const tokenExpirationTime = Number(localStorage.getItem('expires-in'));
+    const tokenExpirationTime = Number(localStorage.getItem(Constants.EXPIRES_IN_TOKEN_KEY));
 
     if (new Date().getTime() > tokenExpirationTime) {
-      new LocalStorage().removeLocalStorageItem('access-token');
-      new LocalStorage().removeLocalStorageItem('expires-in');
+      this.LOCAL_STORAGE.removeLocalStorageItem(Constants.ACCESS_TOKEN_KEY);
+      this.LOCAL_STORAGE.removeLocalStorageItem(Constants.EXPIRES_IN_TOKEN_KEY);
 
-      const updateToken = await this.refreshAccessToken(localStorage.getItem('refresh-token') as string);
-      new LocalStorage().setLocalStorageItem(
-        'access-token',
-        `${updateToken.token_type as string} ${updateToken.access_token}`,
+      const refreshedToken = await this.refreshAccessToken(
+        this.LOCAL_STORAGE.getLocalStorageItem(Constants.REFRESH_TOKEN_KEY) as string,
       );
-      new LocalStorage().setLocalStorageItem('expires-in', `${new Date().getTime() + 10800 * 1000}`);
+      this.LOCAL_STORAGE.setLocalStorageItem(
+        Constants.ACCESS_TOKEN_KEY,
+        `${refreshedToken.token_type as string} ${refreshedToken.access_token}`,
+      );
+      this.LOCAL_STORAGE.setLocalStorageItem(
+        Constants.EXPIRES_IN_TOKEN_KEY,
+        `${new Date().getTime() + Number(refreshedToken.expires_in) * 1000}`,
+      );
     }
   }
 }
