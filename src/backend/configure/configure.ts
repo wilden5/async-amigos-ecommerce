@@ -15,3 +15,7 @@ export const scopes = [
   'manage_cart_discounts:commercetools-api',
   'manage_products:commercetools-api',
 ];
+
+export const clientIdWithAnnonymousScope = 'yX-JzPUEeZXrCZNYAYrdz2Si';
+
+export const clientSecretWithAnnonymousScope = 'MJq7KF0Wd0ATgwu1W2DIameMUiRsfbpQ';

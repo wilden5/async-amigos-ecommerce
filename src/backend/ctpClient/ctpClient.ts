@@ -8,7 +8,16 @@ import {
 } from '@commercetools/sdk-client-v2';
 import { ByProjectKeyRequestBuilder } from '@commercetools/platform-sdk/dist/declarations/src/generated/client/by-project-key-request-builder';
 import { createApiBuilderFromCtpClient } from '@commercetools/platform-sdk';
-import { clientId, clientSecret, hostApi, hostAuth, projectKey, scopes } from '../configure/configure';
+import {
+  clientId,
+  clientSecret,
+  hostApi,
+  hostAuth,
+  projectKey,
+  scopes,
+  clientIdWithAnnonymousScope,
+  clientSecretWithAnnonymousScope,
+} from '../configure/configure';
 
 export class CtpClient {
   ctpClient: ClientBuilder;
@@ -71,8 +80,8 @@ export class CtpClient {
       host: hostAuth,
       projectKey,
       credentials: {
-        clientId,
-        clientSecret,
+        clientId: clientIdWithAnnonymousScope,
+        clientSecret: clientSecretWithAnnonymousScope,
       },
       scopes,
       fetch,

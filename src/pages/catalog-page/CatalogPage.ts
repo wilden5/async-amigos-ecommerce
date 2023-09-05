@@ -92,6 +92,8 @@ class CatalogPage extends Page {
       });
   };
 
+  static onAddToCartButtonClick = (): void => {};
+
   static onProductClick(container: HTMLElement): void {
     container.addEventListener('click', (event: Event): void => {
       const clickedElement = event.target as Element;
@@ -99,6 +101,7 @@ class CatalogPage extends Page {
 
       if (clickedElement instanceof HTMLAnchorElement && clickedElement.className === 'order-me') {
         event.preventDefault();
+        this.onAddToCartButtonClick();
         return;
       }
 

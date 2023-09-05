@@ -149,6 +149,14 @@ class Constants {
   static LAUNCH_DATE_CLASSNAME = 'type-launch-date';
 
   static BRAND_CLASSNAME = 'brand-select';
+
+  static ACCESS_TOKEN_KEY = 'access-token';
+
+  static REFRESH_TOKEN_KEY = 'refresh-token';
+
+  static EXPIRES_IN_TOKEN_KEY = 'expires-in';
+
+  static GET_LOCAL_STORAGE_ITEM_ERROR = 'Local Storage item was not found';
 }
 
 export default Constants;
