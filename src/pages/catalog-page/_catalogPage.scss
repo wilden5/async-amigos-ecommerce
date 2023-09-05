@@ -1,0 +1,250 @@
+@import '../styles/mixins';
+@import '../../globalVariables';
+
+.catalog {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+
+  &__container {
+    max-width: $breakPoint-1;
+    margin: 0 auto;
+    padding: 0 20px;
+  }
+}
+
+.product {
+  &-container {
+    display: flex;
+    margin: 1rem;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  &-item {
+    cursor: pointer;
+    align-items: flex-end;
+    padding: 1rem;
+    margin: 1rem;
+    width: 29rem;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    border: 0.1rem solid #ddd;
+    border-radius: 1rem;
+    box-shadow: 0 0.2rem 0.4rem rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s, box-shadow 0.2s;
+
+    &:hover {
+      transform: translateY(-0.5rem) scale(1.03);
+      box-shadow: 0 0.6rem 1.2rem rgba(0, 0, 0, 0.1);
+    }
+  }
+
+  &-image {
+    margin: 0.5rem;
+    max-width: 24rem;
+    height: 24rem;
+  }
+
+  &-description {
+    margin: 0.5rem;
+    text-align: center;
+  }
+}
+
+.order-me {
+  @include operationButton;
+
+  &:hover {
+    background-color: #0056b3;
+    transform: scale(1.1);
+  }
+}
+
+.price-container {
+  justify-content: center;
+  font-size: 2rem;
+  display: flex;
+  width: 100%;
+  gap: 2rem;
+  margin-bottom: 0.5rem;
+}
+
+.product-discounted-price {
+  color: #f90000;
+  font-weight: 800;
+}
+
+.price-strikethrough {
+  text-decoration: line-through;
+}
+
+.catalog-filters {
+  display: flex;
+  justify-content: center;
+}
+
+.filters-wrapper {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2rem;
+  border: 0.1rem solid #ddd;
+  padding: 1rem;
+  margin-top: 1rem;
+  border-radius: 0.5rem;
+  box-shadow: 0 0 0.5rem rgba(0, 0, 0, 0.1);
+}
+
+.filter-header {
+    font-size: 1.8rem;
+    margin-bottom: 1rem;
+}
+
+.filter-select,
+.sort-by {
+  width: 100%;
+  padding: 0.5rem;
+  font-family: MuseoModerno, sans-serif, cursive;
+}
+
+.filter-select,
+.sort-by {
+  cursor: pointer;
+  background-color: #f8f8f8;
+  border: 0.1rem solid #ddd;
+  border-radius: 0.4rem;
+  transition: border-color 0.2s;
+
+  &:hover, &:focus {
+    border-color: #777;
+  }
+}
+
+.on-sale-checkbox {
+  width: 3rem;
+  height: 2.7rem;
+}
+
+.price-wrapper {
+  display: flex;
+  gap: 1rem;
+}
+
+.reset-filter-button,
+.reset-sort {
+  font-family: MuseoModerno, sans-serif, cursive;
+  align-self: center;
+  max-height: 4rem;
+  display: inline-block;
+  padding: 1rem 2rem;
+  background-color: #007bff;
+  color: #ffffff;
+  border: none;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+
+  &:hover {
+    background-color: #0056b3;
+    transform: scale(1.05);
+  }
+
+  &:focus {
+    outline: none;
+  }
+}
+
+.min-label,
+.max-label {
+  display: block;
+  font-weight: 800;
+}
+
+.price-min,
+.price-max {
+  padding: 0.5rem;
+  border: 0.1rem solid #ccc9c9;
+  border-radius: 0.5rem;
+  font-size: 1.4rem;
+  transition: border-color 0.3s ease;
+
+  &:focus {
+    outline: none;
+    border-color: #007bff;
+  }
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+}
+
+.reset-sort {
+  text-align: center;
+  padding: 0.7rem;
+}
+
+.sorting-block {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  margin: 1rem;
+  gap: 2rem;
+}
+
+.sort-by {
+  font-size: 1.5rem;
+}
+
+.search-container {
+  display: flex;
+  align-items: center;
+  max-width: 30rem;
+
+  input[type="text"] {
+    flex: 1;
+    padding: 0.9rem;
+    border: 0.1rem solid #ccc;
+    border-radius: 0.5rem;
+    font-size: 1.6rem;
+    outline: none;
+  }
+}
+
+.categories-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.categories-header {
+  font-size: 2rem;
+  margin-bottom: 1rem;
+}
+
+.categories-links {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.category-link {
+  @include operationButton;
+
+  &:hover {
+    background-color: #0056b3;
+    transform: scale(1.1);
+  }
+}
+
+@media screen and (max-width: 700px) {
+ .filters-wrapper {
+   flex-direction: column;
+   padding-left: 7rem;
+   padding-right: 7rem;
+ }
+}
+

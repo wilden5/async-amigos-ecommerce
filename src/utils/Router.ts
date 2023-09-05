@@ -11,9 +11,15 @@ import MyProfilePage from '../pages/my-profile-page/MyProfilePage';
 import CartPage from '../pages/cart-page/CartPage';
 import AboutUsPage from '../pages/about-us-page/AboutUsPage';
 import LocalStorage from './LocalStorage';
+import ProductDetailsPage from '../pages/product-details-page/ProductDetailsPage';
+import CategoryPage from '../pages/category-page/CategoryPage';
 
 class Router {
-  private renderSpecificPage(pageID: string): void {
+  public renderSpecificPage(pageID: string): void {
+    const DynamicPages = {
+      ProductDetails: /^product\/[\w-]+$/,
+      Category: /^category\/[a-f0-9-]+$/,
+    };
     let currentPage: Page;
     DOMHelpers.getElement(`${Constants.PAGE_CONTAINER_SELECTOR}`).innerHTML = ''; // remove content before next page loading
 
@@ -41,7 +47,12 @@ class Router {
         currentPage = new CatalogPage();
         break;
       case ProjectPages.MyProfile:
-        currentPage = new MyProfilePage();
+        if (new LocalStorage().isLocalStorageItemExists(Constants.SUCCESSFUL_REGISTRATION_LOCAL_STORAGE_KEY)) {
+          currentPage = new MyProfilePage();
+        } else {
+          window.location.replace(`#${ProjectPages.Login}`);
+          currentPage = new LoginPage();
+        }
         break;
       case ProjectPages.Cart:
         currentPage = new CartPage();
@@ -50,7 +61,15 @@ class Router {
         currentPage = new AboutUsPage();
         break;
       default:
-        currentPage = new NotFoundPage();
+        if (DynamicPages.ProductDetails.test(pageID)) {
+          const extractedProductId = pageID.split('/')[1];
+          currentPage = new ProductDetailsPage(extractedProductId);
+        } else if (DynamicPages.Category.test(pageID)) {
+          const extractedCategoryId = pageID.split('/')[1];
+          currentPage = new CategoryPage(extractedCategoryId);
+        } else {
+          currentPage = new NotFoundPage();
+        }
         break;
     }
 

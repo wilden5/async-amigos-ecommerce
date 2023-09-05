@@ -1,0 +1,51 @@
+@import '../../globalVariables';
+
+.swiper {
+  width: 600px;
+  height: 300px;
+  user-select: none;
+
+  @media (max-width: $breakPoint-1) {
+    width: 100%;
+  }
+}
+
+.swiper {
+  &-slide {
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+    width: 100%;
+    height: 100%;
+    text-align: center;
+    font-size: 18px;
+  }
+
+  &-main-button-next:after,
+  &-main-button-prev:after {
+    font-size: 20px !important;
+    color: rgba(0, 122, 255, 0.66) !important;
+  }
+
+  &-main-button-next:hover, &-main-button-prev:hover {
+    transform: scale(1.3);
+    color: #007aff !important;
+  }
+}
+
+.swiper-modal {
+  width: 100%;
+  height: 100%;
+  user-select: none;
+
+  &-button-next:after,
+  &-button-prev:after {
+    font-size: 20px !important;
+    color: rgba(0, 122, 255, 0.66) !important;
+  }
+
+  &-button-next:hover, &-button-prev:hover {
+    transform: scale(1.3);
+    color: #007aff !important;
+  }
+}

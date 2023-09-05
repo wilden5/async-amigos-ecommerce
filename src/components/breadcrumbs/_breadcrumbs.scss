@@ -1,0 +1,32 @@
+.breadcrumb {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  background-color: #f8f9fa;
+  padding: 1rem;
+  margin-bottom: 1rem;
+  border-radius: 0.4rem;
+  font-size: 1.5rem;
+  font-weight: 800;
+}
+
+.bread-link {
+  text-decoration: none;
+  color: #007bff;
+  transition: color 0.2s;
+}
+
+.breadcrumb span {
+  margin: 0 1rem;
+  color: #1f1f1f;
+}
+
+.breadcrumb a:last-child {
+  font-weight: bold;
+  color: #000;
+}
+
+.breadcrumb a:hover {
+  color: #0056b3;
+}
