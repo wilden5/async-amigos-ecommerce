@@ -8,7 +8,7 @@ import {
 } from '../configure/configure';
 import LocalStorage from '../../utils/LocalStorage';
 
-class AnonymousSession {
+class Authorization {
   private ctpClient: CtpClient;
 
   private LOCAL_STORAGE: LocalStorage;
@@ -18,7 +18,7 @@ class AnonymousSession {
     this.LOCAL_STORAGE = new LocalStorage();
   }
 
-  public async requestAnonymousTokenInfo(): Promise<TokenInfo> {
+  public async requestNewAnonymousTokenInfo(): Promise<TokenInfo> {
     const authUrl = `${hostAuth}/oauth/${projectKey}/anonymous/token?grant_type=client_credentials`;
     const base64Credentials = btoa(`${clientIdWithAnnonymousScope}:${clientSecretWithAnnonymousScope}`);
 
@@ -38,7 +38,7 @@ class AnonymousSession {
 
   public async saveTokenInLocalStorage(): Promise<void> {
     if (!this.LOCAL_STORAGE.isLocalStorageItemExists('access-token')) {
-      const tokenInfo = await this.requestAnonymousTokenInfo();
+      const tokenInfo = await this.requestNewAnonymousTokenInfo();
       this.LOCAL_STORAGE.setLocalStorageItem(
         'access-token',
         `${tokenInfo.token_type as string} ${tokenInfo.access_token}`,
@@ -67,14 +67,20 @@ class AnonymousSession {
     }
   }
 
-  public async updateToken(): Promise<void> {
+  public async checkTokenExpirationDate(): Promise<void> {
     const tokenExpirationTime = Number(localStorage.getItem('expires-in'));
 
     if (new Date().getTime() > tokenExpirationTime) {
-      await this.refreshAccessToken(localStorage.getItem('refresh-token') as string);
       new LocalStorage().removeLocalStorageItem('access-token');
-      await this.saveTokenInLocalStorage();
+      new LocalStorage().removeLocalStorageItem('expires-in');
+
+      const updateToken = await this.refreshAccessToken(localStorage.getItem('refresh-token') as string);
+      new LocalStorage().setLocalStorageItem(
+        'access-token',
+        `${updateToken.token_type as string} ${updateToken.access_token}`,
+      );
+      new LocalStorage().setLocalStorageItem('expires-in', `${new Date().getTime() + 10800 * 1000}`);
     }
   }
 }
-export default AnonymousSession;
+export default Authorization;
