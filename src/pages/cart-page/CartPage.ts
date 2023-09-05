@@ -20,29 +20,47 @@ class CartPage extends Page {
     this.LOCAL_STORAGE = new LocalStorage();
   }
 
-  private displayCartProducts(): void {
+  private showCartProducts(): void {
     const usLocaleKey = 'en-US';
     new CustomerCart()
       .getMyActiveCart(this.LOCAL_STORAGE.getLocalStorageItem(Constants.ACCESS_TOKEN_KEY) as string)
       .then((activeCart) => {
         const cartDetails = this.CONTAINER.querySelector('.cart-details') as HTMLElement;
-        activeCart.results[0].lineItems.forEach((item) => {
-          const cartItem = DOMHelpers.createElement(
-            'div',
-            { className: `${item.productKey as string} cart-item` },
-            cartDetails,
-          );
-          cartItem.innerText = `${item.name[usLocaleKey]} ${item.price.value.centAmount}`;
-        });
+        const cartItemsNumber = activeCart.results[0].lineItems.length;
+        if (cartItemsNumber > 0) {
+          activeCart.results[0].lineItems.forEach((item) => {
+            const cartItem = DOMHelpers.createElement(
+              'div',
+              { className: `${item.productKey as string} cart-item` },
+              cartDetails,
+            );
+            cartItem.innerText = `${item.name[usLocaleKey]} ${item.price.value.centAmount}`;
+          });
+        } else {
+          this.showEmptyCartMessage();
+        }
       })
       .catch((error: Error): void => {
         PromiseHelpers.catchBlockHelper(error, error.message);
       });
   }
 
+  private showEmptyCartMessage(): void {
+    const parent = this.CONTAINER.querySelector('.cart-details') as HTMLDivElement;
+    const element = DOMHelpers.createElement('div', { className: `empty-cart` }, parent);
+    element.innerText = 'CART IS EMPTY!';
+  }
+
   public renderPage(): HTMLElement {
     this.CONTAINER.innerHTML = this.CART_PAGE_MARKUP;
-    this.displayCartProducts();
+    new CustomerCart()
+      .handleCartCreation()
+      .then(() => {
+        this.showCartProducts();
+      })
+      .catch((error: Error): void => {
+        PromiseHelpers.catchBlockHelper(error, error.message);
+      });
     return this.CONTAINER;
   }
 }
