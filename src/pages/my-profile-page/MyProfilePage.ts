@@ -5,6 +5,7 @@ import { GetCustomerInfo } from '../../backend/customer/getCustomer';
 import { UpdateCustomerInfo } from '../../backend/customer/updateCustomer';
 import TostifyHelper from '../../utils/TostifyHelper';
 import Constants from '../../utils/Constants';
+import Validator from './ProfileFormValidation';
 
 class MyProfilePage extends Page {
   customer: Customer | null = null;
@@ -44,23 +45,32 @@ class MyProfilePage extends Page {
 
       this.inputPersonalInfo = [];
     } else {
+      this.inputPersonalInfo = [];
       inputFields.forEach((input) => {
-        input.setAttribute('disabled', 'disabled');
-
         this.inputPersonalInfo?.push((input as HTMLInputElement).value);
       });
-      const updateCustomerInfo = new UpdateCustomerInfo(this.getUserId());
+
       const [firstName, lastName, dateOfBirth, email] = this.inputPersonalInfo;
       const version = this.customer?.version || 0;
 
+      const isPersonalInfoValid = Validator.validatePersonalInfo(firstName, lastName, dateOfBirth, email);
+
+      if (isPersonalInfoValid) {
+        return;
+      }
+
+      const updateCustomerInfo = new UpdateCustomerInfo(this.getUserId());
       updateCustomerInfo
         .updateCustomerInfo(firstName, lastName, dateOfBirth, email, version)
         .then((response) => {
           this.customer = response.body;
           TostifyHelper.showToast('Updating personal information successfully', Constants.TOAST_COLOR_GREEN);
+          inputFields.forEach((input) => {
+            input.setAttribute('disabled', 'disabled');
+          });
         })
         .catch(() => {
-          TostifyHelper.showToast('Updating personal information failed', Constants.TOAST_COLOR_GREEN);
+          TostifyHelper.showToast('Updating personal information failed', Constants.TOAST_COLOR_RED);
         });
 
       originalButton.textContent = 'Edit';
@@ -86,15 +96,27 @@ class MyProfilePage extends Page {
       originalButton.textContent = 'Save';
       this.inputPasswordInfo = [];
     } else {
+      this.inputPasswordInfo = [];
       passwordInputs.forEach((input) => {
-        input.setAttribute('disabled', 'disabled');
         this.inputPasswordInfo.push(input.value);
       });
+
+      const currentPassword = inputCurrentPassword.value;
+      const newPassword = inputNewPassword.value;
+
+      const isPasswordValid = Validator.validatePassword(currentPassword, newPassword);
+
+      if (!isPasswordValid) {
+        return;
+      }
 
       const updateCustomerInfo = new UpdateCustomerInfo(this.getUserId());
       updateCustomerInfo
         .changeCustomerPassword(inputCurrentPassword.value, inputNewPassword.value, this.customer?.version || 0)
         .then((response) => {
+          passwordInputs.forEach((input) => {
+            input.setAttribute('disabled', 'disabled');
+          });
           this.customer = response.body;
           TostifyHelper.showToast('Updating password successfully', Constants.TOAST_COLOR_GREEN);
         })
@@ -188,16 +210,25 @@ class MyProfilePage extends Page {
       originalButton.textContent = 'Save';
       this.selectAddressInfo = [];
     } else {
+      this.selectAddressInfo = [];
       inputs.forEach((address) => {
-        address.setAttribute('disabled', 'disabled');
         this.selectAddressInfo.push(address.value);
       });
 
       const [country, city, street, zip] = this.selectAddressInfo;
+      const isAddressValid = Validator.validateAddress(country, city, street, zip);
+
+      if (!isAddressValid) {
+        return;
+      }
+
       const updateCustomerAddress = new UpdateCustomerInfo(this.getUserId());
       updateCustomerAddress
         .editCustomerAddress(country, city, street, zip, id, this.customer?.version || 0)
         .then((response) => {
+          inputs.forEach((address) => {
+            address.setAttribute('disabled', 'disabled');
+          });
           this.customer = response.body;
           const defaultBillingOption = this.CONTAINER.querySelector(`#option-billingZ999S${id}`) as HTMLOptionElement;
           const defaultShippingOption = this.CONTAINER.querySelector(`#option-shippingZ999S${id}`) as HTMLOptionElement;
@@ -250,6 +281,17 @@ class MyProfilePage extends Page {
 
     let addressId: string;
 
+    const isAddressValid = Validator.validateAddress(
+      selectCountry.value,
+      inputCity.value,
+      inputStreet.value,
+      inputZip.value,
+    );
+
+    if (!isAddressValid) {
+      return;
+    }
+
     const addAddress = new UpdateCustomerInfo(this.getUserId());
     addAddress
       .addCustomerAddress(
@@ -263,44 +305,44 @@ class MyProfilePage extends Page {
         addressId = this.findAddedAddress(this.customer, response.body);
 
         addressContainer.innerHTML += `<div class="customer-address" id="address-${addressId}">
-        <div class="input-container">
-          <label class="input-label">Country:</label>
-          <select class="customer-address-select" id="select-${addressId}" disabled>
-            <option>${selectCountry.value || ''}</option>
-            <option>${selectCountry.value === 'US' ? 'CA' : 'US'}</option>
-          </select>
-        </div>
-        <div class="input-container">
-          <label class="input-label">City:</label>
-          <input class="address-input" id="city-${addressId}" type="text" value="${inputCity.value || ''}" disabled />
-        </div>
-        <div class="input-container">
-          <label class="input-label">Street:</label>
-          <input class="address-input" id="street-${addressId}" type="text" value="${
-            inputStreet.value || ''
-          }" disabled />
-        </div>
-        <div class="input-container">
-          <label class="input-label">ZIP Code:</label>
-          <input class="address-input" id="zip-${addressId}" type="text" value="${inputZip.value || ''}" disabled />
-        </div>
-        <div class="customer-button-container">
-          <button class="customer-personal-button edit-button-address" id="editZ999S${addressId}">Edit</button>
-          <button class="customer-personal-button delete-button-address" id="deleteZ999S${addressId}">Delete</button>
-        </div>
-      </div>`;
+          <div class="input-container">
+            <label class="input-label">Country:</label>
+            <select class="customer-address-select" id="select-${addressId}" disabled>
+              <option>${selectCountry.value || ''}</option>
+              <option>${selectCountry.value === 'US' ? 'CA' : 'US'}</option>
+            </select>
+          </div>
+          <div class="input-container">
+            <label class="input-label">City:</label>
+            <input class="address-input" id="city-${addressId}" type="text" value="${inputCity.value || ''}" disabled />
+          </div>
+          <div class="input-container">
+            <label class="input-label">Street:</label>
+            <input class="address-input" id="street-${addressId}" type="text" value="${
+              inputStreet.value || ''
+            }" disabled />
+          </div>
+          <div class="input-container">
+            <label class="input-label">ZIP Code:</label>
+            <input class="address-input" id="zip-${addressId}" type="text" value="${inputZip.value || ''}" disabled />
+          </div>
+          <div class="customer-button-container">
+            <button class="customer-personal-button edit-button-address" id="editZ999S${addressId}">Edit</button>
+            <button class="customer-personal-button delete-button-address" id="deleteZ999S${addressId}">Delete</button>
+          </div>
+        </div>`;
 
         selectBillingAddress.innerHTML += `<option id="option-billingZ999S${addressId || '--'}">
-      ${selectCountry.value || '--'}, 
-      ${inputCity.value || '--'}, 
-      ${inputStreet.value || '--'}, 
-      ${inputZip.value || '--'}</option>`;
+          ${selectCountry.value || '--'}, 
+          ${inputCity.value || '--'}, 
+          ${inputStreet.value || '--'}, 
+          ${inputZip.value || '--'}</option>`;
 
         selectShippingAddress.innerHTML += `<option id="option-shippingZ999S${addressId || '--'}">
-      ${selectCountry.value || '--'}, 
-      ${inputCity.value || '--'}, 
-      ${inputStreet.value || '--'}, 
-      ${inputZip.value || '--'}</option>`;
+          ${selectCountry.value || '--'}, 
+          ${inputCity.value || '--'}, 
+          ${inputStreet.value || '--'}, 
+          ${inputZip.value || '--'}</option>`;
 
         this.customer = response.body;
         TostifyHelper.showToast('Adding the address was successful', Constants.TOAST_COLOR_GREEN);
@@ -310,9 +352,8 @@ class MyProfilePage extends Page {
         inputZip.value = '';
         selectCountry.selectedIndex = 0;
       })
-      .catch((error) => {
+      .catch(() => {
         TostifyHelper.showToast('Adding an address failed', Constants.TOAST_COLOR_RED);
-        return Promise.reject(error);
       });
   }
 
