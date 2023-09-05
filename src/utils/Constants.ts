@@ -115,6 +115,10 @@ class Constants {
 
   static PRODUCT_IMAGE_CLASSNAME = 'product-image';
 
+  static PRODUCT_SWIPER_IMAGE_CLASSNAME = 'product-swiper-image';
+
+  static PRODUCT_MODAL_IMAGE_CLASSNAME = 'product-modal-image';
+
   static PRODUCT_TITLE_CLASSNAME = 'product-title';
 
   static PRODUCT_TEXT_CLASSNAME = 'product-text';

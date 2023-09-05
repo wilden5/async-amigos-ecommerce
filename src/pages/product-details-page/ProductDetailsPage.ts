@@ -1,4 +1,5 @@
 import { Image, Product } from '@commercetools/platform-sdk';
+import Swiper from 'swiper';
 import Page from '../../components/templates/Page';
 import { ProjectPages } from '../../types/Enums';
 import Constants from '../../utils/Constants';
@@ -7,8 +8,12 @@ import DOMHelpers from '../../utils/DOMHelpers';
 import PromiseHelpers from '../../utils/PromiseHelpers';
 import ProductCardBuilder from '../catalog-page/ProductCardBuilder';
 import Slider from '../../components/slider/Slider';
+import 'swiper/scss';
+import 'swiper/scss/navigation';
+import 'swiper/scss/pagination';
 import Breadcrumbs from '../../components/breadcrumbs/Breadcrumbs';
 import CategoryPage from '../category-page/CategoryPage';
+import { SwiperModalParams } from '../../utils/SwiperParams';
 
 class ProductDetailsPage extends Page {
   private readonly PRODUCT_PAGE_ID: string;
@@ -21,6 +26,16 @@ class ProductDetailsPage extends Page {
     <div class='breadcrumb'></div>
     <div class="product-details-container"></div>
   `;
+
+  private DIALOG_MARKUP = `
+      <div class="dialog-content"></div>
+      <button class="dialog-close">
+        <span></span>
+        <span></span>
+      </button>
+  `;
+
+  private IMAGES_ARRAY: Image[] = [];
 
   constructor(pageId: string) {
     super(ProjectPages.ProductDetails);
@@ -35,13 +50,13 @@ class ProductDetailsPage extends Page {
     const productKey: string = product.key as string;
     const productName: string = product.masterData.current.name[usLocaleKey];
     const productDescription: string | undefined = product.masterData.current.description?.[usLocaleKey];
-    const productImages = product.masterData.current.masterVariant.images as Image[];
+    this.IMAGES_ARRAY = product.masterData.current.masterVariant.images as Image[];
     const productPriceContainer = ProductCardBuilder.appendPriceContainer(
       ProductCardBuilder.getProductPrice(product),
       ProductCardBuilder.getProductDiscountedPrice(product),
     );
 
-    const swiperWrapper = this.SLIDER.buildSwiperContainer(productImages);
+    const swiperWrapper = this.SLIDER.buildSwiperContainer(this.IMAGES_ARRAY);
 
     productElement.innerHTML = `
       <div class="${productKey} ${Constants.PRODUCT_TEXT_CLASSNAME}">
@@ -53,10 +68,12 @@ class ProductDetailsPage extends Page {
         <a class=${Constants.PRODUCT_BUTTON_CLASSNAME}>${Constants.CART_BUTTON_TEXT}</a>
       </div>
     `;
+
     productElement.prepend(swiperWrapper);
     parentContainer.appendChild(productElement);
-
     this.SLIDER.initSwiper();
+
+    (this.CONTAINER.querySelector('.swiper-wrapper') as HTMLElement).addEventListener('click', this.initModal);
   }
 
   private fillProductDetails(): void {
@@ -67,13 +84,47 @@ class ProductDetailsPage extends Page {
         this.buildProductDetails(queriedProductDetails, productContainer);
         this.PRODUCT_TYPE_ID = queriedProductDetails.productType.id;
       })
-      .then(() => {
+      .then((): void => {
         this.setBreadcrumb();
       })
       .catch((error: Error): void => {
         PromiseHelpers.catchBlockHelper(error, Constants.FETCH_PRODUCT_ERROR);
       });
   }
+
+  private initModal = (): void => {
+    const dialogContainer = DOMHelpers.createElement('div', { className: 'dialog-container' }, this.CONTAINER);
+    dialogContainer.innerHTML = this.DIALOG_MARKUP;
+    const dialogContent: HTMLElement | null = this.CONTAINER.querySelector('.dialog-content');
+    const dialogCloseBtn = this.CONTAINER.querySelector('.dialog-close') as HTMLButtonElement;
+
+    if (dialogContent) {
+      const modalSwiperContainer = DOMHelpers.createElement('div', { className: 'swiper swiper-modal' }, dialogContent);
+      modalSwiperContainer.innerHTML = '';
+
+      modalSwiperContainer.innerHTML = `
+    <div class="swiper-wrapper">${this.SLIDER.generateSwiperContent(this.IMAGES_ARRAY)}</div>
+    <div class="swiper-button-next swiper-modal-button-next"></div>
+    <div class="swiper-button-prev swiper-modal-button-prev"></div>
+    <div class="swiper-pagination swiper-modal-pagination"></div>
+  `;
+    }
+
+    // Swiper init:
+    const swiperModal = new Swiper('.swiper-modal', SwiperModalParams) as Swiper | null;
+
+    if (swiperModal) {
+      swiperModal.init();
+    }
+
+    dialogCloseBtn.addEventListener('click', (): void => {
+      dialogContainer.remove();
+
+      if (swiperModal) {
+        swiperModal.destroy();
+      }
+    });
+  };
 
   private setBreadcrumb(): void {
     const productTitleElementText = (this.CONTAINER.querySelector('.product-title') as HTMLElement)
