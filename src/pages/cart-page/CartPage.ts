@@ -11,7 +11,7 @@ import ProductCardBuilder from '../catalog-page/ProductCardBuilder';
 class CartPage extends Page {
   private CART_PAGE_MARKUP = `
     <div class="cart-container">
-      <h1 class='page-title'>Cart Page</h1>
+      <h1 class='cart-page-title'>Your Cart</h1>
       <div class='cart-items'></div>
       <div class='total-cart-price-container'></div>
     </div>`;
@@ -40,6 +40,11 @@ class CartPage extends Page {
       );
       cartElement.innerHTML = `<img class="cart-item-img" src="${cartItemImg}" alt="${cartItem.productKey as string}">
            <h2 class='cart-item-title'>${cartItemTitle}</h2> 
+           <div class="cart-item-quantity">
+              <button class="cart-item-quantity-button">-</button>
+              <input type="number" class="cart-item-quantity-value" value="1">
+              <button class="cart-item-quantity-button">+</button>
+           </div>
            <div class='cart-item-price'>${cartItemPrice}</div>`;
     });
   }

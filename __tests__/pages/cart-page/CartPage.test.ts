@@ -3,7 +3,7 @@ import CartPage from '../../../src/pages/cart-page/CartPage';
 describe('CartPage', () => {
   let cartPage: CartPage;
   const containerId = 'test-container';
-  const expectedPageMarkup = `<h1 class="page-title">Cart Page</h1>`;
+  const expectedPageMarkup = `<h1 class="cart-page-title">Your Cart</h1>`;
 
   beforeEach(() => {
     const container = document.createElement('div');
