@@ -63,6 +63,9 @@ class CartPage extends Page {
       .then((activeCart) => {
         this.buildCartItem(activeCart);
         this.calculateCartTotalPrice(activeCart);
+        new CustomerCart().getCartInformation(activeCart).catch((error: Error): void => {
+          PromiseHelpers.catchBlockHelper(error, error.message);
+        });
       })
       .catch((error: Error): void => {
         PromiseHelpers.catchBlockHelper(error, error.message);

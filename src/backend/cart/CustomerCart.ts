@@ -1,4 +1,4 @@
-import { Cart, CartPagedQueryResponse } from '@commercetools/platform-sdk';
+import { Cart, CartPagedQueryResponse, MyCartUpdate } from '@commercetools/platform-sdk';
 import { CtpClient } from '../ctpClient/ctpClient';
 import Authorization from '../auth/Authorization';
 import LocalStorage from '../../utils/LocalStorage';
@@ -67,6 +67,46 @@ class CustomerCart {
     if (activeCartResponse.results.length === 0) {
       // if response 404 then we will create new active cart for user
       await this.createCart(customerToken);
+    }
+  }
+
+  public async getCartInformation(cartResponse: CartPagedQueryResponse): Promise<void> {
+    const cartVersion = cartResponse.results[0].version;
+    const cartId = cartResponse.results[0].id;
+    this.LOCAL_STORAGE.setLocalStorageItem('cart-version', String(cartVersion));
+    this.LOCAL_STORAGE.setLocalStorageItem('cart-id', String(cartId));
+  }
+
+  public async addCartItem(cartId: string, productId: string): Promise<Cart> {
+    try {
+      const updatePayload: MyCartUpdate = {
+        version: Number(this.LOCAL_STORAGE.getLocalStorageItem('cart-version')),
+        actions: [
+          {
+            action: 'addLineItem',
+            productId: `${productId}`,
+            variantId: 1,
+            quantity: 1,
+          },
+        ],
+      };
+
+      const response = await this.CTP_CLIENT.withAnonymousSessionFlow()
+        .me()
+        .carts()
+        .withId({
+          ID: cartId,
+        })
+        .post({
+          headers: {
+            Authorization: `${this.LOCAL_STORAGE.getLocalStorageItem(Constants.ACCESS_TOKEN_KEY) as string}`,
+          },
+          body: updatePayload,
+        })
+        .execute();
+      return response.body;
+    } catch (error) {
+      return Promise.reject(error);
     }
   }
 }
