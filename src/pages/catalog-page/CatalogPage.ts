@@ -14,6 +14,8 @@ import ProductCardBuilder from './ProductCardBuilder';
 import CatalogPageSort from './CatalogPageSort';
 import Breadcrumbs from '../../components/breadcrumbs/Breadcrumbs';
 import DOMHelpers from '../../utils/DOMHelpers';
+import CustomerCart from '../../backend/cart/CustomerCart';
+import LocalStorage from '../../utils/LocalStorage';
 
 class CatalogPage extends Page {
   private CATALOG_PAGE_MARKUP = `
@@ -92,16 +94,26 @@ class CatalogPage extends Page {
       });
   };
 
-  static onAddToCartButtonClick = (): void => {};
+  static onAddToCartButtonClick = (product: HTMLElement): void => {
+    const productId: string = product.classList[0];
+    new CustomerCart()
+      .addCartItem(new LocalStorage().getLocalStorageItem('cart-id') as string, productId)
+      .catch((error: Error): void => {
+        PromiseHelpers.catchBlockHelper(error, Constants.FETCH_PRODUCT_TYPES_ERROR);
+      });
+  };
 
   static onProductClick(container: HTMLElement): void {
     container.addEventListener('click', (event: Event): void => {
       const clickedElement = event.target as Element;
-      const productItem = clickedElement.closest('.product-item');
+      const productItem = clickedElement.closest('.product-item') as HTMLElement;
 
-      if (clickedElement instanceof HTMLAnchorElement && clickedElement.className === 'order-me') {
+      if (
+        clickedElement instanceof HTMLAnchorElement &&
+        clickedElement.className === `${Constants.CART_BUTTON_CLASSNAME}`
+      ) {
         event.preventDefault();
-        this.onAddToCartButtonClick();
+        this.onAddToCartButtonClick(productItem);
         return;
       }
 
