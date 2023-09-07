@@ -26,7 +26,7 @@ class CartPage extends Page {
     this.CUSTOMER_CART = new CustomerCart();
   }
 
-  private buildCartItem(cartResponse: CartPagedQueryResponse): void {
+  private buildCartItems(cartResponse: CartPagedQueryResponse): void {
     const itemContainer = this.CONTAINER.querySelector('.cart-items') as HTMLElement;
     const usLocaleKey = 'en-US';
     cartResponse.results[0].lineItems.forEach((cartItem) => {
@@ -49,7 +49,9 @@ class CartPage extends Page {
            <h2 class='cart-item-title'>${cartItemTitle}</h2> 
            <div class="cart-item-quantity">
               <button class="cart-item-quantity-minus ${cartItem.productId}">-</button>
-              <input type="number" class="cart-item-quantity-value" value=${itemQuantity} disabled>
+              <input type="number" class="cart-item-quantity-value ${
+                cartItem.productId
+              }" value=${itemQuantity} disabled>
               <button class="cart-item-quantity-plus ${cartItem.productId}">+</button>
            </div>
            <div class='cart-item-price'>${modifiedPriceByItemQuantity}</div>`;
@@ -66,14 +68,51 @@ class CartPage extends Page {
         this.CUSTOMER_CART.addCartItem(
           this.LOCAL_STORAGE.getLocalStorageItem(Constants.CART_ID_KEY) as string,
           productId,
-        ).catch((error: Error): void => {
-          PromiseHelpers.catchBlockHelper(error, error.message);
-        });
+        )
+          .then(() => {
+            this.updateRelatedToProductQuantityElements(productId);
+          })
+          .catch((error: Error): void => {
+            PromiseHelpers.catchBlockHelper(error, error.message);
+          });
       });
     });
   }
 
-  private calculateCartTotalPrice(cartResponse: CartPagedQueryResponse): void {
+  private updateRelatedToProductQuantityElements(productId: string): void {
+    this.CUSTOMER_CART.getMyActiveCart(this.LOCAL_STORAGE.getLocalStorageItem(Constants.ACCESS_TOKEN_KEY) as string)
+      .then((activeCart) => {
+        const cartTotalPrice = ProductCardBuilder.convertProductPrice(
+          Number(activeCart.results[0].totalPrice.centAmount),
+        );
+        let itemQuantity: number;
+        let itemTotalPrice: string;
+        activeCart.results[0].lineItems.forEach((item) => {
+          if (item.productId === productId) {
+            itemQuantity = item.quantity;
+            itemTotalPrice = ProductCardBuilder.convertProductPrice(item.totalPrice.centAmount);
+          }
+        });
+        (this.CONTAINER.querySelector('.total-cart-price') as HTMLSpanElement).textContent = cartTotalPrice;
+        const itemQuantityElement = this.CONTAINER.querySelectorAll('.cart-item');
+        itemQuantityElement.forEach((item) => {
+          if (item.classList[0] === productId) {
+            const cartItemQuantityElement = item.querySelector('.cart-item-quantity-value') as HTMLInputElement;
+            const cartItemPriceElement = item.querySelector('.cart-item-price') as HTMLInputElement;
+            cartItemQuantityElement.value = String(itemQuantity);
+            cartItemPriceElement.textContent = itemTotalPrice;
+          }
+        });
+        this.CUSTOMER_CART.getCartInformation(activeCart).catch((error: Error): void => {
+          PromiseHelpers.catchBlockHelper(error, error.message);
+        });
+      })
+      .catch((error: Error): void => {
+        PromiseHelpers.catchBlockHelper(error, error.message);
+      });
+  }
+
+  private populateCartTotalPriceContainer(cartResponse: CartPagedQueryResponse): void {
     const container = this.CONTAINER.querySelector('.total-cart-price-container') as HTMLDivElement;
     const totalCartPrice = ProductCardBuilder.convertProductPrice(
       Number(cartResponse.results[0].totalPrice.centAmount),
@@ -81,11 +120,11 @@ class CartPage extends Page {
     container.innerHTML = `<div class='total-cart-price-label'>Total cart price:</div> <span class='total-cart-price'>${totalCartPrice}</span>`;
   }
 
-  private showCartProducts(): void {
+  private renderCart(): void {
     this.CUSTOMER_CART.getMyActiveCart(this.LOCAL_STORAGE.getLocalStorageItem(Constants.ACCESS_TOKEN_KEY) as string)
       .then((activeCart) => {
-        this.buildCartItem(activeCart);
-        this.calculateCartTotalPrice(activeCart);
+        this.buildCartItems(activeCart);
+        this.populateCartTotalPriceContainer(activeCart);
         this.CUSTOMER_CART.getCartInformation(activeCart).catch((error: Error): void => {
           PromiseHelpers.catchBlockHelper(error, error.message);
         });
@@ -105,7 +144,7 @@ class CartPage extends Page {
     this.CONTAINER.innerHTML = this.CART_PAGE_MARKUP;
     this.CUSTOMER_CART.handleCartCreation()
       .then(() => {
-        this.showCartProducts();
+        this.renderCart();
       })
       .catch((error: Error): void => {
         PromiseHelpers.catchBlockHelper(error, error.message);
