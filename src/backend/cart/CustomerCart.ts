@@ -74,7 +74,7 @@ class CustomerCart {
     const cartVersion = cartResponse.results[0].version;
     const cartId = cartResponse.results[0].id;
     this.LOCAL_STORAGE.setLocalStorageItem('cart-version', String(cartVersion));
-    this.LOCAL_STORAGE.setLocalStorageItem('cart-id', String(cartId));
+    this.LOCAL_STORAGE.setLocalStorageItem(Constants.CART_ID_KEY, String(cartId));
   }
 
   public async addCartItem(cartId: string, productId: string): Promise<Cart> {

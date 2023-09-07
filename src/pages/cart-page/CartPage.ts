@@ -18,9 +18,12 @@ class CartPage extends Page {
 
   private LOCAL_STORAGE: LocalStorage;
 
+  private CUSTOMER_CART: CustomerCart;
+
   constructor() {
     super(ProjectPages.Cart);
     this.LOCAL_STORAGE = new LocalStorage();
+    this.CUSTOMER_CART = new CustomerCart();
   }
 
   private buildCartItem(cartResponse: CartPagedQueryResponse): void {
@@ -29,9 +32,13 @@ class CartPage extends Page {
     cartResponse.results[0].lineItems.forEach((cartItem) => {
       const cartItemTitle = cartItem.name[usLocaleKey];
       const cartItemPrice = cartItem.price.discounted?.value.centAmount
-        ? ProductCardBuilder.convertProductPrice(Number(cartItem.price.discounted?.value.centAmount))
-        : ProductCardBuilder.convertProductPrice(Number(cartItem.price.value.centAmount));
+        ? cartItem.price.discounted?.value.centAmount
+        : cartItem.price.value.centAmount;
+      const modifiedPriceByItemQuantity = ProductCardBuilder.convertProductPrice(
+        Number(cartItemPrice) * cartItem.quantity,
+      );
       const cartItemImg = cartItem.variant.images?.[0].url ?? Constants.IMAGE_NOT_FOUND_MOCK_IMAGE;
+      const itemQuantity = cartItem.quantity;
 
       const cartElement = DOMHelpers.createElement(
         'div',
@@ -41,11 +48,28 @@ class CartPage extends Page {
       cartElement.innerHTML = `<img class="cart-item-img" src="${cartItemImg}" alt="${cartItem.productKey as string}">
            <h2 class='cart-item-title'>${cartItemTitle}</h2> 
            <div class="cart-item-quantity">
-              <button class="cart-item-quantity-button">-</button>
-              <input type="number" class="cart-item-quantity-value" value="1">
-              <button class="cart-item-quantity-button">+</button>
+              <button class="cart-item-quantity-minus ${cartItem.productId}">-</button>
+              <input type="number" class="cart-item-quantity-value" value=${itemQuantity} disabled>
+              <button class="cart-item-quantity-plus ${cartItem.productId}">+</button>
            </div>
-           <div class='cart-item-price'>${cartItemPrice}</div>`;
+           <div class='cart-item-price'>${modifiedPriceByItemQuantity}</div>`;
+    });
+    this.increaseItemQuantity();
+  }
+
+  private increaseItemQuantity(): void {
+    const buttons = this.CONTAINER.querySelectorAll('.cart-item-quantity-plus');
+
+    buttons.forEach((button) => {
+      button.addEventListener('click', () => {
+        const productId = button.classList[1];
+        this.CUSTOMER_CART.addCartItem(
+          this.LOCAL_STORAGE.getLocalStorageItem(Constants.CART_ID_KEY) as string,
+          productId,
+        ).catch((error: Error): void => {
+          PromiseHelpers.catchBlockHelper(error, error.message);
+        });
+      });
     });
   }
 
@@ -58,12 +82,11 @@ class CartPage extends Page {
   }
 
   private showCartProducts(): void {
-    new CustomerCart()
-      .getMyActiveCart(this.LOCAL_STORAGE.getLocalStorageItem(Constants.ACCESS_TOKEN_KEY) as string)
+    this.CUSTOMER_CART.getMyActiveCart(this.LOCAL_STORAGE.getLocalStorageItem(Constants.ACCESS_TOKEN_KEY) as string)
       .then((activeCart) => {
         this.buildCartItem(activeCart);
         this.calculateCartTotalPrice(activeCart);
-        new CustomerCart().getCartInformation(activeCart).catch((error: Error): void => {
+        this.CUSTOMER_CART.getCartInformation(activeCart).catch((error: Error): void => {
           PromiseHelpers.catchBlockHelper(error, error.message);
         });
       })
@@ -80,8 +103,7 @@ class CartPage extends Page {
 
   public renderPage(): HTMLElement {
     this.CONTAINER.innerHTML = this.CART_PAGE_MARKUP;
-    new CustomerCart()
-      .handleCartCreation()
+    this.CUSTOMER_CART.handleCartCreation()
       .then(() => {
         this.showCartProducts();
       })

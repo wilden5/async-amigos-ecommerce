@@ -157,6 +157,8 @@ class Constants {
   static EXPIRES_IN_TOKEN_KEY = 'expires-in';
 
   static GET_LOCAL_STORAGE_ITEM_ERROR = 'Local Storage item was not found';
+
+  static CART_ID_KEY = 'cart-id';
 }
 
 export default Constants;
