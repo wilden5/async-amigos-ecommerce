@@ -39,6 +39,7 @@ class CartPage extends Page {
       );
       const cartItemImg = cartItem.variant.images?.[0].url ?? Constants.IMAGE_NOT_FOUND_MOCK_IMAGE;
       const itemQuantity = cartItem.quantity;
+      const lineItemId = cartItem.id;
 
       const cartElement = DOMHelpers.createElement(
         'div',
@@ -48,7 +49,7 @@ class CartPage extends Page {
       cartElement.innerHTML = `<img class="cart-item-img" src="${cartItemImg}" alt="${cartItem.productKey as string}">
            <h2 class='cart-item-title'>${cartItemTitle}</h2> 
            <div class="cart-item-quantity">
-              <button class="cart-item-quantity-minus ${cartItem.productId}">-</button>
+              <button class="cart-item-quantity-minus ${lineItemId}">-</button>
               <input type="number" class="cart-item-quantity-value ${
                 cartItem.productId
               }" value=${itemQuantity} disabled>
@@ -57,6 +58,7 @@ class CartPage extends Page {
            <div class='cart-item-price'>${modifiedPriceByItemQuantity}</div>`;
     });
     this.increaseItemQuantity();
+    this.decreaseItemQuantity();
   }
 
   private increaseItemQuantity(): void {
@@ -71,6 +73,26 @@ class CartPage extends Page {
         )
           .then(() => {
             this.updateRelatedToProductQuantityElements(productId);
+          })
+          .catch((error: Error): void => {
+            PromiseHelpers.catchBlockHelper(error, error.message);
+          });
+      });
+    });
+  }
+
+  private decreaseItemQuantity(): void {
+    const buttons = this.CONTAINER.querySelectorAll('.cart-item-quantity-minus');
+
+    buttons.forEach((button) => {
+      button.addEventListener('click', () => {
+        const lineItemId = button.classList[1];
+        this.CUSTOMER_CART.removeCartItem(
+          this.LOCAL_STORAGE.getLocalStorageItem(Constants.CART_ID_KEY) as string,
+          lineItemId,
+        )
+          .then(() => {
+            this.updateRelatedToProductQuantityElements(lineItemId);
           })
           .catch((error: Error): void => {
             PromiseHelpers.catchBlockHelper(error, error.message);

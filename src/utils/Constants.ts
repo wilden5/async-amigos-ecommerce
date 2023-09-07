@@ -159,6 +159,8 @@ class Constants {
   static GET_LOCAL_STORAGE_ITEM_ERROR = 'Local Storage item was not found';
 
   static CART_ID_KEY = 'cart-id';
+
+  static CART_VERSION_KEY = 'cart-version';
 }
 
 export default Constants;
