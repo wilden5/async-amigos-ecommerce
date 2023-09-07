@@ -49,7 +49,7 @@ class CartPage extends Page {
       cartElement.innerHTML = `<img class="cart-item-img" src="${cartItemImg}" alt="${cartItem.productKey as string}">
            <h2 class='cart-item-title'>${cartItemTitle}</h2> 
            <div class="cart-item-quantity">
-              <button class="cart-item-quantity-minus ${lineItemId}">-</button>
+              <button class="cart-item-quantity-minus ${lineItemId} ${cartItem.productId}">-</button>
               <input type="number" class="cart-item-quantity-value ${
                 cartItem.productId
               }" value=${itemQuantity} disabled>
@@ -83,16 +83,17 @@ class CartPage extends Page {
 
   private decreaseItemQuantity(): void {
     const buttons = this.CONTAINER.querySelectorAll('.cart-item-quantity-minus');
-
     buttons.forEach((button) => {
       button.addEventListener('click', () => {
         const lineItemId = button.classList[1];
+        const productId = button.classList[2];
+
         this.CUSTOMER_CART.removeCartItem(
           this.LOCAL_STORAGE.getLocalStorageItem(Constants.CART_ID_KEY) as string,
           lineItemId,
         )
           .then(() => {
-            this.updateRelatedToProductQuantityElements(lineItemId);
+            this.updateRelatedToProductQuantityElements(productId);
           })
           .catch((error: Error): void => {
             PromiseHelpers.catchBlockHelper(error, error.message);

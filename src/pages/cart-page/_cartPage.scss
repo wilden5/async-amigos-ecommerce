@@ -91,5 +91,13 @@
   border: none;
   border-radius: 0.5rem;
   cursor: pointer;
+
+  &:active {
+    transform: scale(1.1);
+  }
+
+  &:disabled {
+    background-color: #798897;
+  }
 }
 
