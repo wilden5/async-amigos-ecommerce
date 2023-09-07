@@ -16,6 +16,7 @@ import Breadcrumbs from '../../components/breadcrumbs/Breadcrumbs';
 import DOMHelpers from '../../utils/DOMHelpers';
 import CustomerCart from '../../backend/cart/CustomerCart';
 import LocalStorage from '../../utils/LocalStorage';
+import TostifyHelper from '../../utils/TostifyHelper';
 
 class CatalogPage extends Page {
   private CATALOG_PAGE_MARKUP = `
@@ -114,6 +115,7 @@ class CatalogPage extends Page {
       ) {
         event.preventDefault();
         this.onAddToCartButtonClick(productItem);
+        TostifyHelper.showToast(`${Constants.CART_PRODUCT_ADD_MESSAGE}`, Constants.TOAST_COLOR_GREEN);
         return;
       }
 

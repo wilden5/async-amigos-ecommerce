@@ -146,6 +146,8 @@ class Constants {
 
   static CART_BUTTON_CLASSNAME = 'order-me';
 
+  static CART_PRODUCT_ADD_MESSAGE = 'Product added to cart';
+
   static PRICE_INVALID_INPUT_ERROR_MESSAGE = 'Set correct values to the price inputs!';
 
   static LAUNCH_DATE_CLASSNAME = 'type-launch-date';
