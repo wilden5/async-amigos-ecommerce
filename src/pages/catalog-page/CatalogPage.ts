@@ -114,6 +114,9 @@ class CatalogPage extends Page {
         clickedElement.className === `${Constants.CART_BUTTON_CLASSNAME}`
       ) {
         event.preventDefault();
+        new CustomerCart().handleCartCreation().catch((error: Error): void => {
+          PromiseHelpers.catchBlockHelper(error, Constants.FETCH_CART_TYPES_ERROR);
+        });
         this.onAddToCartButtonClick(productItem);
         TostifyHelper.showToast(`${Constants.CART_PRODUCT_ADD_MESSAGE}`, Constants.TOAST_COLOR_GREEN);
         return;

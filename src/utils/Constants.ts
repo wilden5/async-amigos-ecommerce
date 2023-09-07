@@ -105,6 +105,8 @@ class Constants {
 
   static FETCH_PRODUCT_TYPES_ERROR = 'Something went wrong during receiving product types!';
 
+  static FETCH_CART_TYPES_ERROR = 'Something went wrong during receiving cart. Please try again';
+
   static PRODUCT_DESCRIPTION_NOT_FOUND = 'Product description was not found :(';
 
   static PRODUCT_DETAILS_CLASSNAME = 'product-details-container';
@@ -146,7 +148,7 @@ class Constants {
 
   static CART_BUTTON_CLASSNAME = 'order-me';
 
-  static CART_PRODUCT_ADD_MESSAGE = 'Product added to cart';
+  static CART_PRODUCT_ADD_MESSAGE = 'Order placed successfully';
 
   static PRICE_INVALID_INPUT_ERROR_MESSAGE = 'Set correct values to the price inputs!';
 
