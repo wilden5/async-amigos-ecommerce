@@ -80,7 +80,7 @@ class ProductCardBuilder {
               productDescription || Constants.PRODUCT_DESCRIPTION_NOT_FOUND
             }</p> 
             <div class='${Constants.PRICE_CONTAINER_CLASSNAME}'>${productPriceContainer}</div>
-            <a class=${Constants.PRODUCT_BUTTON_CLASSNAME}>${Constants.CART_BUTTON_TEXT}</a>`;
+            <a class=${Constants.PRODUCT_BUTTON_CLASSNAME}>${Constants.CART_BUTTON_ADD_TEXT}</a>`;
     parentContainer.appendChild(productElement);
   }
 }

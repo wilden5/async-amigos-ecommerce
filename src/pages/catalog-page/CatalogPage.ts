@@ -98,6 +98,8 @@ class CatalogPage extends Page {
   static onAddToCartButtonClick = (product: HTMLElement): void => {
     const productId: string = product.classList[0];
     const customerToken = new CustomerCart().LOCAL_STORAGE.getLocalStorageItem(Constants.ACCESS_TOKEN_KEY) as string;
+    const cartButton = product.querySelector(`.${Constants.CART_BUTTON_CLASSNAME}`) as HTMLElement;
+
     new CustomerCart()
       .getMyActiveCart(customerToken)
       .then((activeCartResponse): void => {
@@ -110,6 +112,10 @@ class CatalogPage extends Page {
 
         new CustomerCart()
           .addCartItem(cartId, productId)
+          .then((): void => {
+            cartButton.innerText = Constants.CART_BUTTON_REMOVE_TEXT;
+            cartButton.style.backgroundColor = '#5e5e5e';
+          })
           .catch((error: Error): void => PromiseHelpers.catchBlockHelper(error, Constants.FETCH_PRODUCT_TYPES_ERROR));
       })
       .catch((error: Error): void => {

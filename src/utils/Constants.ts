@@ -144,7 +144,9 @@ class Constants {
 
   static MODAL_IMAGE_CLASSNAME = 'modal__image';
 
-  static CART_BUTTON_TEXT = 'ADD TO CART';
+  static CART_BUTTON_ADD_TEXT = 'ADD TO CART';
+
+  static CART_BUTTON_REMOVE_TEXT = 'ADD TO CART';
 
   static CART_BUTTON_CLASSNAME = 'order-me';
 
