@@ -46,7 +46,8 @@ class CartPage extends Page {
         { className: `${cartItem.productId} cart-item` },
         itemContainer,
       );
-      cartElement.innerHTML = `<img class="cart-item-img" src="${cartItemImg}" alt="${cartItem.productKey as string}">
+      cartElement.innerHTML = `<div class="close-button ${lineItemId}"></div>
+           <img class="cart-item-img" src="${cartItemImg}" alt="${cartItem.productKey as string}">
            <h2 class='cart-item-title'>${cartItemTitle}</h2> 
            <div class="cart-item-quantity-container ${cartItem.productId}">
               <button class="cart-item-quantity-minus ${lineItemId} ${cartItem.productId}">-</button>
@@ -68,6 +69,21 @@ class CartPage extends Page {
       const quantityValue = (container.querySelector('.cart-item-quantity-value') as HTMLInputElement).value;
       const minusButton = container.querySelector('.cart-item-quantity-minus') as HTMLButtonElement;
       minusButton.disabled = Number(quantityValue) === 1;
+    });
+  }
+
+  private handleClickOnRemoveCartItemButton(): void {
+    const buttons = this.CONTAINER.querySelectorAll('.close-button');
+    buttons.forEach((button) => {
+      button.addEventListener('click', () => {
+        const lineId = button.classList[1];
+        this.CUSTOMER_CART.removeCartItem(
+          this.LOCAL_STORAGE.getLocalStorageItem(Constants.CART_ID_KEY) as string,
+          lineId,
+        ).catch((error: Error): void => {
+          PromiseHelpers.catchBlockHelper(error, error.message);
+        });
+      });
     });
   }
 
@@ -101,6 +117,7 @@ class CartPage extends Page {
         this.CUSTOMER_CART.removeCartItem(
           this.LOCAL_STORAGE.getLocalStorageItem(Constants.CART_ID_KEY) as string,
           lineItemId,
+          1,
         )
           .then(() => {
             this.updateRelatedToProductQuantityElements(productId);
@@ -165,6 +182,7 @@ class CartPage extends Page {
         this.CUSTOMER_CART.getCartInformation(activeCart)
           .then(() => {
             this.disableQuantityMinusButton();
+            this.handleClickOnRemoveCartItemButton();
           })
           .catch((error: Error): void => {
             PromiseHelpers.catchBlockHelper(error, error.message);

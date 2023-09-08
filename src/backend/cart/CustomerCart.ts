@@ -110,7 +110,7 @@ class CustomerCart {
     }
   }
 
-  public async removeCartItem(cartId: string, lineItemId: string): Promise<Cart> {
+  public async removeCartItem(cartId: string, lineItemId: string, quantity?: number): Promise<Cart> {
     try {
       const updatePayload: MyCartUpdate = {
         version: Number(this.LOCAL_STORAGE.getLocalStorageItem(Constants.CART_VERSION_KEY)),
@@ -118,7 +118,7 @@ class CustomerCart {
           {
             action: 'removeLineItem',
             lineItemId: `${lineItemId}`,
-            quantity: 1,
+            quantity, // optional, if no quantity provided -> the whole LineItem is removed from the Cart
           },
         ],
       };

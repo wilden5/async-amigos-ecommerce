@@ -26,6 +26,7 @@
 }
 
 .cart-item {
+  position: relative;
   text-align: center;
   justify-content: space-between;
   display: flex;
@@ -101,3 +102,41 @@
   }
 }
 
+.close-button {
+  width: 3rem;
+  height: 3rem;
+  position: absolute;
+  top: 0.3rem;
+  right: 1rem;
+  cursor: pointer;
+  background-color: transparent;
+  border: none;
+
+  &::before,
+  &::after {
+    content: "";
+    position: absolute;
+    width: 0.2rem;
+    height: 3rem;
+    top: 0.5rem;
+    left: 50%;
+    background-color: #585656;
+  }
+
+  &::before {
+    transform: rotate(45deg);
+  }
+
+  &::after {
+    transform: rotate(-45deg);
+  }
+
+  &:hover {
+    transform: scale(1.05);
+
+    &::before,
+    &::after {
+      background-color: red;
+    }
+  }
+}
