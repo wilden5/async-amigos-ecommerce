@@ -46,9 +46,10 @@ class CartPage extends Page {
         { className: `${cartItem.productId} cart-item` },
         itemContainer,
       );
-      cartElement.innerHTML = `<img class="cart-item-img" src="${cartItemImg}" alt="${cartItem.productKey as string}">
+      cartElement.innerHTML = `<div class="remove-cart-item-button ${lineItemId} ${cartItem.productId}"></div>
+           <img class="cart-item-img" src="${cartItemImg}" alt="${cartItem.productKey as string}">
            <h2 class='cart-item-title'>${cartItemTitle}</h2> 
-           <div class="cart-item-quantity">
+           <div class="cart-item-quantity-container ${cartItem.productId}">
               <button class="cart-item-quantity-minus ${lineItemId} ${cartItem.productId}">-</button>
               <input type="number" class="cart-item-quantity-value ${
                 cartItem.productId
@@ -59,6 +60,37 @@ class CartPage extends Page {
     });
     this.increaseItemQuantity();
     this.decreaseItemQuantity();
+  }
+
+  private disableQuantityMinusButton(): void {
+    const quantityContainers = this.CONTAINER.querySelectorAll('.cart-item-quantity-container');
+
+    quantityContainers.forEach((container) => {
+      const quantityValue = (container.querySelector('.cart-item-quantity-value') as HTMLInputElement).value;
+      const minusButton = container.querySelector('.cart-item-quantity-minus') as HTMLButtonElement;
+      minusButton.disabled = Number(quantityValue) === 1;
+    });
+  }
+
+  private handleClickOnRemoveCartItemButton(): void {
+    const buttons = this.CONTAINER.querySelectorAll('.remove-cart-item-button');
+    buttons.forEach((button) => {
+      button.addEventListener('click', () => {
+        const lineId = button.classList[1];
+        const productId = button.classList[2];
+        this.CUSTOMER_CART.removeCartItem(
+          this.LOCAL_STORAGE.getLocalStorageItem(Constants.CART_ID_KEY) as string,
+          lineId,
+        )
+          .then(() => {
+            this.updateRelatedToProductQuantityElements(productId);
+            (this.CONTAINER.querySelector(`.${productId}`) as HTMLDivElement).remove();
+          })
+          .catch((error: Error): void => {
+            PromiseHelpers.catchBlockHelper(error, error.message);
+          });
+      });
+    });
   }
 
   private increaseItemQuantity(): void {
@@ -91,6 +123,7 @@ class CartPage extends Page {
         this.CUSTOMER_CART.removeCartItem(
           this.LOCAL_STORAGE.getLocalStorageItem(Constants.CART_ID_KEY) as string,
           lineItemId,
+          1,
         )
           .then(() => {
             this.updateRelatedToProductQuantityElements(productId);
@@ -126,9 +159,13 @@ class CartPage extends Page {
             cartItemPriceElement.textContent = itemTotalPrice;
           }
         });
-        this.CUSTOMER_CART.getCartInformation(activeCart).catch((error: Error): void => {
-          PromiseHelpers.catchBlockHelper(error, error.message);
-        });
+        this.CUSTOMER_CART.getCartInformation(activeCart)
+          .then(() => {
+            this.disableQuantityMinusButton();
+          })
+          .catch((error: Error): void => {
+            PromiseHelpers.catchBlockHelper(error, error.message);
+          });
       })
       .catch((error: Error): void => {
         PromiseHelpers.catchBlockHelper(error, error.message);
@@ -148,9 +185,14 @@ class CartPage extends Page {
       .then((activeCart) => {
         this.buildCartItems(activeCart);
         this.populateCartTotalPriceContainer(activeCart);
-        this.CUSTOMER_CART.getCartInformation(activeCart).catch((error: Error): void => {
-          PromiseHelpers.catchBlockHelper(error, error.message);
-        });
+        this.CUSTOMER_CART.getCartInformation(activeCart)
+          .then(() => {
+            this.disableQuantityMinusButton();
+            this.handleClickOnRemoveCartItemButton();
+          })
+          .catch((error: Error): void => {
+            PromiseHelpers.catchBlockHelper(error, error.message);
+          });
       })
       .catch((error: Error): void => {
         PromiseHelpers.catchBlockHelper(error, error.message);
