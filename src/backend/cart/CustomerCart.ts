@@ -3,6 +3,7 @@ import { CtpClient } from '../ctpClient/ctpClient';
 import Authorization from '../auth/Authorization';
 import LocalStorage from '../../utils/LocalStorage';
 import Constants from '../../utils/Constants';
+import PromiseHelpers from '../../utils/PromiseHelpers';
 
 class CustomerCart {
   private CTP_CLIENT: CtpClient;
@@ -108,6 +109,25 @@ class CustomerCart {
     } catch (error) {
       return Promise.reject(error);
     }
+  }
+
+  public async createCartOnFirstLoad(): Promise<void> {
+    this.handleCartCreation()
+      .then((): void => {
+        const customerToken = this.LOCAL_STORAGE.getLocalStorageItem(Constants.ACCESS_TOKEN_KEY) as string;
+        this.getMyActiveCart(customerToken)
+          .then((activeCartResponse): void => {
+            this.getCartInformation(activeCartResponse).catch((error: Error): void => {
+              PromiseHelpers.catchBlockHelper(error, Constants.FETCH_CART_TYPES_ERROR);
+            });
+          })
+          .catch((error: Error): void => {
+            PromiseHelpers.catchBlockHelper(error, Constants.FETCH_CART_TYPES_ERROR);
+          });
+      })
+      .catch((error: Error): void => {
+        PromiseHelpers.catchBlockHelper(error, Constants.FETCH_CART_TYPES_ERROR);
+      });
   }
 }
 

@@ -6,6 +6,7 @@ import ProductProjectionSearch from '../../backend/products/ProductProjectionSea
 import ProductCardBuilder from '../catalog-page/ProductCardBuilder';
 import PromiseHelpers from '../../utils/PromiseHelpers';
 import CatalogPage from '../catalog-page/CatalogPage';
+import CustomerCart from '../../backend/cart/CustomerCart';
 
 class HomePage extends Page {
   private HOME_PAGE_MARKUP = `
@@ -16,8 +17,11 @@ class HomePage extends Page {
     </div>  
 `;
 
+  private customerCart: CustomerCart;
+
   constructor() {
     super(Constants.HOME_PAGE_SELECTOR);
+    this.customerCart = new CustomerCart();
   }
 
   private homePageSpecialDeals(): void {
@@ -44,6 +48,9 @@ class HomePage extends Page {
   public renderPage(): HTMLElement {
     this.CONTAINER.innerHTML = this.HOME_PAGE_MARKUP;
     this.homePageSpecialDeals();
+    this.customerCart.createCartOnFirstLoad().catch((error: Error): void => {
+      PromiseHelpers.catchBlockHelper(error, Constants.FETCH_PRODUCT_TYPES_ERROR);
+    });
     CatalogPage.onProductClick(this.CONTAINER);
     return this.CONTAINER;
   }

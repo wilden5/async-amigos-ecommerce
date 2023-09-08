@@ -97,10 +97,23 @@ class CatalogPage extends Page {
 
   static onAddToCartButtonClick = (product: HTMLElement): void => {
     const productId: string = product.classList[0];
+    const customerToken = new CustomerCart().LOCAL_STORAGE.getLocalStorageItem(Constants.ACCESS_TOKEN_KEY) as string;
     new CustomerCart()
-      .addCartItem(new LocalStorage().getLocalStorageItem('cart-id') as string, productId)
+      .getMyActiveCart(customerToken)
+      .then((activeCartResponse): void => {
+        new CustomerCart().getCartInformation(activeCartResponse).catch((error: Error): void => {
+          PromiseHelpers.catchBlockHelper(error, Constants.FETCH_CART_TYPES_ERROR);
+        });
+      })
+      .then((): void => {
+        const cartId = new LocalStorage().getLocalStorageItem('cart-id') as string;
+
+        new CustomerCart()
+          .addCartItem(cartId, productId)
+          .catch((error: Error): void => PromiseHelpers.catchBlockHelper(error, Constants.FETCH_PRODUCT_TYPES_ERROR));
+      })
       .catch((error: Error): void => {
-        PromiseHelpers.catchBlockHelper(error, Constants.FETCH_PRODUCT_TYPES_ERROR);
+        PromiseHelpers.catchBlockHelper(error, Constants.FETCH_CART_TYPES_ERROR);
       });
   };
 
@@ -114,27 +127,8 @@ class CatalogPage extends Page {
         clickedElement.className === `${Constants.CART_BUTTON_CLASSNAME}`
       ) {
         event.preventDefault();
-        const customerCart = new CustomerCart();
-        customerCart
-          .handleCartCreation()
-          .then((): void => {
-            const customerToken = customerCart.LOCAL_STORAGE.getLocalStorageItem(Constants.ACCESS_TOKEN_KEY) as string;
-            customerCart
-              .getMyActiveCart(customerToken)
-              .then((activeCartResponse): void => {
-                customerCart.getCartInformation(activeCartResponse).catch((error: Error): void => {
-                  PromiseHelpers.catchBlockHelper(error, Constants.FETCH_CART_TYPES_ERROR);
-                });
-                CatalogPage.onAddToCartButtonClick(productItem);
-                TostifyHelper.showToast(`${Constants.CART_PRODUCT_ADD_MESSAGE}`, Constants.TOAST_COLOR_GREEN);
-              })
-              .catch((error: Error): void => {
-                PromiseHelpers.catchBlockHelper(error, Constants.FETCH_CART_TYPES_ERROR);
-              });
-          })
-          .catch((error: Error): void => {
-            PromiseHelpers.catchBlockHelper(error, Constants.FETCH_CART_TYPES_ERROR);
-          });
+        CatalogPage.onAddToCartButtonClick(productItem);
+        TostifyHelper.showToast(`${Constants.CART_PRODUCT_ADD_MESSAGE}`, Constants.TOAST_COLOR_GREEN);
         return;
       }
 
@@ -144,48 +138,6 @@ class CatalogPage extends Page {
       }
     });
   }
-
-  // static onProductClick(container: HTMLElement): void {
-  //   container.addEventListener('click', (event: Event): void => {
-  //     const clickedElement = event.target as Element;
-  //     const productItem = clickedElement.closest('.product-item') as HTMLElement;
-  //
-  //     if (
-  //       clickedElement instanceof HTMLAnchorElement &&
-  //       clickedElement.className === `${Constants.CART_BUTTON_CLASSNAME}`
-  //     ) {
-  //       event.preventDefault();
-  //       new CustomerCart().handleCartCreation().catch((error: Error): void => {
-  //         PromiseHelpers.catchBlockHelper(error, Constants.FETCH_CART_TYPES_ERROR);
-  //       });
-  //
-  //       const customerToken = this.LOCAL_STORAGE.getLocalStorageItem(Constants.ACCESS_TOKEN_KEY) as string;
-  //       const activeCartResponse = new CustomerCart().getMyActiveCart(customerToken);
-  //
-  //       if (activeCartResponse.results.length > 0) {
-  //         this.onAddToCartButtonClick(productItem);
-  //         TostifyHelper.showToast(`${Constants.CART_PRODUCT_ADD_MESSAGE}`, Constants.TOAST_COLOR_GREEN);
-  //       } else {
-  //         TostifyHelper.showToast(`${Constants.FETCH_CART_TYPES_ERROR}`, Constants.TOAST_COLOR_RED);
-  //       }
-  //       // catch (error: Error) {
-  //       //   PromiseHelpers.catchBlockHelper(error, Constants.FETCH_CART_TYPES_ERROR);
-  //       // }
-  //       // new CustomerCart().handleCartCreation().catch((error: Error): void => {
-  //       //   PromiseHelpers.catchBlockHelper(error, Constants.FETCH_CART_TYPES_ERROR);
-  //       // });
-  //       //
-  //       // this.onAddToCartButtonClick(productItem);
-  //       // TostifyHelper.showToast(`${Constants.CART_PRODUCT_ADD_MESSAGE}`, Constants.TOAST_COLOR_GREEN);
-  //       return;
-  //     }
-  //
-  //     if (productItem) {
-  //       const productId = productItem.classList[0];
-  //       window.location.hash = `#product/${productId}`;
-  //     }
-  //   });
-  // }
 
   private onResetFiltersButtonClick(): void {
     (this.CONTAINER.querySelector('.reset-filter-button') as HTMLButtonElement).addEventListener('click', () => {
