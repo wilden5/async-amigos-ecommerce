@@ -46,7 +46,7 @@ class CartPage extends Page {
         { className: `${cartItem.productId} cart-item` },
         itemContainer,
       );
-      cartElement.innerHTML = `<div class="close-button ${lineItemId} ${cartItem.productId}"></div>
+      cartElement.innerHTML = `<div class="remove-cart-item-button ${lineItemId} ${cartItem.productId}"></div>
            <img class="cart-item-img" src="${cartItemImg}" alt="${cartItem.productKey as string}">
            <h2 class='cart-item-title'>${cartItemTitle}</h2> 
            <div class="cart-item-quantity-container ${cartItem.productId}">
@@ -73,7 +73,7 @@ class CartPage extends Page {
   }
 
   private handleClickOnRemoveCartItemButton(): void {
-    const buttons = this.CONTAINER.querySelectorAll('.close-button');
+    const buttons = this.CONTAINER.querySelectorAll('.remove-cart-item-button');
     buttons.forEach((button) => {
       button.addEventListener('click', () => {
         const lineId = button.classList[1];
