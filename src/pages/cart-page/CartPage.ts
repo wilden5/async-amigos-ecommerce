@@ -46,7 +46,7 @@ class CartPage extends Page {
         { className: `${cartItem.productId} cart-item` },
         itemContainer,
       );
-      cartElement.innerHTML = `<div class="close-button ${lineItemId}"></div>
+      cartElement.innerHTML = `<div class="close-button ${lineItemId} ${cartItem.productId}"></div>
            <img class="cart-item-img" src="${cartItemImg}" alt="${cartItem.productKey as string}">
            <h2 class='cart-item-title'>${cartItemTitle}</h2> 
            <div class="cart-item-quantity-container ${cartItem.productId}">
@@ -77,12 +77,18 @@ class CartPage extends Page {
     buttons.forEach((button) => {
       button.addEventListener('click', () => {
         const lineId = button.classList[1];
+        const productId = button.classList[2];
         this.CUSTOMER_CART.removeCartItem(
           this.LOCAL_STORAGE.getLocalStorageItem(Constants.CART_ID_KEY) as string,
           lineId,
-        ).catch((error: Error): void => {
-          PromiseHelpers.catchBlockHelper(error, error.message);
-        });
+        )
+          .then(() => {
+            this.updateRelatedToProductQuantityElements(productId);
+            (this.CONTAINER.querySelector(`.${productId}`) as HTMLDivElement).remove();
+          })
+          .catch((error: Error): void => {
+            PromiseHelpers.catchBlockHelper(error, error.message);
+          });
       });
     });
   }
