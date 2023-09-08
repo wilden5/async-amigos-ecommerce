@@ -48,7 +48,7 @@ class CartPage extends Page {
       );
       cartElement.innerHTML = `<img class="cart-item-img" src="${cartItemImg}" alt="${cartItem.productKey as string}">
            <h2 class='cart-item-title'>${cartItemTitle}</h2> 
-           <div class="cart-item-quantity">
+           <div class="cart-item-quantity-container ${cartItem.productId}">
               <button class="cart-item-quantity-minus ${lineItemId} ${cartItem.productId}">-</button>
               <input type="number" class="cart-item-quantity-value ${
                 cartItem.productId
@@ -59,6 +59,16 @@ class CartPage extends Page {
     });
     this.increaseItemQuantity();
     this.decreaseItemQuantity();
+  }
+
+  private disableQuantityMinusButton(): void {
+    const quantityContainers = this.CONTAINER.querySelectorAll('.cart-item-quantity-container');
+
+    quantityContainers.forEach((container) => {
+      const quantityValue = (container.querySelector('.cart-item-quantity-value') as HTMLInputElement).value;
+      const minusButton = container.querySelector('.cart-item-quantity-minus') as HTMLButtonElement;
+      minusButton.disabled = Number(quantityValue) === 1;
+    });
   }
 
   private increaseItemQuantity(): void {
@@ -126,9 +136,13 @@ class CartPage extends Page {
             cartItemPriceElement.textContent = itemTotalPrice;
           }
         });
-        this.CUSTOMER_CART.getCartInformation(activeCart).catch((error: Error): void => {
-          PromiseHelpers.catchBlockHelper(error, error.message);
-        });
+        this.CUSTOMER_CART.getCartInformation(activeCart)
+          .then(() => {
+            this.disableQuantityMinusButton();
+          })
+          .catch((error: Error): void => {
+            PromiseHelpers.catchBlockHelper(error, error.message);
+          });
       })
       .catch((error: Error): void => {
         PromiseHelpers.catchBlockHelper(error, error.message);
@@ -148,9 +162,13 @@ class CartPage extends Page {
       .then((activeCart) => {
         this.buildCartItems(activeCart);
         this.populateCartTotalPriceContainer(activeCart);
-        this.CUSTOMER_CART.getCartInformation(activeCart).catch((error: Error): void => {
-          PromiseHelpers.catchBlockHelper(error, error.message);
-        });
+        this.CUSTOMER_CART.getCartInformation(activeCart)
+          .then(() => {
+            this.disableQuantityMinusButton();
+          })
+          .catch((error: Error): void => {
+            PromiseHelpers.catchBlockHelper(error, error.message);
+          });
       })
       .catch((error: Error): void => {
         PromiseHelpers.catchBlockHelper(error, error.message);
