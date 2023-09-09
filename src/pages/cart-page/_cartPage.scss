@@ -1,3 +1,7 @@
+.cart-container {
+  text-align: center;
+}
+
 .cart-items {
   display: flex;
   justify-content: center;
@@ -136,7 +140,19 @@
 
     &::before,
     &::after {
-      background-color: red;
+      background-color: #f10a0a;
     }
+  }
+}
+
+.clear-cart {
+  background-color: #f10a0a;
+  border: 0.2rem solid #f10a0a;
+  cursor: pointer;
+  margin: 2rem;
+
+  &:hover {
+    color: #f10a0a;
+    border: 0.2rem solid #f10a0a;
   }
 }

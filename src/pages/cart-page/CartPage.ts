@@ -7,11 +7,13 @@ import Constants from '../../utils/Constants';
 import DOMHelpers from '../../utils/DOMHelpers';
 import PromiseHelpers from '../../utils/PromiseHelpers';
 import ProductCardBuilder from '../catalog-page/ProductCardBuilder';
+import TostifyHelper from '../../utils/TostifyHelper';
 
 class CartPage extends Page {
   private CART_PAGE_MARKUP = `
     <div class="cart-container">
       <h1 class='cart-page-title'>Your Cart</h1>
+      <a class='clear-cart explore-button'>Clear Your Cart</a>
       <div class='cart-items'></div>
       <div class='total-cart-price-container'></div>
     </div>`;
@@ -85,6 +87,7 @@ class CartPage extends Page {
           .then(() => {
             this.updateRelatedToProductQuantityElements(productId);
             (this.CONTAINER.querySelector(`.${productId}`) as HTMLDivElement).remove();
+            TostifyHelper.showToast(Constants.CART_ITEM_HAS_BEEN_REMOVED, Constants.TOAST_COLOR_DARK_GREEN);
           })
           .catch((error: Error): void => {
             PromiseHelpers.catchBlockHelper(error, error.message);
