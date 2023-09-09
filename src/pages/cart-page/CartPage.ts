@@ -86,6 +86,11 @@ class CartPage extends Page {
             this.updateRelatedToProductQuantityElements(productId);
             (this.CONTAINER.querySelector(`.${productId}`) as HTMLDivElement).remove();
           })
+          .then(() => {
+            if (this.CONTAINER.querySelectorAll('.cart-item').length === 0) {
+              this.showEmptyCartContainer();
+            }
+          })
           .catch((error: Error): void => {
             PromiseHelpers.catchBlockHelper(error, error.message);
           });
@@ -183,26 +188,32 @@ class CartPage extends Page {
   private renderCart(): void {
     this.CUSTOMER_CART.getMyActiveCart(this.LOCAL_STORAGE.getLocalStorageItem(Constants.ACCESS_TOKEN_KEY) as string)
       .then((activeCart) => {
-        this.buildCartItems(activeCart);
-        this.populateCartTotalPriceContainer(activeCart);
-        this.CUSTOMER_CART.getCartInformation(activeCart)
-          .then(() => {
-            this.disableQuantityMinusButton();
-            this.handleClickOnRemoveCartItemButton();
-          })
-          .catch((error: Error): void => {
-            PromiseHelpers.catchBlockHelper(error, error.message);
-          });
+        if (activeCart.results[0].lineItems.length === 0) {
+          this.showEmptyCartContainer();
+        } else {
+          this.buildCartItems(activeCart);
+          this.populateCartTotalPriceContainer(activeCart);
+          this.CUSTOMER_CART.getCartInformation(activeCart)
+            .then(() => {
+              this.disableQuantityMinusButton();
+              this.handleClickOnRemoveCartItemButton();
+            })
+            .catch((error: Error): void => {
+              PromiseHelpers.catchBlockHelper(error, error.message);
+            });
+        }
       })
       .catch((error: Error): void => {
         PromiseHelpers.catchBlockHelper(error, error.message);
       });
   }
 
-  private showEmptyCartMessage(): void {
+  private showEmptyCartContainer(): void {
     const parent = this.CONTAINER.querySelector('.cart-items') as HTMLDivElement;
-    const element = DOMHelpers.createElement('div', { className: `empty-cart` }, parent);
-    element.innerText = 'CART IS EMPTY!';
+    parent.innerHTML = `<div class='empty-cart-container'>
+        <p class='empty-cart-message'>Cart is empty :(</p>
+        <a class='empty-cart-link explore-button' href='#catalog'>Start Shopping Now</a>
+      </div>`;
   }
 
   public renderPage(): HTMLElement {

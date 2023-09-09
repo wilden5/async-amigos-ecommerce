@@ -136,7 +136,28 @@
 
     &::before,
     &::after {
-      background-color: red;
+      background-color: #f90202;
     }
   }
+}
+
+.empty-cart-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4rem;
+}
+
+.explore-button {
+  max-width: 23rem;
+}
+
+.empty-cart-message {
+  font-size: 3.5rem;
+  color: #ff5733;
+  margin-bottom: 2rem;
+  font-weight: bold;
+  text-transform: uppercase;
+  text-shadow: 0.2rem 0.2rem 0.4rem rgba(0, 0, 0, 0.3);
+  margin-top: 10rem;
 }
