@@ -146,7 +146,7 @@ class Constants {
 
   static CART_BUTTON_ADD_TEXT = 'ADD TO CART';
 
-  static CART_BUTTON_REMOVE_TEXT = 'ADD TO CART';
+  static CART_BUTTON_REMOVE_TEXT = 'IN CART';
 
   static CART_BUTTON_CLASSNAME = 'order-me';
 
@@ -165,6 +165,10 @@ class Constants {
   static EXPIRES_IN_TOKEN_KEY = 'expires-in';
 
   static GET_LOCAL_STORAGE_ITEM_ERROR = 'Local Storage item was not found';
+
+  static CART_ID_KEY = 'cart-id';
+
+  static CART_VERSION_KEY = 'cart-version';
 }
 
 export default Constants;

@@ -1,4 +1,5 @@
 import {
+  CartPagedQueryResponse,
   Product,
   ProductPagedQueryResponse,
   ProductType,
@@ -100,23 +101,55 @@ class CatalogPage extends Page {
     const customerToken = new CustomerCart().LOCAL_STORAGE.getLocalStorageItem(Constants.ACCESS_TOKEN_KEY) as string;
     const cartButton = product.querySelector(`.${Constants.CART_BUTTON_CLASSNAME}`) as HTMLElement;
 
+    let activeCartResponse: CartPagedQueryResponse;
+
+    let lineItemId = '';
+
     new CustomerCart()
       .getMyActiveCart(customerToken)
-      .then((activeCartResponse): void => {
-        new CustomerCart().getCartInformation(activeCartResponse).catch((error: Error): void => {
-          PromiseHelpers.catchBlockHelper(error, Constants.FETCH_CART_TYPES_ERROR);
-        });
+      .then((response): void => {
+        activeCartResponse = response;
+        if (activeCartResponse) {
+          new CustomerCart().getCartInformation(activeCartResponse).catch((error: Error): void => {
+            PromiseHelpers.catchBlockHelper(error, Constants.FETCH_CART_TYPES_ERROR);
+          });
+        }
       })
       .then((): void => {
         const cartId = new LocalStorage().getLocalStorageItem('cart-id') as string;
 
-        new CustomerCart()
-          .addCartItem(cartId, productId)
-          .then((): void => {
-            cartButton.innerText = Constants.CART_BUTTON_REMOVE_TEXT;
-            cartButton.style.backgroundColor = '#5e5e5e';
-          })
-          .catch((error: Error): void => PromiseHelpers.catchBlockHelper(error, Constants.FETCH_PRODUCT_TYPES_ERROR));
+        // Тут запрашиваю информацию о корзине, чтобы проверить, существует ли элемент с productId:
+        if (activeCartResponse) {
+          const lineItem = activeCartResponse.results[0].lineItems.find((item): boolean => {
+            lineItemId = item.id;
+
+            return item.productId === productId;
+          });
+
+          if (lineItem) {
+            // Если элемент существует, то его нужно удалить
+            new CustomerCart()
+              .removeCartItem(cartId, lineItemId)
+              .then((): void => {
+                cartButton.innerText = Constants.CART_BUTTON_ADD_TEXT;
+                cartButton.style.backgroundColor = '';
+              })
+              .catch((error: Error): void => {
+                PromiseHelpers.catchBlockHelper(error, Constants.FETCH_PRODUCT_TYPES_ERROR);
+              });
+          } else {
+            // Если элемент не существует, добавляю его
+            new CustomerCart()
+              .addCartItem(cartId, productId)
+              .then((): void => {
+                cartButton.innerText = Constants.CART_BUTTON_REMOVE_TEXT;
+                cartButton.style.backgroundColor = '#5e5e5e';
+              })
+              .catch((error: Error): void =>
+                PromiseHelpers.catchBlockHelper(error, Constants.FETCH_PRODUCT_TYPES_ERROR),
+              );
+          }
+        }
       })
       .catch((error: Error): void => {
         PromiseHelpers.catchBlockHelper(error, Constants.FETCH_CART_TYPES_ERROR);

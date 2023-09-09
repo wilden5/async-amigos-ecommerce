@@ -111,6 +111,38 @@ class CustomerCart {
     }
   }
 
+  public async removeCartItem(cartId: string, lineItemId: string, quantity?: number): Promise<Cart> {
+    try {
+      const updatePayload: MyCartUpdate = {
+        version: Number(this.LOCAL_STORAGE.getLocalStorageItem(Constants.CART_VERSION_KEY)),
+        actions: [
+          {
+            action: 'removeLineItem',
+            lineItemId: `${lineItemId}`,
+            quantity, // optional, if no quantity provided -> the whole LineItem is removed from the Cart
+          },
+        ],
+      };
+
+      const response = await this.CTP_CLIENT.withAnonymousSessionFlow()
+        .me()
+        .carts()
+        .withId({
+          ID: cartId,
+        })
+        .post({
+          headers: {
+            Authorization: `${this.LOCAL_STORAGE.getLocalStorageItem(Constants.ACCESS_TOKEN_KEY) as string}`,
+          },
+          body: updatePayload,
+        })
+        .execute();
+      return response.body;
+    } catch (error) {
+      return Promise.reject(error);
+    }
+  }
+
   public async createCartOnFirstLoad(): Promise<void> {
     this.handleCartCreation()
       .then((): void => {
