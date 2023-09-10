@@ -161,6 +161,12 @@ class Constants {
   static CART_ID_KEY = 'cart-id';
 
   static CART_VERSION_KEY = 'cart-version';
+
+  static CART_ITEM_HAS_BEEN_REMOVED = 'Item has been removed from cart';
+
+  static CONFIRM_QUESTION = 'Are you sure you want to clear your cart?';
+
+  static CONFIRM_NOTIFICATION = 'Your cart has been cleared successfully!';
 }
 
 export default Constants;

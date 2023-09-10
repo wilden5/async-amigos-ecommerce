@@ -7,11 +7,13 @@ import Constants from '../../utils/Constants';
 import DOMHelpers from '../../utils/DOMHelpers';
 import PromiseHelpers from '../../utils/PromiseHelpers';
 import ProductCardBuilder from '../catalog-page/ProductCardBuilder';
+import TostifyHelper from '../../utils/TostifyHelper';
 
 class CartPage extends Page {
   private CART_PAGE_MARKUP = `
     <div class="cart-container">
       <h1 class='cart-page-title'>Your Cart</h1>
+      <button class='clear-cart explore-button' disabled>Clear Your Cart</button>
       <div class='cart-items'></div>
       <div class='total-cart-price-container'></div>
     </div>`;
@@ -46,7 +48,10 @@ class CartPage extends Page {
         { className: `${cartItem.productId} cart-item` },
         itemContainer,
       );
-      cartElement.innerHTML = `<div class="remove-cart-item-button ${lineItemId} ${cartItem.productId}"></div>
+      cartElement.setAttribute('data-product-id', `${cartItem.productId}`);
+      cartElement.innerHTML = `<div class="remove-cart-item-button ${lineItemId} ${
+        cartItem.productId
+      }" data-product-id="${cartItem.productId}"></div>
            <img class="cart-item-img" src="${cartItemImg}" alt="${cartItem.productKey as string}">
            <h2 class='cart-item-title'>${cartItemTitle}</h2> 
            <div class="cart-item-quantity-container ${cartItem.productId}">
@@ -72,19 +77,55 @@ class CartPage extends Page {
     });
   }
 
+  private handleClearCartButtonState(): void {
+    const itemsNumber = this.CONTAINER.querySelectorAll('.cart-item').length;
+    const clearCartButton = this.CONTAINER.querySelector('.clear-cart') as HTMLButtonElement;
+    if (itemsNumber > 0) {
+      clearCartButton.disabled = false;
+      clearCartButton.addEventListener('click', this.handleCartCleanProcess);
+    }
+  }
+
+  private handleCartCleanProcess = (): void => {
+    // eslint-disable-next-line no-restricted-globals
+    const confirmation = confirm(Constants.CONFIRM_QUESTION);
+
+    if (confirmation) {
+      this.CUSTOMER_CART.deleteCart(this.LOCAL_STORAGE.getLocalStorageItem(Constants.CART_ID_KEY) as string)
+        .then(() =>
+          this.CUSTOMER_CART.createCart(this.LOCAL_STORAGE.getLocalStorageItem(Constants.ACCESS_TOKEN_KEY) as string),
+        )
+        .then(() =>
+          this.CUSTOMER_CART.getMyActiveCart(
+            this.LOCAL_STORAGE.getLocalStorageItem(Constants.ACCESS_TOKEN_KEY) as string,
+          ),
+        )
+        .then((activeCart) => this.CUSTOMER_CART.getCartInformation(activeCart))
+        .then(() => {
+          this.renderPage();
+          TostifyHelper.showToast(Constants.CONFIRM_NOTIFICATION, Constants.TOAST_COLOR_DARK_GREEN);
+        })
+        .catch((error: Error): void => {
+          PromiseHelpers.catchBlockHelper(error, error.message);
+        });
+    }
+  };
+
   private handleClickOnRemoveCartItemButton(): void {
     const buttons = this.CONTAINER.querySelectorAll('.remove-cart-item-button');
     buttons.forEach((button) => {
       button.addEventListener('click', () => {
         const lineId = button.classList[1];
         const productId = button.classList[2];
+        const dataProductId = button.getAttribute('data-product-id') as string;
         this.CUSTOMER_CART.removeCartItem(
           this.LOCAL_STORAGE.getLocalStorageItem(Constants.CART_ID_KEY) as string,
           lineId,
         )
           .then(() => {
             this.updateRelatedToProductQuantityElements(productId);
-            (this.CONTAINER.querySelector(`.${productId}`) as HTMLDivElement).remove();
+            (this.CONTAINER.querySelector(`[data-product-id="${dataProductId}"]`) as HTMLDivElement).remove();
+            TostifyHelper.showToast(Constants.CART_ITEM_HAS_BEEN_REMOVED, Constants.TOAST_COLOR_DARK_GREEN);
           })
           .then(() => {
             if (this.CONTAINER.querySelectorAll('.cart-item').length === 0) {
@@ -197,6 +238,7 @@ class CartPage extends Page {
             .then(() => {
               this.disableQuantityMinusButton();
               this.handleClickOnRemoveCartItemButton();
+              this.handleClearCartButtonState();
             })
             .catch((error: Error): void => {
               PromiseHelpers.catchBlockHelper(error, error.message);

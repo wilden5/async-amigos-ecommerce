@@ -141,6 +141,29 @@ class CustomerCart {
       return Promise.reject(error);
     }
   }
+
+  public async deleteCart(cartId: string): Promise<Cart> {
+    try {
+      const response = await this.CTP_CLIENT.withAnonymousSessionFlow()
+        .me()
+        .carts()
+        .withId({
+          ID: cartId,
+        })
+        .delete({
+          headers: {
+            Authorization: `${this.LOCAL_STORAGE.getLocalStorageItem(Constants.ACCESS_TOKEN_KEY) as string}`,
+          },
+          queryArgs: {
+            version: Number(this.LOCAL_STORAGE.getLocalStorageItem(Constants.CART_VERSION_KEY)),
+          },
+        })
+        .execute();
+      return response.body;
+    } catch (error) {
+      return Promise.reject(error);
+    }
+  }
 }
 
 export default CustomerCart;

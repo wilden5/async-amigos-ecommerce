@@ -1,3 +1,7 @@
+.cart-container {
+  text-align: center;
+}
+
 .cart-items {
   display: flex;
   justify-content: center;
@@ -162,4 +166,27 @@
   text-transform: uppercase;
   text-shadow: 0.2rem 0.2rem 0.4rem rgba(0, 0, 0, 0.3);
   margin-top: 10rem;
+}
+
+.clear-cart {
+  background-color: #f10a0a;
+  border: 0.2rem solid #f10a0a;
+  cursor: pointer;
+  margin: 2rem;
+
+  &:hover {
+    color: #f10a0a;
+    border: 0.2rem solid #f10a0a;
+  }
+
+  &:disabled {
+    cursor: default;
+    background-color: #a29b9b;
+    border: 0.2rem solid #a29b9b;
+  }
+
+  &:hover:disabled {
+    color: white;
+    border: 0.2rem solid #a29b9b;
+  }
 }
