@@ -155,4 +155,15 @@
     color: #f10a0a;
     border: 0.2rem solid #f10a0a;
   }
+
+  &:disabled {
+    cursor: default;
+    background-color: #a29b9b;
+    border: 0.2rem solid #a29b9b;
+  }
+
+  &:hover:disabled {
+    color: white;
+    border: 0.2rem solid #a29b9b;
+  }
 }

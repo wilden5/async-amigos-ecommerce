@@ -13,7 +13,7 @@ class CartPage extends Page {
   private CART_PAGE_MARKUP = `
     <div class="cart-container">
       <h1 class='cart-page-title'>Your Cart</h1>
-      <a class='clear-cart explore-button'>Clear Your Cart</a>
+      <button class='clear-cart explore-button' disabled>Clear Your Cart</button>
       <div class='cart-items'></div>
       <div class='total-cart-price-container'></div>
     </div>`;
@@ -73,6 +73,24 @@ class CartPage extends Page {
       minusButton.disabled = Number(quantityValue) === 1;
     });
   }
+
+  private handleClearCartButton(): void {
+    const itemsNumber = this.CONTAINER.querySelectorAll('.cart-item').length;
+    const clearCartButton = this.CONTAINER.querySelector('.clear-cart') as HTMLButtonElement;
+    if (itemsNumber > 0) {
+      clearCartButton.disabled = false;
+      clearCartButton.addEventListener('click', this.confirmationPrompt);
+    }
+  }
+
+  private confirmationPrompt = (): void => {
+    // eslint-disable-next-line no-restricted-globals
+    const confirmation = confirm(Constants.CONFIRM_QUESTION);
+
+    if (confirmation) {
+      TostifyHelper.showToast(Constants.CONFIRM_NOTIFICATION, Constants.TOAST_COLOR_DARK_GREEN);
+    }
+  };
 
   private handleClickOnRemoveCartItemButton(): void {
     const buttons = this.CONTAINER.querySelectorAll('.remove-cart-item-button');
@@ -192,6 +210,7 @@ class CartPage extends Page {
           .then(() => {
             this.disableQuantityMinusButton();
             this.handleClickOnRemoveCartItemButton();
+            this.handleClearCartButton();
           })
           .catch((error: Error): void => {
             PromiseHelpers.catchBlockHelper(error, error.message);
@@ -200,12 +219,6 @@ class CartPage extends Page {
       .catch((error: Error): void => {
         PromiseHelpers.catchBlockHelper(error, error.message);
       });
-  }
-
-  private showEmptyCartMessage(): void {
-    const parent = this.CONTAINER.querySelector('.cart-items') as HTMLDivElement;
-    const element = DOMHelpers.createElement('div', { className: `empty-cart` }, parent);
-    element.innerText = 'CART IS EMPTY!';
   }
 
   public renderPage(): HTMLElement {
