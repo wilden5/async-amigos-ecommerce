@@ -74,21 +74,37 @@ class CartPage extends Page {
     });
   }
 
-  private handleClearCartButton(): void {
+  private handleClearCartButtonState(): void {
     const itemsNumber = this.CONTAINER.querySelectorAll('.cart-item').length;
     const clearCartButton = this.CONTAINER.querySelector('.clear-cart') as HTMLButtonElement;
     if (itemsNumber > 0) {
       clearCartButton.disabled = false;
-      clearCartButton.addEventListener('click', this.confirmationPrompt);
+      clearCartButton.addEventListener('click', this.handleCartCleanProcess);
     }
   }
 
-  private confirmationPrompt = (): void => {
+  private handleCartCleanProcess = (): void => {
     // eslint-disable-next-line no-restricted-globals
     const confirmation = confirm(Constants.CONFIRM_QUESTION);
 
     if (confirmation) {
-      TostifyHelper.showToast(Constants.CONFIRM_NOTIFICATION, Constants.TOAST_COLOR_DARK_GREEN);
+      this.CUSTOMER_CART.deleteCart(this.LOCAL_STORAGE.getLocalStorageItem(Constants.CART_ID_KEY) as string)
+        .then(() =>
+          this.CUSTOMER_CART.createCart(this.LOCAL_STORAGE.getLocalStorageItem(Constants.ACCESS_TOKEN_KEY) as string),
+        )
+        .then(() =>
+          this.CUSTOMER_CART.getMyActiveCart(
+            this.LOCAL_STORAGE.getLocalStorageItem(Constants.ACCESS_TOKEN_KEY) as string,
+          ),
+        )
+        .then((activeCart) => this.CUSTOMER_CART.getCartInformation(activeCart))
+        .then(() => {
+          this.renderPage();
+          TostifyHelper.showToast(Constants.CONFIRM_NOTIFICATION, Constants.TOAST_COLOR_DARK_GREEN);
+        })
+        .catch((error: Error): void => {
+          PromiseHelpers.catchBlockHelper(error, error.message);
+        });
     }
   };
 
@@ -218,7 +234,7 @@ class CartPage extends Page {
             .then(() => {
               this.disableQuantityMinusButton();
               this.handleClickOnRemoveCartItemButton();
-              this.handleClearCartButton();
+              this.handleClearCartButtonState();
             })
             .catch((error: Error): void => {
               PromiseHelpers.catchBlockHelper(error, error.message);
