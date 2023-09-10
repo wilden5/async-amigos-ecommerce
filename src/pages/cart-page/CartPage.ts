@@ -48,7 +48,10 @@ class CartPage extends Page {
         { className: `${cartItem.productId} cart-item` },
         itemContainer,
       );
-      cartElement.innerHTML = `<div class="remove-cart-item-button ${lineItemId} ${cartItem.productId}"></div>
+      cartElement.setAttribute('data-product-id', `${cartItem.productId}`);
+      cartElement.innerHTML = `<div class="remove-cart-item-button ${lineItemId} ${
+        cartItem.productId
+      }" data-product-id="${cartItem.productId}"></div>
            <img class="cart-item-img" src="${cartItemImg}" alt="${cartItem.productKey as string}">
            <h2 class='cart-item-title'>${cartItemTitle}</h2> 
            <div class="cart-item-quantity-container ${cartItem.productId}">
@@ -114,13 +117,14 @@ class CartPage extends Page {
       button.addEventListener('click', () => {
         const lineId = button.classList[1];
         const productId = button.classList[2];
+        const dataProductId = button.getAttribute('data-product-id') as string;
         this.CUSTOMER_CART.removeCartItem(
           this.LOCAL_STORAGE.getLocalStorageItem(Constants.CART_ID_KEY) as string,
           lineId,
         )
           .then(() => {
             this.updateRelatedToProductQuantityElements(productId);
-            (this.CONTAINER.querySelector(`.${productId}`) as HTMLDivElement).remove();
+            (this.CONTAINER.querySelector(`[data-product-id="${dataProductId}"]`) as HTMLDivElement).remove();
             TostifyHelper.showToast(Constants.CART_ITEM_HAS_BEEN_REMOVED, Constants.TOAST_COLOR_DARK_GREEN);
           })
           .then(() => {
