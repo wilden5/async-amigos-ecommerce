@@ -80,7 +80,7 @@ class CatalogPage extends Page {
 
   constructor() {
     super(ProjectPages.Catalog);
-    this.restoreCartState();
+    // this.restoreCartState();
   }
 
   private fillProductCatalog = (): void => {
@@ -90,6 +90,7 @@ class CatalogPage extends Page {
       .then((queriedProductList: ProductPagedQueryResponse): void => {
         queriedProductList.results.forEach((product: Product): void => {
           ProductCardBuilder.buildProductCard(product, productContainer);
+          this.restoreCartState();
         });
       })
       .catch((error: Error): void => {
@@ -141,7 +142,7 @@ class CatalogPage extends Page {
               cartButton.innerText = Constants.CART_BUTTON_REMOVE_TEXT;
               cartButton.style.backgroundColor = '#5e5e5e';
               TostifyHelper.showToast(`${Constants.CART_PRODUCT_ADD_MESSAGE}`, Constants.TOAST_COLOR_DARK_GREEN);
-              this.saveToLocalStorage(productId);
+              this.saveToLocalStorage(productId, Constants.CART_BUTTON_REMOVE_TEXT, 'background-color: #5e5e5e;');
             })
             .catch((error: Error): void => PromiseHelpers.catchBlockHelper(error, Constants.FETCH_PRODUCT_TYPES_ERROR));
         }
@@ -151,30 +152,40 @@ class CatalogPage extends Page {
       });
   };
 
-  private static saveToLocalStorage(productId: string): void {
-    const cartState = JSON.parse(localStorage.getItem('cartState') || '{}') as Record<string, boolean>;
-    cartState[productId] = true;
+  private static saveToLocalStorage(productId: string, buttonText: string, buttonStyles: string): void {
+    const cartState = JSON.parse(localStorage.getItem('cartState') || '{}') as Record<
+      string,
+      { text: string; styles: string }
+    >;
+    cartState[productId] = { text: buttonText, styles: buttonStyles };
     localStorage.setItem('cartState', JSON.stringify(cartState));
   }
 
   private static removeFromLocalStorage(productId: string): void {
-    const cartState = JSON.parse(localStorage.getItem('cartState') || '{}') as Record<string, boolean>;
+    const cartState = JSON.parse(localStorage.getItem('cartState') || '{}') as Record<
+      string,
+      { text: string; styles: string }
+    >;
     delete cartState[productId];
     localStorage.setItem('cartState', JSON.stringify(cartState));
   }
 
   private restoreCartState(): void {
-    const cartState = JSON.parse(localStorage.getItem('cartState') || '{}') as Record<string, boolean>;
-    const productItems = document.querySelectorAll('.product-item');
+    const cartState = JSON.parse(localStorage.getItem('cartState') || '{}') as Record<
+      string,
+      { text: string; styles: string }
+    >;
+    const productItems = this.CONTAINER.querySelectorAll('.product-item');
 
     productItems.forEach((productItem): void => {
-      const productId = productItem.getAttribute('data-product-id') as string;
+      const productId = productItem.classList[0];
       const cartButton = productItem.querySelector(`.${Constants.CART_BUTTON_CLASSNAME}`) as HTMLElement;
-      if (productId && cartButton) {
-        if (cartState[productId]) {
-          cartButton.innerText = Constants.CART_BUTTON_REMOVE_TEXT;
-          cartButton.style.backgroundColor = '#5e5e5e';
-        }
+      console.log('Product ID:', productId, 'Cart Button:', cartButton);
+      if (productId && cartButton && cartState[productId]) {
+        const { text, styles } = cartState[productId];
+
+        cartButton.innerText = text;
+        cartButton.style.cssText = styles;
       }
     });
   }
@@ -238,7 +249,6 @@ class CatalogPage extends Page {
     this.onResetFiltersButtonClick();
     Breadcrumbs.setCatalogBreadcrumb(this.CONTAINER);
     this.createCategoriesLinks();
-
     return this.CONTAINER;
   }
 }
