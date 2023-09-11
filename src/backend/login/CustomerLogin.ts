@@ -3,7 +3,7 @@ import { CtpClient } from '../ctpClient/ctpClient';
 import LoginValidator from './LoginValidator';
 
 export class CustomerLogin {
-  private loginData: CustomerSignin;
+  private readonly loginData: CustomerSignin;
 
   public ctpClient: CtpClient;
 
@@ -21,6 +21,7 @@ export class CustomerLogin {
       };
       const response = await this.ctpClient
         .withPasswordFlow(this.loginData.email, this.loginData.password)
+        .me()
         .login()
         .post({
           body: customerLogin,
