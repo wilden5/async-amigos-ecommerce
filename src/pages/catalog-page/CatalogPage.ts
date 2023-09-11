@@ -96,13 +96,11 @@ class CatalogPage extends Page {
       });
   };
 
-  static onAddToCartButtonClick = (product: HTMLElement): void => {
-    const productId: string = product.classList[0];
+  static onAddToCartButtonClick = (productId: string, product: HTMLElement): void => {
     const customerToken = new CustomerCart().LOCAL_STORAGE.getLocalStorageItem(Constants.ACCESS_TOKEN_KEY) as string;
     const cartButton = product.querySelector(`.${Constants.CART_BUTTON_CLASSNAME}`) as HTMLElement;
 
     let activeCartResponse: CartPagedQueryResponse;
-
     let lineItemId = '';
 
     new CustomerCart()
@@ -118,37 +116,32 @@ class CatalogPage extends Page {
       .then((): void => {
         const cartId = new LocalStorage().getLocalStorageItem('cart-id') as string;
 
-        // Тут запрашиваю информацию о корзине, чтобы проверить, существует ли элемент с productId:
-        if (activeCartResponse) {
-          const lineItem = activeCartResponse.results[0].lineItems.find((item): boolean => {
-            lineItemId = item.id;
+        // Проверяю, есть ли товар с productId в корзине
+        const lineItem = activeCartResponse?.results[0]?.lineItems.find((item): boolean => {
+          lineItemId = item.id;
+          return item.productId === productId;
+        });
 
-            return item.productId === productId;
-          });
-
-          if (lineItem) {
-            // Если элемент существует, то его нужно удалить
-            new CustomerCart()
-              .removeCartItem(cartId, lineItemId)
-              .then((): void => {
-                cartButton.innerText = Constants.CART_BUTTON_ADD_TEXT;
-                cartButton.style.backgroundColor = '';
-              })
-              .catch((error: Error): void => {
-                PromiseHelpers.catchBlockHelper(error, Constants.FETCH_PRODUCT_TYPES_ERROR);
-              });
-          } else {
-            // Если элемент не существует, добавляю его
-            new CustomerCart()
-              .addCartItem(cartId, productId)
-              .then((): void => {
-                cartButton.innerText = Constants.CART_BUTTON_REMOVE_TEXT;
-                cartButton.style.backgroundColor = '#5e5e5e';
-              })
-              .catch((error: Error): void =>
-                PromiseHelpers.catchBlockHelper(error, Constants.FETCH_PRODUCT_TYPES_ERROR),
-              );
-          }
+        if (lineItem) {
+          // Если элемент существует, то его нужно удалить
+          new CustomerCart()
+            .removeCartItem(cartId, lineItemId)
+            .then((): void => {
+              cartButton.innerText = Constants.CART_BUTTON_ADD_TEXT;
+              cartButton.style.backgroundColor = '';
+            })
+            .catch((error: Error): void => {
+              PromiseHelpers.catchBlockHelper(error, Constants.FETCH_PRODUCT_TYPES_ERROR);
+            });
+        } else {
+          // Если элемент не существует, добавляю его
+          new CustomerCart()
+            .addCartItem(cartId, productId)
+            .then((): void => {
+              cartButton.innerText = Constants.CART_BUTTON_REMOVE_TEXT;
+              cartButton.style.backgroundColor = '#5e5e5e';
+            })
+            .catch((error: Error): void => PromiseHelpers.catchBlockHelper(error, Constants.FETCH_PRODUCT_TYPES_ERROR));
         }
       })
       .catch((error: Error): void => {
@@ -163,11 +156,16 @@ class CatalogPage extends Page {
 
       if (
         clickedElement instanceof HTMLAnchorElement &&
-        clickedElement.className === `${Constants.CART_BUTTON_CLASSNAME}`
+        clickedElement.classList.contains(`${Constants.CART_BUTTON_CLASSNAME}`)
+        // clickedElement.className === `${Constants.CART_BUTTON_CLASSNAME}`
       ) {
         event.preventDefault();
-        CatalogPage.onAddToCartButtonClick(productItem);
-        TostifyHelper.showToast(`${Constants.CART_PRODUCT_ADD_MESSAGE}`, Constants.TOAST_COLOR_GREEN);
+        const productId = clickedElement.getAttribute('data-product-id');
+
+        if (productId) {
+          CatalogPage.onAddToCartButtonClick(productId, productItem);
+          TostifyHelper.showToast(`${Constants.CART_PRODUCT_ADD_MESSAGE}`, Constants.TOAST_COLOR_GREEN);
+        }
         return;
       }
 
