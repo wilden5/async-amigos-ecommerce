@@ -80,6 +80,7 @@ class CatalogPage extends Page {
 
   constructor() {
     super(ProjectPages.Catalog);
+    this.restoreCartState();
   }
 
   private fillProductCatalog = (): void => {
@@ -100,7 +101,7 @@ class CatalogPage extends Page {
     const customerToken = new CustomerCart().LOCAL_STORAGE.getLocalStorageItem(Constants.ACCESS_TOKEN_KEY) as string;
     const cartButton = product.querySelector(`.${Constants.CART_BUTTON_CLASSNAME}`) as HTMLElement;
 
-    let activeCartResponse: CartPagedQueryResponse;
+    let activeCartResponse: CartPagedQueryResponse | undefined;
     let lineItemId = '';
 
     new CustomerCart()
@@ -116,30 +117,31 @@ class CatalogPage extends Page {
       .then((): void => {
         const cartId = new LocalStorage().getLocalStorageItem('cart-id') as string;
 
-        // Проверяю, есть ли товар с productId в корзине
         const lineItem = activeCartResponse?.results[0]?.lineItems.find((item): boolean => {
           lineItemId = item.id;
           return item.productId === productId;
         });
 
         if (lineItem) {
-          // Если элемент существует, то его нужно удалить
           new CustomerCart()
             .removeCartItem(cartId, lineItemId)
             .then((): void => {
               cartButton.innerText = Constants.CART_BUTTON_ADD_TEXT;
               cartButton.style.backgroundColor = '';
+              TostifyHelper.showToast(`${Constants.CART_PRODUCT_REMOVE_MESSAGE}`, Constants.TOAST_COLOR_DARK_BLUE);
+              this.removeFromLocalStorage(productId);
             })
             .catch((error: Error): void => {
               PromiseHelpers.catchBlockHelper(error, Constants.FETCH_PRODUCT_TYPES_ERROR);
             });
         } else {
-          // Если элемент не существует, добавляю его
           new CustomerCart()
             .addCartItem(cartId, productId)
             .then((): void => {
               cartButton.innerText = Constants.CART_BUTTON_REMOVE_TEXT;
               cartButton.style.backgroundColor = '#5e5e5e';
+              TostifyHelper.showToast(`${Constants.CART_PRODUCT_ADD_MESSAGE}`, Constants.TOAST_COLOR_DARK_GREEN);
+              this.saveToLocalStorage(productId);
             })
             .catch((error: Error): void => PromiseHelpers.catchBlockHelper(error, Constants.FETCH_PRODUCT_TYPES_ERROR));
         }
@@ -149,6 +151,34 @@ class CatalogPage extends Page {
       });
   };
 
+  private static saveToLocalStorage(productId: string): void {
+    const cartState = JSON.parse(localStorage.getItem('cartState') || '{}') as Record<string, boolean>;
+    cartState[productId] = true;
+    localStorage.setItem('cartState', JSON.stringify(cartState));
+  }
+
+  private static removeFromLocalStorage(productId: string): void {
+    const cartState = JSON.parse(localStorage.getItem('cartState') || '{}') as Record<string, boolean>;
+    delete cartState[productId];
+    localStorage.setItem('cartState', JSON.stringify(cartState));
+  }
+
+  private restoreCartState(): void {
+    const cartState = JSON.parse(localStorage.getItem('cartState') || '{}') as Record<string, boolean>;
+    const productItems = document.querySelectorAll('.product-item');
+
+    productItems.forEach((productItem): void => {
+      const productId = productItem.getAttribute('data-product-id') as string;
+      const cartButton = productItem.querySelector(`.${Constants.CART_BUTTON_CLASSNAME}`) as HTMLElement;
+      if (productId && cartButton) {
+        if (cartState[productId]) {
+          cartButton.innerText = Constants.CART_BUTTON_REMOVE_TEXT;
+          cartButton.style.backgroundColor = '#5e5e5e';
+        }
+      }
+    });
+  }
+
   static onProductClick(container: HTMLElement): void {
     container.addEventListener('click', (event: Event): void => {
       const clickedElement = event.target as Element;
@@ -157,14 +187,12 @@ class CatalogPage extends Page {
       if (
         clickedElement instanceof HTMLAnchorElement &&
         clickedElement.classList.contains(`${Constants.CART_BUTTON_CLASSNAME}`)
-        // clickedElement.className === `${Constants.CART_BUTTON_CLASSNAME}`
       ) {
         event.preventDefault();
-        const productId = clickedElement.getAttribute('data-product-id');
+        const productId: string | null = clickedElement.getAttribute('data-product-id');
 
         if (productId) {
           CatalogPage.onAddToCartButtonClick(productId, productItem);
-          TostifyHelper.showToast(`${Constants.CART_PRODUCT_ADD_MESSAGE}`, Constants.TOAST_COLOR_GREEN);
         }
         return;
       }
@@ -210,6 +238,7 @@ class CatalogPage extends Page {
     this.onResetFiltersButtonClick();
     Breadcrumbs.setCatalogBreadcrumb(this.CONTAINER);
     this.createCategoriesLinks();
+
     return this.CONTAINER;
   }
 }
