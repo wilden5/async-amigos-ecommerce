@@ -92,7 +92,13 @@ class ProductDetailsPage extends Page {
       });
   }
 
-  private initModal = (): void => {
+  private initModal = (event: MouseEvent): void => {
+    const clickedSlide = (event.target as HTMLElement).closest('.swiper-slide') as Element;
+    if (!clickedSlide) return;
+
+    const clickedSlideIndex = clickedSlide.getAttribute('data-swiper-slide-index') as string;
+    if (clickedSlideIndex === null) return;
+
     const dialogContainer = DOMHelpers.createElement('div', { className: 'dialog-container' }, this.CONTAINER);
     dialogContainer.innerHTML = this.DIALOG_MARKUP;
     const dialogContent: HTMLElement | null = this.CONTAINER.querySelector('.dialog-content');
@@ -103,26 +109,26 @@ class ProductDetailsPage extends Page {
       modalSwiperContainer.innerHTML = '';
 
       modalSwiperContainer.innerHTML = `
-    <div class="swiper-wrapper">${this.SLIDER.generateSwiperContent(this.IMAGES_ARRAY)}</div>
-    <div class="swiper-button-next swiper-modal-button-next"></div>
-    <div class="swiper-button-prev swiper-modal-button-prev"></div>
-    <div class="swiper-pagination swiper-modal-pagination"></div>
-  `;
-    }
+      <div class="swiper-wrapper">${this.SLIDER.generateSwiperContent(this.IMAGES_ARRAY)}</div>
+      <div class="swiper-button-next swiper-modal-button-next"></div>
+      <div class="swiper-button-prev swiper-modal-button-prev"></div>
+      <div class="swiper-pagination swiper-modal-pagination"></div>
+    `;
 
-    // Swiper init:
-    const swiperModal = new Swiper('.swiper-modal', SwiperModalParams) as Swiper | null;
+      const initialSlide: number = parseInt(clickedSlideIndex, 10);
 
-    if (swiperModal) {
-      swiperModal.init();
+      if (!Number.isNaN(initialSlide)) {
+        const swiperModal = new Swiper('.swiper-modal', {
+          ...SwiperModalParams,
+          initialSlide,
+        });
+
+        swiperModal.init();
+      }
     }
 
     dialogCloseBtn.addEventListener('click', (): void => {
       dialogContainer.remove();
-
-      if (swiperModal) {
-        swiperModal.destroy();
-      }
     });
   };
 

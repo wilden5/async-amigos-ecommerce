@@ -74,14 +74,14 @@ class CustomerCart {
   public async getCartInformation(cartResponse: CartPagedQueryResponse): Promise<void> {
     const cartVersion = cartResponse.results[0].version;
     const cartId = cartResponse.results[0].id;
-    this.LOCAL_STORAGE.setLocalStorageItem('cart-version', String(cartVersion));
-    this.LOCAL_STORAGE.setLocalStorageItem('cart-id', String(cartId));
+    this.LOCAL_STORAGE.setLocalStorageItem(Constants.CART_VERSION_KEY, String(cartVersion));
+    this.LOCAL_STORAGE.setLocalStorageItem(Constants.CART_ID_KEY, String(cartId));
   }
 
   public async addCartItem(cartId: string, productId: string): Promise<Cart> {
     try {
       const updatePayload: MyCartUpdate = {
-        version: Number(this.LOCAL_STORAGE.getLocalStorageItem('cart-version')),
+        version: Number(this.LOCAL_STORAGE.getLocalStorageItem(Constants.CART_VERSION_KEY)),
         actions: [
           {
             action: 'addLineItem',
@@ -135,6 +135,29 @@ class CustomerCart {
             Authorization: `${this.LOCAL_STORAGE.getLocalStorageItem(Constants.ACCESS_TOKEN_KEY) as string}`,
           },
           body: updatePayload,
+        })
+        .execute();
+      return response.body;
+    } catch (error) {
+      return Promise.reject(error);
+    }
+  }
+
+  public async deleteCart(cartId: string): Promise<Cart> {
+    try {
+      const response = await this.CTP_CLIENT.withAnonymousSessionFlow()
+        .me()
+        .carts()
+        .withId({
+          ID: cartId,
+        })
+        .delete({
+          headers: {
+            Authorization: `${this.LOCAL_STORAGE.getLocalStorageItem(Constants.ACCESS_TOKEN_KEY) as string}`,
+          },
+          queryArgs: {
+            version: Number(this.LOCAL_STORAGE.getLocalStorageItem(Constants.CART_VERSION_KEY)),
+          },
         })
         .execute();
       return response.body;
