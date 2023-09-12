@@ -34,9 +34,11 @@ describe('CustomerLogin', () => {
     it('should call the ctpClient withPasswordFlow method with the correct arguments', async () => {
       const mockResponse = { body: { customer: { id: '123' } } };
       const mockWithPasswordFlow = jest.fn().mockReturnValue({
-        login: jest.fn().mockReturnValue({
-          post: jest.fn().mockReturnValue({
-            execute: jest.fn().mockResolvedValue(mockResponse),
+        me: jest.fn().mockReturnValue({
+          login: jest.fn().mockReturnValue({
+            post: jest.fn().mockReturnValue({
+              execute: jest.fn().mockResolvedValue(mockResponse),
+            }),
           }),
         }),
       });
@@ -48,9 +50,11 @@ describe('CustomerLogin', () => {
     it('should return a promise that resolves to a ClientResponse<CustomerSignInResult> object', async () => {
       const mockResponse = { body: { customer: { id: '123' } } };
       const mockWithPasswordFlow = jest.fn().mockReturnValue({
-        login: jest.fn().mockReturnValue({
-          post: jest.fn().mockReturnValue({
-            execute: jest.fn().mockResolvedValue(mockResponse),
+        me: jest.fn().mockReturnValue({
+          login: jest.fn().mockReturnValue({
+            post: jest.fn().mockReturnValue({
+              execute: jest.fn().mockResolvedValue(mockResponse),
+            }),
           }),
         }),
       });
