@@ -91,8 +91,8 @@ class CatalogPage extends Page {
         queriedProductList.results.forEach((product: Product): void => {
           ProductCardBuilder.buildProductCard(product, productContainer);
         });
-        this.restoreCartState();
       })
+      .then(() => CatalogPage.restoreButtonState())
       .catch((error: Error): void => {
         PromiseHelpers.catchBlockHelper(error, Constants.FETCH_CATALOG_ERROR);
       });
@@ -150,8 +150,8 @@ class CatalogPage extends Page {
       });
   };
 
-  private restoreCartState(): void {
-    const productItems = this.CONTAINER.querySelectorAll('.product-item');
+  static restoreButtonState(): void {
+    const productItems = document.querySelectorAll('.product-item');
     const productIds: string[] = [];
 
     new CustomerCart()

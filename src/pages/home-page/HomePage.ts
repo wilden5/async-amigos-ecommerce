@@ -40,6 +40,7 @@ class HomePage extends Page {
           ProductCardBuilder.buildProductCard(product, this.CONTAINER.querySelector('.special-offers') as HTMLElement);
         }),
       )
+      .then(() => CatalogPage.restoreButtonState())
       .catch((error: Error): void => {
         PromiseHelpers.catchBlockHelper(error, Constants.FETCH_CATALOG_ERROR);
       });
