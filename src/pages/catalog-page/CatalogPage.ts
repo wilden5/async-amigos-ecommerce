@@ -1,5 +1,6 @@
 import {
   CartPagedQueryResponse,
+  LineItem,
   Product,
   ProductPagedQueryResponse,
   ProductType,
@@ -80,7 +81,6 @@ class CatalogPage extends Page {
 
   constructor() {
     super(ProjectPages.Catalog);
-    // this.restoreCartState();
   }
 
   private fillProductCatalog = (): void => {
@@ -90,8 +90,8 @@ class CatalogPage extends Page {
       .then((queriedProductList: ProductPagedQueryResponse): void => {
         queriedProductList.results.forEach((product: Product): void => {
           ProductCardBuilder.buildProductCard(product, productContainer);
-          this.restoreCartState();
         });
+        this.restoreCartState();
       })
       .catch((error: Error): void => {
         PromiseHelpers.catchBlockHelper(error, Constants.FETCH_CATALOG_ERROR);
@@ -99,7 +99,7 @@ class CatalogPage extends Page {
   };
 
   static onAddToCartButtonClick = (productId: string, product: HTMLElement): void => {
-    const customerToken = new CustomerCart().LOCAL_STORAGE.getLocalStorageItem(Constants.ACCESS_TOKEN_KEY) as string;
+    const customerToken = new LocalStorage().getLocalStorageItem(Constants.ACCESS_TOKEN_KEY) as string;
     const cartButton = product.querySelector(`.${Constants.CART_BUTTON_CLASSNAME}`) as HTMLElement;
 
     let activeCartResponse: CartPagedQueryResponse | undefined;
@@ -130,7 +130,6 @@ class CatalogPage extends Page {
               cartButton.innerText = Constants.CART_BUTTON_ADD_TEXT;
               cartButton.style.backgroundColor = '';
               TostifyHelper.showToast(`${Constants.CART_PRODUCT_REMOVE_MESSAGE}`, Constants.TOAST_COLOR_DARK_BLUE);
-              this.removeFromLocalStorage(productId);
             })
             .catch((error: Error): void => {
               PromiseHelpers.catchBlockHelper(error, Constants.FETCH_PRODUCT_TYPES_ERROR);
@@ -142,7 +141,6 @@ class CatalogPage extends Page {
               cartButton.innerText = Constants.CART_BUTTON_REMOVE_TEXT;
               cartButton.style.backgroundColor = '#5e5e5e';
               TostifyHelper.showToast(`${Constants.CART_PRODUCT_ADD_MESSAGE}`, Constants.TOAST_COLOR_DARK_GREEN);
-              this.saveToLocalStorage(productId, Constants.CART_BUTTON_REMOVE_TEXT, 'background-color: #5e5e5e;');
             })
             .catch((error: Error): void => PromiseHelpers.catchBlockHelper(error, Constants.FETCH_PRODUCT_TYPES_ERROR));
         }
@@ -152,42 +150,31 @@ class CatalogPage extends Page {
       });
   };
 
-  private static saveToLocalStorage(productId: string, buttonText: string, buttonStyles: string): void {
-    const cartState = JSON.parse(localStorage.getItem('cartState') || '{}') as Record<
-      string,
-      { text: string; styles: string }
-    >;
-    cartState[productId] = { text: buttonText, styles: buttonStyles };
-    localStorage.setItem('cartState', JSON.stringify(cartState));
-  }
-
-  private static removeFromLocalStorage(productId: string): void {
-    const cartState = JSON.parse(localStorage.getItem('cartState') || '{}') as Record<
-      string,
-      { text: string; styles: string }
-    >;
-    delete cartState[productId];
-    localStorage.setItem('cartState', JSON.stringify(cartState));
-  }
-
   private restoreCartState(): void {
-    const cartState = JSON.parse(localStorage.getItem('cartState') || '{}') as Record<
-      string,
-      { text: string; styles: string }
-    >;
     const productItems = this.CONTAINER.querySelectorAll('.product-item');
+    const productIds: string[] = [];
 
-    productItems.forEach((productItem): void => {
-      const productId = productItem.classList[0];
-      const cartButton = productItem.querySelector(`.${Constants.CART_BUTTON_CLASSNAME}`) as HTMLElement;
-      console.log('Product ID:', productId, 'Cart Button:', cartButton);
-      if (productId && cartButton && cartState[productId]) {
-        const { text, styles } = cartState[productId];
+    new CustomerCart()
+      .getMyActiveCart(new LocalStorage().getLocalStorageItem(Constants.ACCESS_TOKEN_KEY) as string)
+      .then((response): void => {
+        response?.results[0]?.lineItems.forEach((lineItem: LineItem): void => {
+          productIds.push(lineItem.productId);
+        });
+      })
+      .then((): void => {
+        productItems.forEach((productItem): void => {
+          const cartButton = productItem.querySelector(`.${Constants.CART_BUTTON_CLASSNAME}`) as HTMLElement;
+          const productId = productItem.classList[0];
 
-        cartButton.innerText = text;
-        cartButton.style.cssText = styles;
-      }
-    });
+          if (productIds.includes(productId)) {
+            cartButton.innerText = Constants.CART_BUTTON_REMOVE_TEXT;
+            cartButton.style.backgroundColor = '#5e5e5e';
+          }
+        });
+      })
+      .catch((error: Error): void => {
+        PromiseHelpers.catchBlockHelper(error, Constants.FETCH_PRODUCT_TYPES_ERROR);
+      });
   }
 
   static onProductClick(container: HTMLElement): void {
