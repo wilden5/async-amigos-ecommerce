@@ -1,4 +1,4 @@
-import { Image, Product } from '@commercetools/platform-sdk';
+import { Image, LineItem, Product } from '@commercetools/platform-sdk';
 import Swiper from 'swiper';
 import Page from '../../components/templates/Page';
 import { ProjectPages } from '../../types/Enums';
@@ -15,6 +15,8 @@ import Breadcrumbs from '../../components/breadcrumbs/Breadcrumbs';
 import CategoryPage from '../category-page/CategoryPage';
 import { SwiperModalParams } from '../../utils/SwiperParams';
 import CatalogPage from '../catalog-page/CatalogPage';
+import CustomerCart from '../../backend/cart/CustomerCart';
+import LocalStorage from '../../utils/LocalStorage';
 
 class ProductDetailsPage extends Page {
   private readonly PRODUCT_PAGE_ID: string;
@@ -87,6 +89,7 @@ class ProductDetailsPage extends Page {
       })
       .then((): void => {
         this.addProductToCart();
+        this.restoreButtonState();
         this.setBreadcrumb();
       })
       .catch((error: Error): void => {
@@ -160,6 +163,31 @@ class ProductDetailsPage extends Page {
         CatalogPage.onAddToCartButtonClick(this.PRODUCT_PAGE_ID, productItem);
       }
     });
+  }
+
+  private restoreButtonState(): void {
+    const productIds: string[] = [];
+
+    new CustomerCart()
+      .getMyActiveCart(new LocalStorage().getLocalStorageItem(Constants.ACCESS_TOKEN_KEY) as string)
+      .then((response): void => {
+        response?.results[0]?.lineItems.forEach((lineItem: LineItem): void => {
+          productIds.push(lineItem.productId);
+        });
+      })
+      .then((): void => {
+        const productItem = this.CONTAINER.querySelector('.product-details-content') as HTMLElement;
+        const cartButton = productItem.querySelector(`.${Constants.CART_BUTTON_CLASSNAME}`) as HTMLElement;
+        const productId = productItem.classList[0];
+
+        if (productIds.includes(productId)) {
+          cartButton.innerText = Constants.CART_BUTTON_REMOVE_TEXT;
+          cartButton.style.backgroundColor = '#5e5e5e';
+        }
+      })
+      .catch((error: Error): void => {
+        PromiseHelpers.catchBlockHelper(error, Constants.FETCH_PRODUCT_TYPES_ERROR);
+      });
   }
 
   public renderPage(): HTMLElement {

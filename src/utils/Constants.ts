@@ -148,7 +148,7 @@ class Constants {
 
   static CART_BUTTON_ADD_TEXT = 'ADD TO CART';
 
-  static CART_BUTTON_REMOVE_TEXT = 'IN CART';
+  static CART_BUTTON_REMOVE_TEXT = 'REMOVE FROM CART';
 
   static CART_BUTTON_CLASSNAME = 'order-me';
 
