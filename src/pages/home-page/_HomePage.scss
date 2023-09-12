@@ -8,6 +8,7 @@
   padding: 1rem;
   margin-bottom: 2rem;
   margin-top: 1rem;
+  text-align: center;
   font-size: 3.5rem;
   color: transparent;
   background-image: linear-gradient(45deg, #ff4500, #ffdb58, #ff4500);
@@ -34,6 +35,7 @@
 
 .special-offers {
   display: flex;
+  justify-content: center;
   margin-bottom: 1.5rem;
   flex-wrap: wrap;
 }

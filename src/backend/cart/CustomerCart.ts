@@ -10,7 +10,7 @@ class CustomerCart {
 
   private AUTH: Authorization;
 
-  private LOCAL_STORAGE: LocalStorage;
+  public LOCAL_STORAGE: LocalStorage;
 
   constructor() {
     this.CTP_CLIENT = new CtpClient();
