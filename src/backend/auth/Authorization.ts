@@ -37,6 +37,24 @@ class Authorization {
     }
   }
 
+  public async requestCustomerTokenInfo(userLogin: string, userPassword: string): Promise<TokenInfo> {
+    const authUrl = `${hostAuth}/oauth/${projectKey}/customers/token?grant_type=password&username=${userLogin}&password=${userPassword}`;
+    const base64Credentials = btoa(`${clientIdWithAnnonymousScope}:${clientSecretWithAnnonymousScope}`);
+
+    try {
+      const response = await fetch(authUrl, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Basic ${base64Credentials}`,
+          'Content-Type': 'application/x-www-form-urlencoded',
+        },
+      });
+      return (await response.json()) as TokenInfo;
+    } catch (error) {
+      return Promise.reject(error);
+    }
+  }
+
   public async saveTokenInLocalStorage(): Promise<void> {
     if (!this.LOCAL_STORAGE.isLocalStorageItemExists(Constants.ACCESS_TOKEN_KEY)) {
       const tokenInfo = await this.requestNewAnonymousTokenInfo();

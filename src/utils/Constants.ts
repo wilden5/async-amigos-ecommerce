@@ -107,6 +107,8 @@ class Constants {
 
   static PRODUCT_DESCRIPTION_NOT_FOUND = 'Product description was not found :(';
 
+  static FETCH_CART_TYPES_ERROR = 'Something went wrong during receiving cart. Please try again';
+
   static PRODUCT_DETAILS_CLASSNAME = 'product-details-container';
 
   static PRODUCT_CONTENT_CLASSNAME = 'product-details-content';
