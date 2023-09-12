@@ -7,7 +7,7 @@ import schoolUrl from '../../assets/rs_school.svg';
 
 class AboutUsPage extends Page {
   private ABOUT_US_PAGE_MARKUP = `
-    <div class="about-us__container">
+  <div class="about-us__container">
       <section class="about-us">
         <h2 class="about-us__title">About Project</h2>
         <p class="description-collaboration">The Computer E-Commerce Application is a user-friendly and feature-rich online platform designed to cater to computer enthusiasts, gamers, and professionals looking to purchase high-quality computer hardware. With an intuitive user interface and a vast range of products, our application aims to provide a seamless shopping experience for customers seeking the latest and most reliable computer components.
@@ -46,13 +46,12 @@ class AboutUsPage extends Page {
           </div>
         </div>
       </div>
-  </section>
-  
-  <section class="rs-school-logo" id="rs-school-logo">
-      <a href="https://rs.school/" target="_blank" class="rs-school-logo__link">
-          <img src="${schoolUrl}" alt="RS School Logo" class="rs-school-logo__image">
-      </a>
-  </section>
+    </section>
+    <section class="rs-school-logo" id="rs-school-logo">
+        <a href="https://rs.school/" target="_blank" class="rs-school-logo__link">
+            <img src="${schoolUrl}" alt="RS School Logo" class="rs-school-logo__image">
+        </a>
+    </section>
   </div>`;
 
   constructor() {
@@ -60,7 +59,7 @@ class AboutUsPage extends Page {
   }
 
   public renderPage(): HTMLElement {
-    this.CONTAINER.innerHTML = this.ABOUT_US_PAGE_MARKUP;
+    this.CONTAINER.innerHTML = this.ABOUT_US_PAGE_MARKUP.trim();
     return this.CONTAINER;
   }
 }
