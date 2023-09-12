@@ -14,6 +14,7 @@ import 'swiper/scss/pagination';
 import Breadcrumbs from '../../components/breadcrumbs/Breadcrumbs';
 import CategoryPage from '../category-page/CategoryPage';
 import { SwiperModalParams } from '../../utils/SwiperParams';
+import CatalogPage from '../catalog-page/CatalogPage';
 
 class ProductDetailsPage extends Page {
   private readonly PRODUCT_PAGE_ID: string;
@@ -85,6 +86,7 @@ class ProductDetailsPage extends Page {
         this.PRODUCT_TYPE_ID = queriedProductDetails.productType.id;
       })
       .then((): void => {
+        this.addProductToCart();
         this.setBreadcrumb();
       })
       .catch((error: Error): void => {
@@ -142,6 +144,22 @@ class ProductDetailsPage extends Page {
       productTitleElementText,
       `#product/${this.PRODUCT_PAGE_ID}`,
     );
+  }
+
+  private addProductToCart(): void {
+    const productItem = this.CONTAINER.querySelector('.product-details-content') as HTMLElement;
+
+    productItem.addEventListener('click', (event: Event): void => {
+      const clickedElement = event.target as Element;
+
+      if (
+        clickedElement instanceof HTMLAnchorElement &&
+        clickedElement.classList.contains(`${Constants.CART_BUTTON_CLASSNAME}`)
+      ) {
+        event.preventDefault();
+        CatalogPage.onAddToCartButtonClick(this.PRODUCT_PAGE_ID, productItem);
+      }
+    });
   }
 
   public renderPage(): HTMLElement {
