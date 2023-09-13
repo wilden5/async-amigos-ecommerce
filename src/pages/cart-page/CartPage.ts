@@ -28,6 +28,21 @@ class CartPage extends Page {
     this.CUSTOMER_CART = new CustomerCart();
   }
 
+  public handlePromoCode(): void {
+    const button = DOMHelpers.createElement('button', { className: 'abc' });
+    const field = DOMHelpers.createElement('input', { className: 'abc213' });
+    button.addEventListener('click', () => {
+      const enteredCode = (field as HTMLInputElement).value;
+      this.CUSTOMER_CART.applyCartPromoCode(enteredCode)
+        .then(() => {
+          // тут вызвать метод, который обновит: 1) Либо только тотал стоимость корзины 2) И тотал и цену самих айтемов
+        })
+        .catch((error: Error): void => {
+          PromiseHelpers.catchBlockHelper(error, error.message);
+        });
+    });
+  }
+
   private buildCartItems(cartResponse: CartPagedQueryResponse): void {
     const itemContainer = this.CONTAINER.querySelector('.cart-items') as HTMLElement;
     const usLocaleKey = 'en-US';
@@ -239,6 +254,7 @@ class CartPage extends Page {
               this.disableQuantityMinusButton();
               this.handleClickOnRemoveCartItemButton();
               this.handleClearCartButtonState();
+              // вот тут вызвать handleApplyPromoCode()
             })
             .catch((error: Error): void => {
               PromiseHelpers.catchBlockHelper(error, error.message);
