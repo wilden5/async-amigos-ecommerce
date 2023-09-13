@@ -13,9 +13,9 @@ import DOMHelpers from '../../utils/DOMHelpers';
 class HomePage extends Page {
   private HOME_PAGE_MARKUP = `
     <div class="home-container">
-      <h1 class='home-page-title'>Discover Amazing Discounts, Dive into Savings!</h1>
+      <h1 class="home-page-title">Discover Amazing Discounts, Dive into Savings!</h1>
       <div class="promo-container"></div>
-      <div class='special-offers'></div>
+      <div class="special-offers"></div>
       <a href="#catalog" class="explore-button">Explore our catalog</a>
     </div>  
 `;
@@ -31,7 +31,7 @@ class HomePage extends Page {
         </div>
       </div>
       <div class="promo promo-right">
-        <div class="copyBtn"></div>
+        <div class="eye"></div>
         <h3 class="promo-number"></h3>
         <div class="barcode"></div>
       </div>
