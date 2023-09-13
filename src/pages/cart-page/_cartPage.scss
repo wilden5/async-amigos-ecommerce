@@ -1,5 +1,6 @@
 .cart-container {
   text-align: center;
+  user-select: none;
 }
 
 .cart-items {
@@ -188,5 +189,53 @@
   &:hover:disabled {
     color: white;
     border: 0.2rem solid #a29b9b;
+  }
+}
+
+.promo {
+  &-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    margin-bottom: 2rem;
+    gap: 2rem;
+
+    & label {
+      font-size: 1.7rem;
+    }
+  }
+
+  &-input {
+    width: 80px;
+    height: 40px;
+    padding: 2px 10px;
+    border-radius: 5px;
+    text-align: center;
+    font-family: inherit;
+    font-size: 1.7rem;
+    font-weight: 600;
+    color: #007bff;
+    box-shadow: 0 0.2rem 0.4rem rgba(0, 0, 0, 0.5);
+  }
+
+  &-button {
+    width: 150px;
+    height: 40px;
+    padding: 2px 10px;
+    border: none;
+    border-radius: 0.5rem;
+    text-align: center;
+    font-family: inherit;
+    font-size: 1.6rem;
+    color: #ffffff;
+    background-color: #007bff;
+    box-shadow: 0 0.2rem 0.4rem rgba(0, 0, 0, 0.5);
+    cursor: pointer;
+
+    &:hover {
+      background-color: #0056b3;
+      transition: transform 0.3s, background-color 0.3s;
+    }
   }
 }

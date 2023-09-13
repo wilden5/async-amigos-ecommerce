@@ -15,6 +15,11 @@ class CartPage extends Page {
       <h1 class='cart-page-title'>Your Cart</h1>
       <button class='clear-cart explore-button' disabled>Clear Your Cart</button>
       <div class='cart-items'></div>
+      <div class="promo-container">
+        <label for="text">Enter your Promo code here:</label>
+        <input type="text" class="promo-input" autofocus maxlength="4" placeholder="••••">
+        <button type="submit" class="promo-button">GO PROMO</button>
+      </div>
       <div class='total-cart-price-container'></div>
     </div>`;
 
@@ -26,21 +31,6 @@ class CartPage extends Page {
     super(ProjectPages.Cart);
     this.LOCAL_STORAGE = new LocalStorage();
     this.CUSTOMER_CART = new CustomerCart();
-  }
-
-  public handlePromoCode(): void {
-    const button = DOMHelpers.createElement('button', { className: 'abc' });
-    const field = DOMHelpers.createElement('input', { className: 'abc213' });
-    button.addEventListener('click', () => {
-      const enteredCode = (field as HTMLInputElement).value;
-      this.CUSTOMER_CART.applyCartPromoCode(enteredCode)
-        .then(() => {
-          // тут вызвать метод, который обновит: 1) Либо только тотал стоимость корзины 2) И тотал и цену самих айтемов
-        })
-        .catch((error: Error): void => {
-          PromiseHelpers.catchBlockHelper(error, error.message);
-        });
-    });
   }
 
   private buildCartItems(cartResponse: CartPagedQueryResponse): void {
@@ -241,6 +231,21 @@ class CartPage extends Page {
     container.innerHTML = `<div class='total-cart-price-label'>Total cart price:</div> <span class='total-cart-price'>${totalCartPrice}</span>`;
   }
 
+  public handlePromoCode(): void {
+    const button = DOMHelpers.createElement('button', { className: 'abc' });
+    const field = DOMHelpers.createElement('input', { className: 'abc213' });
+    button.addEventListener('click', () => {
+      const enteredCode = (field as HTMLInputElement).value;
+      this.CUSTOMER_CART.applyCartPromoCode(enteredCode)
+        .then(() => {
+          // тут вызвать метод, который обновит: 1) Либо только тотал стоимость корзины 2) И тотал и цену самих айтемов
+        })
+        .catch((error: Error): void => {
+          PromiseHelpers.catchBlockHelper(error, error.message);
+        });
+    });
+  }
+
   private renderCart(): void {
     this.CUSTOMER_CART.getMyActiveCart(this.LOCAL_STORAGE.getLocalStorageItem(Constants.ACCESS_TOKEN_KEY) as string)
       .then((activeCart) => {
@@ -254,6 +259,7 @@ class CartPage extends Page {
               this.disableQuantityMinusButton();
               this.handleClickOnRemoveCartItemButton();
               this.handleClearCartButtonState();
+              this.handlePromoCode();
               // вот тут вызвать handleApplyPromoCode()
             })
             .catch((error: Error): void => {
