@@ -1,4 +1,4 @@
-import { CartPagedQueryResponse } from '@commercetools/platform-sdk';
+import { CartPagedQueryResponse, LineItem } from '@commercetools/platform-sdk';
 import Page from '../../components/templates/Page';
 import { ProjectPages } from '../../types/Enums';
 import CustomerCart from '../../backend/cart/CustomerCart';
@@ -15,6 +15,11 @@ class CartPage extends Page {
       <h1 class='cart-page-title'>Your Cart</h1>
       <button class='clear-cart explore-button' disabled>Clear Your Cart</button>
       <div class='cart-items'></div>
+      <div class="promo-container">
+        <label for="promo">Enter your Promo code here:</label>
+        <input type="text" name="promo" id="promo" class="promo-input" autofocus maxlength="4" placeholder="••••">
+        <button type="submit" class="promo-button">GO PROMO</button>
+      </div>
       <div class='total-cart-price-container'></div>
     </div>`;
 
@@ -206,7 +211,7 @@ class CartPage extends Page {
           }
         });
         this.CUSTOMER_CART.getCartInformation(activeCart)
-          .then(() => {
+          .then((): void => {
             this.disableQuantityMinusButton();
           })
           .catch((error: Error): void => {
@@ -226,6 +231,33 @@ class CartPage extends Page {
     container.innerHTML = `<div class='total-cart-price-label'>Total cart price:</div> <span class='total-cart-price'>${totalCartPrice}</span>`;
   }
 
+  public handlePromoCode(): void {
+    const promoButton = this.CONTAINER.querySelector('.promo-button') as HTMLButtonElement;
+    const promoInput = this.CONTAINER.querySelector('.promo-input') as HTMLInputElement;
+    promoButton.addEventListener('click', (): void => {
+      const enteredCode = promoInput.value;
+      this.CUSTOMER_CART.applyCartPromoCode(enteredCode)
+        .then((): void => {
+          this.CUSTOMER_CART.getMyActiveCart(
+            this.LOCAL_STORAGE.getLocalStorageItem(Constants.ACCESS_TOKEN_KEY) as string,
+          )
+            .then((cartResponse: CartPagedQueryResponse): void => {
+              cartResponse.results[0].lineItems.forEach((item: LineItem): void => {
+                this.updateRelatedToProductQuantityElements(item.productId);
+              });
+              this.populateCartTotalPriceContainer(cartResponse);
+              TostifyHelper.showToast(Constants.PROMO_CODE_ACCEPTED, Constants.TOAST_COLOR_DARK_BLUE);
+            })
+            .catch((error: Error): void => {
+              PromiseHelpers.catchBlockHelper(error, error.message);
+            });
+        })
+        .catch((error: Error): void => {
+          PromiseHelpers.catchBlockHelper(error, error.message);
+        });
+    });
+  }
+
   private renderCart(): void {
     this.CUSTOMER_CART.getMyActiveCart(this.LOCAL_STORAGE.getLocalStorageItem(Constants.ACCESS_TOKEN_KEY) as string)
       .then((activeCart) => {
@@ -239,6 +271,8 @@ class CartPage extends Page {
               this.disableQuantityMinusButton();
               this.handleClickOnRemoveCartItemButton();
               this.handleClearCartButtonState();
+              // вот тут вызвать handleApplyPromoCode()
+              this.handlePromoCode();
             })
             .catch((error: Error): void => {
               PromiseHelpers.catchBlockHelper(error, error.message);

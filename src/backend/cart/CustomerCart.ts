@@ -184,6 +184,36 @@ class CustomerCart {
         PromiseHelpers.catchBlockHelper(error, Constants.FETCH_CART_TYPES_ERROR);
       });
   }
+
+  public async applyCartPromoCode(promoCode: string): Promise<Cart> {
+    try {
+      const updatePayload: MyCartUpdate = {
+        version: Number(this.LOCAL_STORAGE.getLocalStorageItem(Constants.CART_VERSION_KEY)),
+        actions: [
+          {
+            action: 'addDiscountCode',
+            code: `${promoCode}`,
+          },
+        ],
+      };
+      const response = await this.CTP_CLIENT.withAnonymousSessionFlow()
+        .me()
+        .carts()
+        .withId({
+          ID: this.LOCAL_STORAGE.getLocalStorageItem(Constants.CART_ID_KEY) as string,
+        })
+        .post({
+          headers: {
+            Authorization: `${this.LOCAL_STORAGE.getLocalStorageItem(Constants.ACCESS_TOKEN_KEY) as string}`,
+          },
+          body: updatePayload,
+        })
+        .execute();
+      return response.body;
+    } catch (error) {
+      return Promise.reject(error);
+    }
+  }
 }
 
 export default CustomerCart;
