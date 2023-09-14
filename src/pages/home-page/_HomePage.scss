@@ -27,7 +27,7 @@
   padding: 0.7rem;
   background: linear-gradient(to bottom, $blue 0%, $blue 30%, $grey 30%, $grey 100%);
 
-  &-container {
+  &-wrapper {
     display: flex;
     justify-content: space-evenly;
     flex-wrap: wrap;
@@ -74,7 +74,7 @@
   }
 
   &-title {
-    margin-top: 0;
+    margin: 2px 0;
     font-size: 1.5rem;
 
     & span {
@@ -107,6 +107,13 @@
     text-align: center;
     text-transform: uppercase;
     color: $blue;
+    transition: scale 0.3s, transform 0.3s ease, color 0.3s;
+
+    &:hover {
+      transform: translateY(-2px);
+      color: $blue;
+      cursor: copy;
+    }
   }
 }
 

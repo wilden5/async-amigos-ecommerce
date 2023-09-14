@@ -179,6 +179,8 @@ class Constants {
   static CONFIRM_QUESTION = 'Are you sure you want to clear your cart?';
 
   static CONFIRM_NOTIFICATION = 'Your cart has been cleared successfully!';
+
+  static PROMO_COPIED_NOTICE = 'Discount copied successfully. Use it in Cart';
 }
 
 export default Constants;

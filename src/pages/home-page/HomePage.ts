@@ -9,12 +9,13 @@ import CatalogPage from '../catalog-page/CatalogPage';
 import CustomerCart from '../../backend/cart/CustomerCart';
 import DiscountCodes from '../../backend/discountCodes/discountCodes';
 import DOMHelpers from '../../utils/DOMHelpers';
+import TostifyHelper from '../../utils/TostifyHelper';
 
 class HomePage extends Page {
   private HOME_PAGE_MARKUP = `
     <div class="home-container">
       <h1 class="home-page-title">Discover Amazing Discounts, Dive into Savings!</h1>
-      <div class="promo-container"></div>
+      <div class="promo-wrapper"></div>
       <div class="special-offers"></div>
       <a href="#catalog" class="explore-button">Explore our catalog</a>
     </div>  
@@ -45,7 +46,7 @@ class HomePage extends Page {
   }
 
   private addPromoCards(): void {
-    const promoContainer = this.CONTAINER.querySelector('.promo-container') as HTMLElement;
+    const promoContainer = this.CONTAINER.querySelector('.promo-wrapper') as HTMLElement;
 
     new DiscountCodes()
       .getDiscountCodes()
@@ -64,6 +65,17 @@ class HomePage extends Page {
             const discountValid = promoCard.querySelector('.promo-valid') as HTMLSpanElement;
             const date: Date = new Date(result.validUntil as string);
             discountValid.innerText = `${date.toLocaleDateString()}`;
+
+            promoSecret.addEventListener('click', (): void => {
+              navigator.clipboard.writeText(promoSecret.innerText).then(
+                (): void => {
+                  TostifyHelper.showToast(`${Constants.PROMO_COPIED_NOTICE}`, Constants.TOAST_COLOR_DARK_GREEN);
+                },
+                (error: Error): void => {
+                  PromiseHelpers.catchBlockHelper(error, error.message);
+                },
+              );
+            });
 
             promoContainer.appendChild(promoCard);
           }

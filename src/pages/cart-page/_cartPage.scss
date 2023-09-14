@@ -231,11 +231,11 @@
     color: #ffffff;
     background-color: #007bff;
     box-shadow: 0 0.2rem 0.4rem rgba(0, 0, 0, 0.5);
+    transition: transform 0.3s, background-color 0.3s;
     cursor: pointer;
 
-    &:hover {
+    &:active {
       background-color: #0056b3;
-      transition: transform 0.3s, background-color 0.3s;
     }
   }
 }
