@@ -181,6 +181,8 @@ class Constants {
   static CONFIRM_NOTIFICATION = 'Your cart has been cleared successfully!';
 
   static PROMO_COPIED_NOTICE = 'Discount copied successfully. Use it in Cart';
+
+  static PROMO_CODE_ACCEPTED = 'Your Discount is successfully applied';
 }
 
 export default Constants;

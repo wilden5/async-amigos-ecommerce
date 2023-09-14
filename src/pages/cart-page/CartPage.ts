@@ -1,4 +1,4 @@
-import { CartPagedQueryResponse } from '@commercetools/platform-sdk';
+import { CartPagedQueryResponse, LineItem } from '@commercetools/platform-sdk';
 import Page from '../../components/templates/Page';
 import { ProjectPages } from '../../types/Enums';
 import CustomerCart from '../../backend/cart/CustomerCart';
@@ -16,8 +16,8 @@ class CartPage extends Page {
       <button class='clear-cart explore-button' disabled>Clear Your Cart</button>
       <div class='cart-items'></div>
       <div class="promo-container">
-        <label for="text">Enter your Promo code here:</label>
-        <input type="text" class="promo-input" autofocus maxlength="4" placeholder="••••">
+        <label for="promo">Enter your Promo code here:</label>
+        <input type="text" name="promo" id="promo" class="promo-input" autofocus maxlength="4" placeholder="••••">
         <button type="submit" class="promo-button">GO PROMO</button>
       </div>
       <div class='total-cart-price-container'></div>
@@ -211,7 +211,7 @@ class CartPage extends Page {
           }
         });
         this.CUSTOMER_CART.getCartInformation(activeCart)
-          .then(() => {
+          .then((): void => {
             this.disableQuantityMinusButton();
           })
           .catch((error: Error): void => {
@@ -232,13 +232,25 @@ class CartPage extends Page {
   }
 
   public handlePromoCode(): void {
-    const button = DOMHelpers.createElement('button', { className: 'abc' });
-    const field = DOMHelpers.createElement('input', { className: 'abc213' });
-    button.addEventListener('click', () => {
-      const enteredCode = (field as HTMLInputElement).value;
+    const promoButton = this.CONTAINER.querySelector('.promo-button') as HTMLButtonElement;
+    const promoInput = this.CONTAINER.querySelector('.promo-input') as HTMLInputElement;
+    promoButton.addEventListener('click', (): void => {
+      const enteredCode = promoInput.value;
       this.CUSTOMER_CART.applyCartPromoCode(enteredCode)
-        .then(() => {
-          // тут вызвать метод, который обновит: 1) Либо только тотал стоимость корзины 2) И тотал и цену самих айтемов
+        .then((): void => {
+          this.CUSTOMER_CART.getMyActiveCart(
+            this.LOCAL_STORAGE.getLocalStorageItem(Constants.ACCESS_TOKEN_KEY) as string,
+          )
+            .then((cartResponse: CartPagedQueryResponse): void => {
+              cartResponse.results[0].lineItems.forEach((item: LineItem): void => {
+                this.updateRelatedToProductQuantityElements(item.productId);
+              });
+              this.populateCartTotalPriceContainer(cartResponse);
+              TostifyHelper.showToast(Constants.PROMO_CODE_ACCEPTED, Constants.TOAST_COLOR_DARK_BLUE);
+            })
+            .catch((error: Error): void => {
+              PromiseHelpers.catchBlockHelper(error, error.message);
+            });
         })
         .catch((error: Error): void => {
           PromiseHelpers.catchBlockHelper(error, error.message);
@@ -259,8 +271,8 @@ class CartPage extends Page {
               this.disableQuantityMinusButton();
               this.handleClickOnRemoveCartItemButton();
               this.handleClearCartButtonState();
-              this.handlePromoCode();
               // вот тут вызвать handleApplyPromoCode()
+              this.handlePromoCode();
             })
             .catch((error: Error): void => {
               PromiseHelpers.catchBlockHelper(error, error.message);
