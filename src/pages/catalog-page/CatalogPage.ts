@@ -77,16 +77,17 @@ class CatalogPage extends Page {
            </div>
          </div>
       <div class='product-container'></div>
+      <div class='pag-pages'></div>
     </div>`;
 
   constructor() {
     super(ProjectPages.Catalog);
   }
 
-  private fillProductCatalog = (): void => {
+  private fillProductCatalog = (page = 1): void => {
     const productContainer = this.CONTAINER.querySelector('.product-container') as HTMLDivElement;
     new QueryProducts()
-      .queryProductList()
+      .queryProductList(page, 9)
       .then((queriedProductList: ProductPagedQueryResponse): void => {
         queriedProductList.results.forEach((product: Product): void => {
           ProductCardBuilder.buildProductCard(product, productContainer);
@@ -97,6 +98,44 @@ class CatalogPage extends Page {
         PromiseHelpers.catchBlockHelper(error, Constants.FETCH_CATALOG_ERROR);
       });
   };
+
+  private initPagination(): void {
+    const productContainer = this.CONTAINER.querySelector('.product-container') as HTMLDivElement;
+    setTimeout(() => {
+      (this.CONTAINER.querySelector('.page-1') as HTMLSpanElement).classList.add('pag-active');
+      this.CONTAINER.querySelectorAll('.pag-page').forEach((page) => {
+        page.addEventListener('click', () => {
+          productContainer.innerHTML = '';
+          const pageNumber = (page as HTMLSpanElement).innerText;
+          this.clearPaginationPageStyle();
+          (this.CONTAINER.querySelector(`.page-${pageNumber}`) as HTMLSpanElement).classList.add('pag-active');
+          this.fillProductCatalog(Number(pageNumber));
+        });
+      });
+    }, 500);
+  }
+
+  private clearPaginationPageStyle(): void {
+    this.CONTAINER.querySelectorAll('.pag-active').forEach((item) => {
+      item.classList.remove('pag-active');
+    });
+  }
+
+  private generateProductPages(): void {
+    let pages: number;
+    const parent = this.CONTAINER.querySelector('.pag-pages') as HTMLDivElement;
+    new QueryProducts()
+      .queryProductList()
+      .then((products) => {
+        pages = Math.ceil((products.total || 0) / 9);
+        for (let i = 1; i <= pages; i += 1) {
+          DOMHelpers.createElement('span', { className: `page-${i} pag-page`, innerText: `${i}` }, parent);
+        }
+      })
+      .catch((error: Error): void => {
+        PromiseHelpers.catchBlockHelper(error, Constants.FETCH_CATALOG_ERROR);
+      });
+  }
 
   static onAddToCartButtonClick = (productId: string, product: HTMLElement): void => {
     const customerToken = new LocalStorage().getLocalStorageItem(Constants.ACCESS_TOKEN_KEY) as string;
@@ -236,6 +275,8 @@ class CatalogPage extends Page {
     this.onResetFiltersButtonClick();
     Breadcrumbs.setCatalogBreadcrumb(this.CONTAINER);
     this.createCategoriesLinks();
+    this.generateProductPages();
+    this.initPagination();
     return this.CONTAINER;
   }
 }
