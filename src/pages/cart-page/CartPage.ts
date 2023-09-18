@@ -197,10 +197,14 @@ class CartPage extends Page {
         );
         let itemQuantity: number;
         let itemTotalPrice: string;
+        let originalItemPrice: string;
         activeCart.results[0].lineItems.forEach((item) => {
           if (item.productId === productId) {
             itemQuantity = item.quantity;
             itemTotalPrice = ProductCardBuilder.convertProductPrice(item.totalPrice.centAmount);
+            originalItemPrice = item.price.discounted?.value.centAmount
+              ? ProductCardBuilder.convertProductPrice((item.price.discounted?.value.centAmount || 0) * item.quantity)
+              : ProductCardBuilder.convertProductPrice(item.price.value.centAmount * item.quantity);
           }
         });
         (this.CONTAINER.querySelector('.total-cart-price') as HTMLSpanElement).textContent = cartTotalPrice;
@@ -209,6 +213,8 @@ class CartPage extends Page {
           if (item.classList[0] === productId) {
             const cartItemQuantityElement = item.querySelector('.cart-item-quantity-value') as HTMLInputElement;
             const cartItemPriceElement = item.querySelector('.cart-item-price') as HTMLInputElement;
+            const cartItemPriceOriginal = item.querySelector('.cart-item-price-regular') as HTMLSpanElement;
+            cartItemPriceOriginal.textContent = originalItemPrice;
             cartItemQuantityElement.value = String(itemQuantity);
             cartItemPriceElement.textContent = itemTotalPrice;
           }
