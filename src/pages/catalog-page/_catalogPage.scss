@@ -249,3 +249,25 @@ input::-webkit-inner-spin-button {
  }
 }
 
+.pag-pages {
+  display: flex;
+  justify-content: center;
+}
+
+.pag-page {
+  font-size: 5rem;
+  cursor: pointer;
+
+  &:hover {
+    transform: scale(1.2);
+  }
+}
+
+.pag-active {
+  color: #0056b3;
+}
+
+.pag-page-selected {
+  color: #f50505;
+}
+
