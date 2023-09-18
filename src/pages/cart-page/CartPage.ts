@@ -66,7 +66,7 @@ class CartPage extends Page {
               }" value=${itemQuantity} disabled>
               <button class="cart-item-quantity-plus ${cartItem.productId}">+</button>
            </div>
-           <div class='cart-item-price'>${modifiedPriceByItemQuantity}</div>`;
+           <div class='cart-item-price'><span class="cart-item-price-std"></span>${modifiedPriceByItemQuantity}</div>`;
     });
     this.increaseItemQuantity();
     this.decreaseItemQuantity();
@@ -271,8 +271,12 @@ class CartPage extends Page {
               this.disableQuantityMinusButton();
               this.handleClickOnRemoveCartItemButton();
               this.handleClearCartButtonState();
-              // вот тут вызвать handleApplyPromoCode()
               this.handlePromoCode();
+            })
+            .then(() => {
+              activeCart.results[0].lineItems.forEach((lineItem) => {
+                this.updateRelatedToProductQuantityElements(lineItem.productId);
+              });
             })
             .catch((error: Error): void => {
               PromiseHelpers.catchBlockHelper(error, error.message);
