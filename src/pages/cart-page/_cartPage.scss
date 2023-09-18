@@ -1,3 +1,5 @@
+@import "src/globalVariables";
+
 .cart-container {
   text-align: center;
   user-select: none;
@@ -13,65 +15,71 @@
 }
 
 .cart-page-title {
-  font-size: 2.4rem;
-  font-weight: bold;
-  text-align: center;
-  color: #007bff;
   margin-bottom: 2rem;
   text-transform: uppercase;
   text-decoration: underline;
-}
-
-.cart-item {
-  font-size: 2rem;
-}
-
-.empty-cart {
-  font-size: 2rem;
+  font-size: 2.4rem;
+  font-weight: bold;
+  text-align: center;
+  color: $pureBlue;
 }
 
 .cart-item {
   position: relative;
-  text-align: center;
-  justify-content: space-between;
   display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
   width: 30rem;
   height: 30rem;
-  flex-direction: column;
-  align-items: center;
-  margin-bottom: 2rem;
   padding: 1rem;
-  background-color: #fff;
+  margin-bottom: 2rem;
+  background-color: $white;
   border-radius: 0.5rem;
   box-shadow: 0 0.2rem 0.4rem rgba(0, 0, 0, 0.5);
-}
-
-.cart-item-img {
-  width: 15rem;
-  height: 15rem;
-  object-fit: cover;
-  border-radius: 0.5rem;
-  padding: 1rem;
-}
-
-.cart-item-title {
-  font-size: 1.8rem;
-  margin-right: 1rem;
-}
-
-.cart-item-price {
+  text-align: center;
   font-size: 2rem;
-  font-weight: 800;
-  margin-left: 1rem;
+
+  &-price-wrapper {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 5px;
+    gap: 5px;
+  }
+
+  &-img {
+    width: 15rem;
+    height: 15rem;
+    padding: 1rem;
+    object-fit: cover;
+    border-radius: 0.5rem;
+  }
+
+  &-title {
+    font-size: 1.8rem;
+    margin-right: 1rem;
+  }
+
+  &-price {
+    font-size: 2rem;
+    font-weight: 800;
+
+    &-discounted {
+      color: $grey;
+      text-decoration: line-through;
+    }
+  }
 }
 
 .total-cart-price-container {
   display: flex;
-  gap: 1rem;
   justify-content: center;
-  font-size: 3rem;
-  padding-top: 2rem;
+  padding: 3rem;
+  gap: 1rem;
   border-top: 0.1rem solid;
+  font-size: 3rem;
 }
 
 .cart-item-quantity-container {
@@ -93,11 +101,11 @@
 .cart-item-quantity-plus {
   width: 3rem;
   height: 3rem;
-  font-size: 1.6rem;
-  background-color: #007bff;
-  color: #fff;
   border: none;
   border-radius: 0.5rem;
+  background-color: $pureBlue;
+  font-size: 1.6rem;
+  color: $white;
   cursor: pointer;
 
   &:active {
@@ -110,23 +118,23 @@
 }
 
 .remove-cart-item-button {
-  width: 3rem;
-  height: 3rem;
   position: absolute;
   top: 0.3rem;
   right: 1rem;
-  cursor: pointer;
-  background-color: transparent;
+  width: 3rem;
+  height: 3rem;
   border: none;
+  background-color: transparent;
+  cursor: pointer;
 
   &::before,
   &::after {
     content: "";
     position: absolute;
-    width: 0.2rem;
-    height: 3rem;
     top: 0.5rem;
     left: 50%;
+    width: 0.2rem;
+    height: 3rem;
     background-color: #585656;
   }
 
@@ -148,25 +156,29 @@
   }
 }
 
-.empty-cart-container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 4rem;
-}
+.empty-cart {
+  font-size: 2rem;
 
-.explore-button {
-  max-width: 23rem;
-}
+  &-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4rem;
+  }
 
-.empty-cart-message {
-  font-size: 3.5rem;
-  color: #ff5733;
-  margin-bottom: 2rem;
-  font-weight: bold;
-  text-transform: uppercase;
-  text-shadow: 0.2rem 0.2rem 0.4rem rgba(0, 0, 0, 0.3);
-  margin-top: 10rem;
+  &-message {
+    margin-top: 10rem;
+    margin-bottom: 2rem;
+    text-transform: uppercase;
+    text-shadow: 0.2rem 0.2rem 0.4rem rgba(0, 0, 0, 0.3);
+    font-size: 3.5rem;
+    font-weight: bold;
+    color: #ff5733;
+  }
+
+  .explore-button {
+    max-width: 23rem;
+  }
 }
 
 .clear-cart {
@@ -215,7 +227,7 @@
     font-family: inherit;
     font-size: 1.7rem;
     font-weight: 600;
-    color: #007bff;
+    color: $pureBlue;
     box-shadow: 0 0.2rem 0.4rem rgba(0, 0, 0, 0.5);
   }
 
@@ -228,8 +240,8 @@
     text-align: center;
     font-family: inherit;
     font-size: 1.6rem;
-    color: #ffffff;
-    background-color: #007bff;
+    color: $white;
+    background-color: $pureBlue;
     box-shadow: 0 0.2rem 0.4rem rgba(0, 0, 0, 0.5);
     transition: transform 0.3s, background-color 0.3s;
     cursor: pointer;

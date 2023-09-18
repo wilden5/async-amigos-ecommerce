@@ -66,7 +66,10 @@ class CartPage extends Page {
               }" value=${itemQuantity} disabled>
               <button class="cart-item-quantity-plus ${cartItem.productId}">+</button>
            </div>
-           <div class='cart-item-price'>${modifiedPriceByItemQuantity}</div>`;
+           <div class="cart-item-price-wrapper">
+              <span class="cart-item-price-regular"></span>
+              <span class='cart-item-price'>${modifiedPriceByItemQuantity}</span>
+           </div>`;
     });
     this.increaseItemQuantity();
     this.decreaseItemQuantity();
@@ -194,10 +197,14 @@ class CartPage extends Page {
         );
         let itemQuantity: number;
         let itemTotalPrice: string;
+        let originalItemPrice: string;
         activeCart.results[0].lineItems.forEach((item) => {
           if (item.productId === productId) {
             itemQuantity = item.quantity;
             itemTotalPrice = ProductCardBuilder.convertProductPrice(item.totalPrice.centAmount);
+            originalItemPrice = item.price.discounted?.value.centAmount
+              ? ProductCardBuilder.convertProductPrice((item.price.discounted?.value.centAmount || 0) * item.quantity)
+              : ProductCardBuilder.convertProductPrice(item.price.value.centAmount * item.quantity);
           }
         });
         (this.CONTAINER.querySelector('.total-cart-price') as HTMLSpanElement).textContent = cartTotalPrice;
@@ -206,6 +213,8 @@ class CartPage extends Page {
           if (item.classList[0] === productId) {
             const cartItemQuantityElement = item.querySelector('.cart-item-quantity-value') as HTMLInputElement;
             const cartItemPriceElement = item.querySelector('.cart-item-price') as HTMLInputElement;
+            const cartItemPriceOriginal = item.querySelector('.cart-item-price-regular') as HTMLSpanElement;
+            cartItemPriceOriginal.textContent = originalItemPrice;
             cartItemQuantityElement.value = String(itemQuantity);
             cartItemPriceElement.textContent = itemTotalPrice;
           }
@@ -244,6 +253,12 @@ class CartPage extends Page {
             .then((cartResponse: CartPagedQueryResponse): void => {
               cartResponse.results[0].lineItems.forEach((item: LineItem): void => {
                 this.updateRelatedToProductQuantityElements(item.productId);
+                const cartItem = this.CONTAINER.querySelector(`[data-product-id="${item.productId}"]`) as HTMLElement;
+                const cartItemPriceRegular = cartItem.querySelector('.cart-item-price-regular') as HTMLSpanElement;
+                const stdPrice = item.price.value.centAmount;
+
+                cartItemPriceRegular.innerHTML = ProductCardBuilder.convertProductPrice(stdPrice);
+                cartItemPriceRegular.classList.add('cart-item-price-discounted');
               });
               this.populateCartTotalPriceContainer(cartResponse);
               TostifyHelper.showToast(Constants.PROMO_CODE_ACCEPTED, Constants.TOAST_COLOR_DARK_BLUE);
@@ -271,8 +286,22 @@ class CartPage extends Page {
               this.disableQuantityMinusButton();
               this.handleClickOnRemoveCartItemButton();
               this.handleClearCartButtonState();
-              // вот тут вызвать handleApplyPromoCode()
               this.handlePromoCode();
+            })
+            .then(() => {
+              activeCart.results[0].lineItems.forEach((lineItem) => {
+                this.updateRelatedToProductQuantityElements(lineItem.productId);
+                const cartItem = this.CONTAINER.querySelector(
+                  `[data-product-id="${lineItem.productId}"]`,
+                ) as HTMLElement;
+                const cartItemPriceRegular = cartItem.querySelector('.cart-item-price-regular') as HTMLSpanElement;
+                const stdPrice = lineItem.price.value.centAmount;
+
+                if (activeCart.results[0].discountCodes.length > 0) {
+                  cartItemPriceRegular.innerHTML = ProductCardBuilder.convertProductPrice(stdPrice);
+                  cartItemPriceRegular.classList.add('cart-item-price-discounted');
+                }
+              });
             })
             .catch((error: Error): void => {
               PromiseHelpers.catchBlockHelper(error, error.message);
