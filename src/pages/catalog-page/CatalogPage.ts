@@ -76,8 +76,8 @@ class CatalogPage extends Page {
               <input class='search-field' type="text" placeholder="Search...">
            </div>
          </div>
+      <div class='pag-pages'></div>   
       <div class='product-container'></div>
-      <div class='pag-pages'></div>
     </div>`;
 
   constructor() {

@@ -6,6 +6,7 @@ import Constants from '../../utils/Constants';
 import ProductProjectionSearch from '../../backend/products/ProductProjectionSearch';
 import ProductCardBuilder from './ProductCardBuilder';
 import TostifyHelper from '../../utils/TostifyHelper';
+import DOMHelpers from '../../utils/DOMHelpers';
 
 class CatalogPageFilters {
   static populateProductTypesSelect(container: HTMLElement): void {
@@ -36,6 +37,7 @@ class CatalogPageFilters {
           queriedProductList.results.forEach((product: ProductProjection): void => {
             ProductCardBuilder.buildProductCard(product, productContainer);
           });
+          DOMHelpers.clearPaginationContainer();
         })
         .catch((error: Error): void => {
           PromiseHelpers.catchBlockHelper(error, Constants.FETCH_CATALOG_ERROR);
@@ -58,6 +60,7 @@ class CatalogPageFilters {
                 discountedProducts.push(product);
               }
             });
+            DOMHelpers.clearPaginationContainer();
           })
           .then(() =>
             discountedProducts.forEach((product: ProductProjection) => {
@@ -135,6 +138,7 @@ class CatalogPageFilters {
           queriedProducts.forEach((product) => {
             ProductCardBuilder.buildProductCard(product, productContainer);
           });
+          DOMHelpers.clearPaginationContainer();
         })
         .catch((error: Error): void => {
           PromiseHelpers.catchBlockHelper(error, Constants.FETCH_CATALOG_ERROR);
@@ -177,6 +181,7 @@ class CatalogPageFilters {
             queriedProductList.results.forEach((product: ProductProjection) => {
               ProductCardBuilder.buildProductCard(product, productContainer);
             });
+            DOMHelpers.clearPaginationContainer();
           })
           .catch((error: Error): void => {
             PromiseHelpers.catchBlockHelper(error, Constants.FETCH_CATALOG_ERROR);
@@ -197,6 +202,7 @@ class CatalogPageFilters {
           queriedProductList.results.forEach((product: ProductProjection) => {
             ProductCardBuilder.buildProductCard(product, productContainer);
           });
+          DOMHelpers.clearPaginationContainer();
         })
         .catch((error: Error): void => {
           PromiseHelpers.catchBlockHelper(error, Constants.FETCH_CATALOG_ERROR);
