@@ -249,7 +249,7 @@ class CartPage extends Page {
                 const cartItemPriceStd = cartItem.querySelector('.cart-item-price-std') as HTMLSpanElement;
                 const stdPrice = item.price.value.centAmount;
 
-                cartItemPriceStd.innerHTML = `${stdPrice}`;
+                cartItemPriceStd.innerHTML = ProductCardBuilder.convertProductPrice(stdPrice);
               });
               this.populateCartTotalPriceContainer(cartResponse);
               TostifyHelper.showToast(Constants.PROMO_CODE_ACCEPTED, Constants.TOAST_COLOR_DARK_BLUE);
@@ -288,7 +288,9 @@ class CartPage extends Page {
                 const cartItemPriceStd = cartItem.querySelector('.cart-item-price-std') as HTMLSpanElement;
                 const stdPrice = lineItem.price.value.centAmount;
 
-                cartItemPriceStd.innerHTML = `${stdPrice}`;
+                if (activeCart.results[0].discountCodes.length > 0) {
+                  cartItemPriceStd.innerHTML = ProductCardBuilder.convertProductPrice(stdPrice);
+                }
               });
             })
             .catch((error: Error): void => {
