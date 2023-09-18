@@ -66,8 +66,10 @@ class CartPage extends Page {
               }" value=${itemQuantity} disabled>
               <button class="cart-item-quantity-plus ${cartItem.productId}">+</button>
            </div>
-           <div class='cart-item-price'>${modifiedPriceByItemQuantity}</div>
-<span class="cart-item-price-std"></span>`;
+           <div class="cart-item-price-wrapper">
+              <span class="cart-item-price-regular"></span>
+              <span class='cart-item-price'>${modifiedPriceByItemQuantity}</span>
+           </div>`;
     });
     this.increaseItemQuantity();
     this.decreaseItemQuantity();
@@ -246,10 +248,11 @@ class CartPage extends Page {
               cartResponse.results[0].lineItems.forEach((item: LineItem): void => {
                 this.updateRelatedToProductQuantityElements(item.productId);
                 const cartItem = this.CONTAINER.querySelector(`[data-product-id="${item.productId}"]`) as HTMLElement;
-                const cartItemPriceStd = cartItem.querySelector('.cart-item-price-std') as HTMLSpanElement;
+                const cartItemPriceRegular = cartItem.querySelector('.cart-item-price-regular') as HTMLSpanElement;
                 const stdPrice = item.price.value.centAmount;
 
-                cartItemPriceStd.innerHTML = ProductCardBuilder.convertProductPrice(stdPrice);
+                cartItemPriceRegular.innerHTML = ProductCardBuilder.convertProductPrice(stdPrice);
+                cartItemPriceRegular.classList.add('cart-item-price-discounted');
               });
               this.populateCartTotalPriceContainer(cartResponse);
               TostifyHelper.showToast(Constants.PROMO_CODE_ACCEPTED, Constants.TOAST_COLOR_DARK_BLUE);
@@ -285,11 +288,12 @@ class CartPage extends Page {
                 const cartItem = this.CONTAINER.querySelector(
                   `[data-product-id="${lineItem.productId}"]`,
                 ) as HTMLElement;
-                const cartItemPriceStd = cartItem.querySelector('.cart-item-price-std') as HTMLSpanElement;
+                const cartItemPriceRegular = cartItem.querySelector('.cart-item-price-regular') as HTMLSpanElement;
                 const stdPrice = lineItem.price.value.centAmount;
 
                 if (activeCart.results[0].discountCodes.length > 0) {
-                  cartItemPriceStd.innerHTML = ProductCardBuilder.convertProductPrice(stdPrice);
+                  cartItemPriceRegular.innerHTML = ProductCardBuilder.convertProductPrice(stdPrice);
+                  cartItemPriceRegular.classList.add('cart-item-price-discounted');
                 }
               });
             })
