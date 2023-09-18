@@ -3,7 +3,8 @@ import headerLogo from '../../assets/header-logo2.png';
 import cart from '../../assets/cart.png';
 import Constants from '../../utils/Constants';
 import CustomerCart from '../../backend/cart/CustomerCart';
-import TostifyHelper from '../../utils/TostifyHelper';
+import PromiseHelpers from '../../utils/PromiseHelpers';
+import LocalStorage from '../../utils/LocalStorage';
 
 class Header extends Component {
   private HEADER_MARKUP = `
@@ -30,14 +31,18 @@ class Header extends Component {
     super('header', `${Constants.HEADER}`);
     this.customerCart = new CustomerCart();
     this.showHeaderMenu();
-    this.updateCartItemCount().catch(() => {
-      TostifyHelper.showToast('Updating cart items failed', Constants.TOAST_COLOR_RED);
-    });
     document.addEventListener('click', () => {
       setTimeout(() => {
-        this.updateCartItemCount().catch(() => {
-          TostifyHelper.showToast('Updating cart items failed', Constants.TOAST_COLOR_RED);
-        });
+        this.customerCart
+          .getMyActiveCart(new LocalStorage().getLocalStorageItem(Constants.ACCESS_TOKEN_KEY) as string)
+          .then((activeCartResponse): void => {
+            const itemCount = activeCartResponse.results[0].lineItems.length;
+            const cartItemCountElement = document.querySelector('.cart-items-count') as HTMLElement;
+            cartItemCountElement.textContent = `${itemCount}`;
+          })
+          .catch((error: Error): void => {
+            PromiseHelpers.catchBlockHelper(error, Constants.FETCH_CART_TYPES_ERROR);
+          });
       }, 200);
     });
   }
@@ -58,19 +63,6 @@ class Header extends Component {
         }
       }
     });
-  }
-
-  private async updateCartItemCount(): Promise<void> {
-    try {
-      const customerToken = this.customerCart.LOCAL_STORAGE.getLocalStorageItem(Constants.ACCESS_TOKEN_KEY) as string;
-      const activeCartResponse = await this.customerCart.getMyActiveCart(customerToken);
-      const itemCount = activeCartResponse.results[0].lineItems.length;
-
-      const cartItemCountElement = this.CONTAINER.querySelector('.cart-items-count') as HTMLElement;
-      cartItemCountElement.textContent = `${itemCount}`;
-    } catch {
-      TostifyHelper.showToast('Updating cart items failed', Constants.TOAST_COLOR_RED);
-    }
   }
 
   public renderComponent(): HTMLElement {

@@ -172,6 +172,9 @@ class CustomerCart {
         const customerToken = this.LOCAL_STORAGE.getLocalStorageItem(Constants.ACCESS_TOKEN_KEY) as string;
         this.getMyActiveCart(customerToken)
           .then((activeCartResponse): void => {
+            const itemCount = activeCartResponse.results[0].lineItems.length;
+            const cartItemCountElement = document.querySelector('.cart-items-count') as HTMLElement;
+            cartItemCountElement.textContent = `${itemCount}`;
             this.getCartInformation(activeCartResponse).catch((error: Error): void => {
               PromiseHelpers.catchBlockHelper(error, Constants.FETCH_CART_TYPES_ERROR);
             });
