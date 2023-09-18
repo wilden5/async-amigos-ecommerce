@@ -66,7 +66,8 @@ class CartPage extends Page {
               }" value=${itemQuantity} disabled>
               <button class="cart-item-quantity-plus ${cartItem.productId}">+</button>
            </div>
-           <div class='cart-item-price'><span class="cart-item-price-std"></span>${modifiedPriceByItemQuantity}</div>`;
+           <div class='cart-item-price'>${modifiedPriceByItemQuantity}</div>
+<span class="cart-item-price-std"></span>`;
     });
     this.increaseItemQuantity();
     this.decreaseItemQuantity();
@@ -244,6 +245,11 @@ class CartPage extends Page {
             .then((cartResponse: CartPagedQueryResponse): void => {
               cartResponse.results[0].lineItems.forEach((item: LineItem): void => {
                 this.updateRelatedToProductQuantityElements(item.productId);
+                const cartItem = this.CONTAINER.querySelector(`[data-product-id="${item.productId}"]`) as HTMLElement;
+                const cartItemPriceStd = cartItem.querySelector('.cart-item-price-std') as HTMLSpanElement;
+                const stdPrice = item.price.value.centAmount;
+
+                cartItemPriceStd.innerHTML = `${stdPrice}`;
               });
               this.populateCartTotalPriceContainer(cartResponse);
               TostifyHelper.showToast(Constants.PROMO_CODE_ACCEPTED, Constants.TOAST_COLOR_DARK_BLUE);
@@ -276,6 +282,13 @@ class CartPage extends Page {
             .then(() => {
               activeCart.results[0].lineItems.forEach((lineItem) => {
                 this.updateRelatedToProductQuantityElements(lineItem.productId);
+                const cartItem = this.CONTAINER.querySelector(
+                  `[data-product-id="${lineItem.productId}"]`,
+                ) as HTMLElement;
+                const cartItemPriceStd = cartItem.querySelector('.cart-item-price-std') as HTMLSpanElement;
+                const stdPrice = lineItem.price.value.centAmount;
+
+                cartItemPriceStd.innerHTML = `${stdPrice}`;
               });
             })
             .catch((error: Error): void => {
