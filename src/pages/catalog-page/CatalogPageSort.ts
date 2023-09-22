@@ -8,6 +8,7 @@ import ProductCardBuilder from './ProductCardBuilder';
 import PromiseHelpers from '../../utils/PromiseHelpers';
 import Constants from '../../utils/Constants';
 import ToastifyHelper from '../../utils/TostifyHelper';
+import DOMHelpers from '../../utils/DOMHelpers';
 
 class CatalogPageSort {
   static applySortByCondition(container: HTMLElement): void {
@@ -23,6 +24,7 @@ class CatalogPageSort {
             queriedProductList.results.forEach((product: ProductProjection) => {
               ProductCardBuilder.buildProductCard(product, productContainer);
             });
+            DOMHelpers.clearPaginationContainer();
           })
           .catch((error: Error): void => {
             PromiseHelpers.catchBlockHelper(error, Constants.FETCH_CATALOG_ERROR);
@@ -36,6 +38,7 @@ class CatalogPageSort {
             queriedProductList.results.forEach((product: ProductProjection) => {
               ProductCardBuilder.buildProductCard(product, productContainer);
             });
+            DOMHelpers.clearPaginationContainer();
           })
           .catch((error: Error): void => {
             PromiseHelpers.catchBlockHelper(error, Constants.FETCH_CATALOG_ERROR);

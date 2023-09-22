@@ -21,6 +21,14 @@ class LocalStorage {
       throw new Error(Constants.REMOVE_LOCAL_STORAGE_ITEM_ERROR);
     }
   }
+
+  public getLocalStorageItem(item: string): string | null {
+    try {
+      return localStorage.getItem(item);
+    } catch (error) {
+      throw new Error(Constants.GET_LOCAL_STORAGE_ITEM_ERROR);
+    }
+  }
 }
 
 export default LocalStorage;

@@ -1,0 +1,111 @@
+.about-us__container {
+  max-width: 1140px;
+  margin: 0 auto;
+}
+
+.about-us {
+  text-align: center;
+  padding: 1.5rem;
+
+  &__title {
+    font-size: 3rem;
+    color: #01619e;
+  }
+
+  &-highlight {
+    color: #01619e;
+    font-size: 2rem;
+  }
+
+  .team-member {
+    margin: 1rem;
+    padding: 1.5rem;
+    display: inline-block;
+    text-align: center;
+    border: 0.1rem solid #ddd;
+    border-radius: 1rem;
+    box-shadow: 0 0.2rem 0.4rem rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s, box-shadow 0.2s;
+
+    &__container {
+      display: block;
+      margin-top: 2rem;
+    }
+
+    &__image {
+      max-width: 17rem;
+      border-radius: 50%;
+      border: solid 1px rgba(128, 128, 128, 0.26);
+    }
+
+    .member-info {
+      margin-top: 1rem;
+
+      &__name {
+        font-size: 2.2rem;
+        color: #01619e;
+      }
+
+      &__role {
+        margin-top: .5rem;
+        font-style: italic;
+        color: #3f4546d0;
+      }
+
+      &__bio {
+        margin-top: 2rem;
+        font-size: 1.8rem;
+        min-height: 25.2rem;
+        max-width: 28rem;
+        font-family: 'Lato', sans-serif;
+        line-height: 2.3rem;
+        text-align: justify;
+        vertical-align: top;
+      }
+
+      &__link {
+        display: inline-block;
+        margin-top: 1.5rem;
+        color: #007bff;
+        text-decoration: none;
+        font-size: 2rem;
+        text-align: center;
+        transition: background-color 0.3s ease, transform 0.2s ease;
+
+        &:hover {
+          transform: scale(1.05);
+        }
+      }
+    }
+  }
+}
+
+.description-collaboration {
+  font-size: 1.8rem;
+  width: 90%;
+  margin: 4rem auto;
+  font-family: 'Lato', sans-serif;
+  line-height: 3rem;
+  text-align: left;
+  text-indent: 2rem;
+}
+
+.rs-school-logo {
+  text-align: center;
+  margin-top: 2rem;
+
+  &__link {
+    .rs-school-logo__image {
+      max-width: 12rem;
+      border: 0.1rem solid #ddd;
+      border-radius: 1rem;
+      box-shadow: 0 0.2rem 0.4rem rgba(0, 0, 0, 0.1);
+      transition: transform 0.2s, box-shadow 0.2s;
+      padding: 1.5rem;
+
+      &:hover {
+        transform: scale(1.05);
+      }
+    }
+  }
+}

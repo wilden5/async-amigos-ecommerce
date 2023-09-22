@@ -1,4 +1,4 @@
-import { Image, Product } from '@commercetools/platform-sdk';
+import { Image, LineItem, Product } from '@commercetools/platform-sdk';
 import Swiper from 'swiper';
 import Page from '../../components/templates/Page';
 import { ProjectPages } from '../../types/Enums';
@@ -14,6 +14,9 @@ import 'swiper/scss/pagination';
 import Breadcrumbs from '../../components/breadcrumbs/Breadcrumbs';
 import CategoryPage from '../category-page/CategoryPage';
 import { SwiperModalParams } from '../../utils/SwiperParams';
+import CatalogPage from '../catalog-page/CatalogPage';
+import CustomerCart from '../../backend/cart/CustomerCart';
+import LocalStorage from '../../utils/LocalStorage';
 
 class ProductDetailsPage extends Page {
   private readonly PRODUCT_PAGE_ID: string;
@@ -65,7 +68,7 @@ class ProductDetailsPage extends Page {
           productDescription || Constants.PRODUCT_DESCRIPTION_NOT_FOUND
         }</p>
         <div class="${Constants.PRICE_CONTAINER_CLASSNAME}">${productPriceContainer}</div>
-        <a class=${Constants.PRODUCT_BUTTON_CLASSNAME}>${Constants.CART_BUTTON_TEXT}</a>
+        <a class=${Constants.PRODUCT_BUTTON_CLASSNAME}>${Constants.CART_BUTTON_ADD_TEXT}</a>
       </div>
     `;
 
@@ -85,6 +88,8 @@ class ProductDetailsPage extends Page {
         this.PRODUCT_TYPE_ID = queriedProductDetails.productType.id;
       })
       .then((): void => {
+        this.addProductToCart();
+        this.restoreButtonState();
         this.setBreadcrumb();
       })
       .catch((error: Error): void => {
@@ -92,7 +97,13 @@ class ProductDetailsPage extends Page {
       });
   }
 
-  private initModal = (): void => {
+  private initModal = (event: MouseEvent): void => {
+    const clickedSlide = (event.target as HTMLElement).closest('.swiper-slide') as Element;
+    if (!clickedSlide) return;
+
+    const clickedSlideIndex = clickedSlide.getAttribute('data-swiper-slide-index') as string;
+    if (clickedSlideIndex === null) return;
+
     const dialogContainer = DOMHelpers.createElement('div', { className: 'dialog-container' }, this.CONTAINER);
     dialogContainer.innerHTML = this.DIALOG_MARKUP;
     const dialogContent: HTMLElement | null = this.CONTAINER.querySelector('.dialog-content');
@@ -103,26 +114,26 @@ class ProductDetailsPage extends Page {
       modalSwiperContainer.innerHTML = '';
 
       modalSwiperContainer.innerHTML = `
-    <div class="swiper-wrapper">${this.SLIDER.generateSwiperContent(this.IMAGES_ARRAY)}</div>
-    <div class="swiper-button-next swiper-modal-button-next"></div>
-    <div class="swiper-button-prev swiper-modal-button-prev"></div>
-    <div class="swiper-pagination swiper-modal-pagination"></div>
-  `;
-    }
+      <div class="swiper-wrapper">${this.SLIDER.generateSwiperContent(this.IMAGES_ARRAY)}</div>
+      <div class="swiper-button-next swiper-modal-button-next"></div>
+      <div class="swiper-button-prev swiper-modal-button-prev"></div>
+      <div class="swiper-pagination swiper-modal-pagination"></div>
+    `;
 
-    // Swiper init:
-    const swiperModal = new Swiper('.swiper-modal', SwiperModalParams) as Swiper | null;
+      const initialSlide: number = parseInt(clickedSlideIndex, 10);
 
-    if (swiperModal) {
-      swiperModal.init();
+      if (!Number.isNaN(initialSlide)) {
+        const swiperModal = new Swiper('.swiper-modal', {
+          ...SwiperModalParams,
+          initialSlide,
+        });
+
+        swiperModal.init();
+      }
     }
 
     dialogCloseBtn.addEventListener('click', (): void => {
       dialogContainer.remove();
-
-      if (swiperModal) {
-        swiperModal.destroy();
-      }
     });
   };
 
@@ -136,6 +147,47 @@ class ProductDetailsPage extends Page {
       productTitleElementText,
       `#product/${this.PRODUCT_PAGE_ID}`,
     );
+  }
+
+  private addProductToCart(): void {
+    const productItem = this.CONTAINER.querySelector('.product-details-content') as HTMLElement;
+
+    productItem.addEventListener('click', (event: Event): void => {
+      const clickedElement = event.target as Element;
+
+      if (
+        clickedElement instanceof HTMLAnchorElement &&
+        clickedElement.classList.contains(`${Constants.CART_BUTTON_CLASSNAME}`)
+      ) {
+        event.preventDefault();
+        CatalogPage.onAddToCartButtonClick(this.PRODUCT_PAGE_ID, productItem);
+      }
+    });
+  }
+
+  private restoreButtonState(): void {
+    const productIds: string[] = [];
+
+    new CustomerCart()
+      .getMyActiveCart(new LocalStorage().getLocalStorageItem(Constants.ACCESS_TOKEN_KEY) as string)
+      .then((response): void => {
+        response?.results[0]?.lineItems.forEach((lineItem: LineItem): void => {
+          productIds.push(lineItem.productId);
+        });
+      })
+      .then((): void => {
+        const productItem = this.CONTAINER.querySelector('.product-details-content') as HTMLElement;
+        const cartButton = productItem.querySelector(`.${Constants.CART_BUTTON_CLASSNAME}`) as HTMLElement;
+        const productId = productItem.classList[0];
+
+        if (productIds.includes(productId)) {
+          cartButton.innerText = Constants.CART_BUTTON_REMOVE_TEXT;
+          cartButton.style.backgroundColor = '#5e5e5e';
+        }
+      })
+      .catch((error: Error): void => {
+        PromiseHelpers.catchBlockHelper(error, Constants.FETCH_PRODUCT_TYPES_ERROR);
+      });
   }
 
   public renderPage(): HTMLElement {

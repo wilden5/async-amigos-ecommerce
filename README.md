@@ -38,6 +38,11 @@ seeking the latest and most reliable computer components.
 15. **[Webpack Dev Server](https://www.npmjs.com/package/webpack-dev-server)**: A development server that enables live reloading and better development experience.
 16. **[ts-jest](https://www.npmjs.com/package/ts-jest)**: A TypeScript preprocessor for Jest to enable testing TypeScript files.
 17. **[@typescript-eslint](https://www.npmjs.com/package/@typescript-eslint/eslint-plugin)**: Integrates ESLint with TypeScript for enhanced linting capabilities.
+18. **[@testing-library/dom](https://www.npmjs.com/package/@testing-library/dom)**: Simple and complete DOM testing utilities that encourage good testing practices.
+19. **[Boxicons](https://www.npmjs.com/package/boxicons)**: Carefully designed open source iconset with 1500+ icons. It's crafted to look enrich your website/app experience.
+20. **[JustValidate](https://www.npmjs.com/package/just-validate)**: Modern, simple, lightweight (~5kb gzip) form validation library written in Typescript, with no dependencies.
+21. **[Toastify-JS](https://www.npmjs.com/package/toastify-js)**: Toastify is a lightweight, vanilla JS toast notification library.
+22. **[Swiper](https://www.npmjs.com/package/swiper)**: Swiper - is the free and most modern mobile touch slider with hardware accelerated transitions and amazing native behavior.
 
 ## Setting up and Running the Project Locally
 

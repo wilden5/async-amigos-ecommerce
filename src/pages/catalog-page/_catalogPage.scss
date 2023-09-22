@@ -71,6 +71,7 @@
   margin-bottom: 0.5rem;
 }
 
+.total-cart-price,
 .product-discounted-price {
   color: #f90000;
   font-weight: 800;
@@ -246,5 +247,27 @@ input::-webkit-inner-spin-button {
    padding-left: 7rem;
    padding-right: 7rem;
  }
+}
+
+.pag-pages {
+  display: flex;
+  justify-content: center;
+}
+
+.pag-page {
+  font-size: 5rem;
+  cursor: pointer;
+
+  &:hover {
+    transform: scale(1.2);
+  }
+}
+
+.pag-active {
+  color: #0056b3;
+}
+
+.pag-page-selected {
+  color: #f50505;
 }
 

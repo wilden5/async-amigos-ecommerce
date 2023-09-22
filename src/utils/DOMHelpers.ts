@@ -39,6 +39,11 @@ class DOMHelpers {
       passwordInput.type = 'password';
     }
   }
+
+  static clearPaginationContainer(): void {
+    const elem = document.querySelector('.pag-pages') as HTMLDivElement;
+    elem.innerHTML = '';
+  }
 }
 
 export default DOMHelpers;

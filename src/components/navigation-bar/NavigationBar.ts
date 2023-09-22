@@ -46,6 +46,7 @@ class NavigationBar extends Component {
     if (this.LOCAL_STORAGE.isLocalStorageItemExists(Constants.SUCCESSFUL_REGISTRATION_LOCAL_STORAGE_KEY)) {
       (document.querySelector('.user-logout') as HTMLAnchorElement).addEventListener('click', () => {
         this.LOCAL_STORAGE.removeLocalStorageItem(Constants.SUCCESSFUL_REGISTRATION_LOCAL_STORAGE_KEY);
+        this.LOCAL_STORAGE.removeLocalStorageItem(Constants.ACCESS_TOKEN_KEY);
         window.location.href = ProjectPages.Home;
       });
     }
